@@ -13,3 +13,5 @@
 	6.1 将jiansw.war文件拷贝到解压出来tomcat的webapps目录下面
 	6.2 进入tomcat/bin目录下面启动tomcat（startup.dat）
 7、访问:http://localhost:8080/jiansw/projectcheck/list
+8、默认账号密码：
+   admin  123456
