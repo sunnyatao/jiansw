@@ -1,0 +1,47 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{$context_path}/projectcheck/list">新晃建安行业管理软件</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+      	{foreach from=$navList item=navInfo key=key}
+      	<li><a href="{$context_path}{$navInfo.navigation.authResource.resourcePath}">{$navInfo.navigation.navName}</a></li>
+      	{/foreach}
+        <li><a href="{$context_path}/crm/v1/admin/updateUserInfo?userName={$userName}" id="userName">{$userName}</a></li>   
+        <li><a href="#" onclick="logout()">退出</a></li>
+      </ul>
+      
+      <!--
+      <form class="navbar-form navbar-right">
+        <input type="text" class="form-control" placeholder="Search...">
+      </form>
+      -->
+      
+    </div>
+  </div>
+</nav>
+
+<script type="text/javascript">
+	function logout() {
+		$.post(
+    		"{$context_path}/crm/v1/auth/ajax/logout",
+    		{},
+    		function(data) {
+    			if (data.code == 1) {
+    				window.location.href = "{$context_path}/crm/v1/auth/to_login"
+    			} else {
+    				alert("退出失败");
+    			}
+    		},
+    		'JSON'
+    	);
+	}
+	
+</script>

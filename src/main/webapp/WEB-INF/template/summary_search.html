@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+
+    <title>数据查询</title>
+    {include file='/library/head_top.lbi'}
+    <link href="{$context_path}/styles/wjb/wjb-crm-css.css" rel="stylesheet">
+    <link href="{$context_path}/styles/bootstrap.3.3.7/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="{$context_path}/styles/member.css" rel="stylesheet">
+    <link href="{$context_path}/styles/jquery/jquery-ui.min.css" rel="stylesheet">
+    <style type="text/css">
+    	.td_width {
+    		width:40px
+    	}
+    </style>
+    <script type="text/javascript">
+    var $context_path = "{$context_path}";
+    </script>
+    
+  </head>
+
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 会员管理左侧菜单 -->
+        {include file='/library/left.lbi'}
+        
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h3 class="page-header">综合数据查询
+          <div class="input-group member-search">
+  			  <input type="text" class="form-control" placeholder="请输入搜索内容" aria-describedby="basic-addon2" value="{$keyword}"  name="search_value" id="search_value">
+  			  <span class="input-group-addon glyphicon glyphicon-search" id="basic-addon2" style="top:0px;cursor:pointer;" onclick = "search()"></span>
+		    </div>
+          </h3>
+          <div class="row summary-filter">
+          	<div class="col-sm-4"><span>编号：</span><input type="text" name="search_serial_num" id="search_serial_num"/></div>
+          	<div class="col-sm-4"><span>工程名称：</span><input type="text" name="search_project_name" id="search_project_name"/></div>
+          	<div class="col-sm-4"><span>建设单位：</span><input type="text" name="search_project_constructor" id="search_project_constructor"/></div>
+          	<div class="col-sm-4"><span>施工单位：</span><input type="text" name="search_taxpayer_name" id="search_taxpayer_name"/></div>
+          	<div class="col-sm-4"><span>发票号码：</span><input type="text" name="search_national_invoice_no" id="search_national_invoice_no"/></div>
+          	<div class="col-sm-4"><span>国税号码：</span><input type="text" name="search_national_invoice_tax_no" id="search_national_invoice_tax_no"/></div>
+          	<div class="col-sm-4"><span>地税号码：</span><input type="text" name="search_local_invoice_tax_no" id="search_local_invoice_tax_no"/></div>
+          	<div class="col-sm-4"><span>开票日期起：</span><input type="text" name="search_start_time" id="search_start_time"/></div>
+          	<div class="col-sm-4"><span>开票日期止：</span><input type="text" name="search_end_time" id="search_end_time"/></div>
+          	<div class="col-sm-1">
+          		<button type="button" class="btn btn-primary tx-save tx-save-only" id="zhsearch">查询</button>
+          	</div>
+          	<div class="col-sm-2">
+          		<button type="button" class="btn btn-primary tx-save tx-export" id="export">生成导出内容</button>
+          	</div>
+          	<div class="col-sm-1" style="margin-left: -5%">
+          		<a href="#" style="display:none; font-size: 18px; font-weight: bold;" target="blank" id="downloadXls">下载附件</a>
+          	</div>
+          	
+          </div>
+	      
+	      <div class="table-responsive row">
+	           <!-- start 循环展示会员信息 -->
+	              <table class="table table-striped table-hover member-table" style="width:2340px;max-width:2340px;">
+	              <thead>
+	                <tr>
+	                  	<th width="80px">编号</th>
+						<th width="120px">纳税人识别号</th>
+						<th width="100px">纳税人名称</th>
+						<th width="150px">项目名称</th>
+						<th width="150px">项目地址</th>
+						<th width="100px">发包方</th>
+						<th width="100px">总造价</th>
+						<th width="100px">是否完工</th>
+						<th width="130px">本次开票金额</th>
+						<th width="100px">增值税</th>
+						<th width="100px">所得税</th>
+						<th width="100px">城建费附加</th>
+						<th width="180px">教育费附加</th>
+						<th width="180px">地方教育费附加</th>
+						<th width="100px">印花税</th>
+						<th width="100px">工会经费</th>
+						<th width="180px">水利建设专项收入</th>
+						<th width="100px">纳税经办人</th>
+						<th width="100px">联系电话</th>
+						<th width="100px">经办人</th>
+						<th width="150px">负责人</th>
+	                </tr>
+	              </thead>
+	              <tbody id="checkBody">
+	              <!-- {foreach from=$projectChecks item=projectCheck key=key} -->
+	                	<tr>
+						  <td>{$projectCheck.serialNum}</td>
+						  <td>{$projectCheck.taxpayerIdentifyNum}</td>
+						  <td>{$projectCheck.taxpayerName}</td>
+						  <td>{$projectCheck.projectName}</td>
+						  <td>{$projectCheck.projectAddress}</td>
+						  <td>{$projectCheck.projectConstructor}</td>
+						  <td>{$projectCheck.projectTotalCost}</td>
+						  <td>{$projectCheck.isDown}</td>
+						  <td>{$projectCheck.invoiceAmount}</td>
+						  <td>{$projectCheck.appreciationTaxAmount}</td>
+						  <td>{$projectCheck.incomeTaxAmount}</td>
+						  <td>{$projectCheck.urbanTaxAmount}</td>
+						  <td>{$projectCheck.educationAdditionAmount}</td>
+						  <td>{$projectCheck.localEducationAdditionAmount}</td>
+						  <td>{$projectCheck.stampDutyAmount}</td>
+						  <td>{$projectCheck.laborUnionAmount}</td>
+						  <td>{$projectCheck.waterConstructAmount}</td>
+						  <td>{$projectCheck.payTaxUser}</td>
+						  <td>{$projectCheck.contactsPhone}</td>
+						  <td>{$projectCheck.operatorName}</td>
+						  <td>{$projectCheck.dutyUserName}</td>
+						</tr>
+			      <!-- {/foreach} -->  
+			      </tbody>      
+	              </table>
+        	</div>
+        	<br/>
+        	<div class="table-responsive row">
+	           <!-- start 循环展示会员信息 -->
+	              <table class="table table-striped table-hover member-table" style="width:2980px;max-width:2980px;">
+	              	<thead>
+	                <tr>
+	                  	<th width="80px">编号</th>
+						<th width="120px">纳税人识别号</th>
+						<th width="100px">施工方名称</th>
+						<th width="150px">项目名称</th>
+						<th width="150px">项目地址</th>
+						<th width="100px">发包方</th>
+						<th width="100px">总造价</th>
+						<th width="100px">是否完工</th>
+						<th width="120px">本次结算金额</th>
+						<th width="100px">供货方姓名</th>
+						<th width="150px">供货方身份证号码</th>
+						<th width="150px">成本发票比例</th>
+						<th width="150px">已取得发票分数</th>
+						<th width="150px">已取得发票金额</th>
+						<th width="100px">代扣单位</th>
+						<th width="120px">已代扣税额</th>
+						<th width="160px">增值税额及地税附征税款</th>
+						<th width="160px">本次结算应补应退税额</th>
+						<th width="100px">征收单位</th>
+						<th width="120px">纳税经办人</th>
+						<th width="100px">联系电话</th>
+						<th width="100px">经办人</th>
+						<th width="100px">负责人</th>
+						<th width="100px">局领导</th>
+						<th width="100px"></th>
+	                </tr>
+	              	</thead>
+		           <tbody id="settlementBody">
+	              <!-- {foreach from=$projectSettlements item=projectSettlement key=key} -->
+	                	<tr>
+							<td>{$projectSettlement.serialNum}</td>
+							<td>{$projectSettlement.taxpayerIdentifyNum}</td>
+							<td>{$projectSettlement.taxpayerName}</td>
+							<td>{$projectSettlement.projectName}</td>
+							<td>{$projectSettlement.projectAddress}</td>
+							<td>{$projectSettlement.projectConstructor}</td>
+							<td>{$projectSettlement.projectTotalCost}</td>
+							<td>{$projectSettlement.isDown}</td>
+							<td>{$projectSettlement.settlementAmount}</td>
+							<td>{$projectSettlement.serviceProducerName}</td>
+							<td>{$projectSettlement.serviceProducerCardNo}</td>
+							<td>{$projectSettlement.costInvoiceRate}</td>
+							<td>{$projectSettlement.obtainInvoiceNum}</td>
+							<td>{$projectSettlement.obtainInvoiceAmount}</td>
+							<td>{$projectSettlement.withholdDepartment}</td>
+							<td>{$projectSettlement.withholdTaxAmount}</td>
+							<td>{$projectSettlement.appreciationLocalTaxAmount}</td>
+							<td>{$projectSettlement.refundTaxAmount}</td>
+							<td>{$projectSettlement.imposeDepartment}</td>
+							<td>{$projectSettlement.payTaxUser}</td>
+							<td>{$projectSettlement.contactsPhone}</td>
+							<td>{$projectSettlement.operatorName}</td>
+							<td>{$projectSettlement.dutyUserName}</td>
+							<td>{$projectSettlement.bureauLeader}</td>
+						</tr>
+			      <!-- {/foreach} -->
+			      </tbody>    
+	              </table>
+        	</div>
+        	<br/>
+        	<div class="table-responsive row">
+	           <!-- start 循环展示会员信息 -->
+	              <table class="table table-striped table-hover member-table" style="width:2700px;max-width:2700px;">
+	              <thead>
+	                <tr>
+						<th width="80px">编号</th>
+						<th width="120px">纳税人识别号</th>
+						<th width="100px">纳税人名称</th>
+						<th width="150px">项目名称</th>
+						<th width="150px">项目地址</th>
+						<th width="100px">发包方</th>
+						<th width="100px">总造价</th>
+						<th width="100px">是否完工</th>
+						<th width="150px">本次结算金额</th>
+						<th width="120px">预缴增值税</th>
+						<th width="120px">纳税人类型</th>
+						<th width="150px">预缴企业所税</th>
+						<th width="120px">所得税归属</th>
+						<th width="120px">城建费附加</th>
+						<th width="120px">教育费附加</th>
+						<th width="150px">地方教育费附加</th>
+						<th width="100px">印花税</th>
+						<th width="100px">工会经费</th>
+						<th width="150px">水利建设专项收入</th>
+						<th width="120px">纳税经办人</th>
+						<th width="100px">联系电话</th>
+						<th width="100px">经办人</th>
+						<th width="100px">负责人</th>
+	                </tr>
+	              </thead>
+	              <tbody id="outertubeBody">
+	              <!-- {foreach from=$projectOutertubes item=rojectOutertube key=key} -->
+	                	<tr>
+						<td>{$rojectOutertube.serialNum}</td>
+						<td>{$rojectOutertube.taxpayerIdentifyNum}</td>
+						<td>{$rojectOutertube.taxpayerName}</td>
+						<td>{$rojectOutertube.projectName}</td>
+						<td>{$rojectOutertube.projectAddress}</td>
+						<td>{$rojectOutertube.projectConstructor}</td>
+						<td>{$rojectOutertube.projectTotalCost}</td>
+						<td>{$rojectOutertube.isDown}</td>
+						<td>{$rojectOutertube.settlementAmount}</td>
+						<td>{$rojectOutertube.preAppreciationTaxAmount}</td>
+						<td>{$rojectOutertube.payTaxUserType}</td>
+						<td>{$rojectOutertube.preCorporateIncomeTaxAmount}</td>
+						<td>{$rojectOutertube.incomeAffiliation}</td>
+						<td>{$rojectOutertube.urbanTaxAmount}</td>
+						<td>{$rojectOutertube.educationAdditionAmount}</td>
+						<td>{$rojectOutertube.localEducationAdditionAmount}</td>
+						<td>{$rojectOutertube.stampDutyAmount}</td>
+						<td>{$rojectOutertube.laborUnionAmount}</td>
+						<td>{$rojectOutertube.waterConstructAmount}</td>
+						<td>{$rojectOutertube.payTaxUser}</td>
+						<td>{$rojectOutertube.contactsPhone}</td>
+						<td>{$rojectOutertube.operatorName}</td>
+						<td>{$rojectOutertube.dutyUserName}</td>
+						</tr>
+			      <!-- {/foreach} -->        
+			      </tbody>
+	              </table>
+        	</div>
+      </div>
+    </div>
+    <div class="alert alert-danger user-status-failure" style="display:none;" role="alert"></div>
+	<!-- 引入bash_js -->
+    {include file='/library/base_js.lbi'}
+	<script type="text/javascript" src="{$context_path}/javascript/jquery.tmpl.min.js"></script>
+	<script src="{$context_path}/javascript/jquery-ui.min.js"></script>
+    <script src="{$context_path}/javascript/jquery.ui.datepicker-zh-CN.js"></script>
+    
+    <script>
+    $(function(){
+    	$( "#search_start_time" ).datepicker({ dateFormat: 'yy-mm-dd'});
+    	$( "#search_end_time" ).datepicker({ dateFormat: 'yy-mm-dd'});
+    });
+	
+    
+   	var context_path = '{$context_path}';
+   	 
+   	$(document).ready(function(){
+   		$('#search_value').bind('keydown', keyDownSearch);
+   		$('#zhsearch').bind('click', zkSearchClick);
+   		$('.tx-export').bind('click', exportClick);
+   	});
+   	
+   	var exportClick = function(e) {
+   		$('.tx-export').attr("disabled", "disabled");
+   		$('.tx-export').val("正在生产中...");
+   		
+   		//开始查询check
+   		var serial_num = $('#search_serial_num').val();
+   		var project_name = $('#search_project_name').val();
+   		var project_constructor = $('#search_project_constructor').val();
+   		var taxpayer_name = $('#search_taxpayer_name').val();
+   		var national_invoice_no = $('#search_national_invoice_no').val();
+   		var national_invoice_tax_no = $('#search_national_invoice_tax_no').val();
+   		var local_invoice_tax_no = $('#search_local_invoice_tax_no').val();
+   		var start_time = $('#search_start_time').val();
+   		var end_time = $('#search_end_time').val();
+   		
+   		$.post(
+ 				'{$context_path}' + "/summary/api/xls/export",	
+ 	    		 {'serial_num': serial_num, 'project_name':project_name, 'project_constructor':project_constructor,
+ 					'taxpayer_name': taxpayer_name, 'national_invoice_no':national_invoice_no,
+ 					'national_invoice_tax_no': national_invoice_tax_no, 'local_invoice_tax_no': local_invoice_tax_no, 'start_time': start_time, 'end_time': end_time},
+ 	    		function(data) {
+ 	    			if(data.code == 1){
+ 	    				$('.tx-export').removeAttr("disabled");
+ 	    				$('.tx-export').val("生成导出内容");
+ 	    				$('#downloadXls').css("display","block");
+ 	    				$('#downloadXls').attr("href", context_path+"/data/"+data.msg_data.filename);
+ 	    			}
+ 	    		},
+ 	    		'JSON'
+ 	    	);
+   	};
+   	
+   	var zkSearchClick = function(e) {
+   		//开始查询check
+   		var serial_num = $('#search_serial_num').val();
+   		var project_name = $('#search_project_name').val();
+   		var project_constructor = $('#search_project_constructor').val();
+   		var taxpayer_name = $('#search_taxpayer_name').val();
+   		var national_invoice_no = $('#search_national_invoice_no').val();
+   		var national_invoice_tax_no = $('#search_national_invoice_tax_no').val();
+   		var local_invoice_tax_no = $('#search_local_invoice_tax_no').val();
+   		var start_time = $('#search_start_time').val();
+   		var end_time = $('#search_end_time').val();
+   		
+   		searchCheck(serial_num, project_name, project_constructor, taxpayer_name, 
+   			national_invoice_no, national_invoice_tax_no, local_invoice_tax_no, start_time, end_time);
+
+   		searchSettlement(serial_num, project_name, project_constructor, taxpayer_name, 
+   			national_invoice_no, national_invoice_tax_no, local_invoice_tax_no, start_time, end_time);
+   		
+   		searchOutertube(serial_num, project_name, project_constructor, taxpayer_name, 
+   			national_invoice_no, national_invoice_tax_no, local_invoice_tax_no, start_time, end_time);
+   	};
+   	
+   	function searchCheck(serial_num, project_name, project_constructor, taxpayer_name, 
+   			national_invoice_no, national_invoice_tax_no, local_invoice_tax_no, start_time, end_time) {
+   		$.post(
+ 				'{$context_path}' + "/summary/api/check/search",	
+ 	    		 {'serial_num': serial_num, 'project_name':project_name, 'project_constructor':project_constructor,
+ 					'taxpayer_name': taxpayer_name, 'national_invoice_no':national_invoice_no,
+ 					'national_invoice_tax_no': national_invoice_tax_no, 'local_invoice_tax_no':local_invoice_tax_no, 'start_time': start_time, 'end_time': end_time},
+ 	    		function(data) {
+ 	    			if(data.code == 1){
+ 	    				$("#checkBody").html("");
+        				$("#checkTemplate").tmpl(data.msg_data.projectChecks).appendTo("#checkBody");
+        				
+        				var sumAmount = data.msg_data.sumAmount;
+        				if (typeof(sumAmount.total_cost) == 'undefined'){
+        					return;
+        				}
+        				$("#checkBody").append("<tr><td>总计:</td><td></td><td></td><td></td><td></td><td></td><td>" 
+        						+ sumAmount.total_cost + "</td><td></td><td>" + 
+        						sumAmount.total_invoice_amount + "</td><td>"+
+        						sumAmount.total_appreciation_tax_amount+"</td><td>" + sumAmount.total_income_tax_amount + 
+        						"</td><td>"+sumAmount.total_urban_tax_amount+"</td><td>" + sumAmount.total_education_addition_amount + 
+        						"</td><td>"+sumAmount.total_education_addition_amount + " </td><td>"+sumAmount.total_stamp_duty_amount+
+        						"</td><td>"+sumAmount.total_labor_union_amount+
+        						"</td><td>"+sumAmount.total_water_construct_amount+"</td><td></td><td></td><td></td><td></td></tr>");
+ 	    			}
+ 	    		},
+ 	    		'JSON'
+ 	    	);
+   	}
+
+   	function searchSettlement(serial_num, project_name, project_constructor, taxpayer_name, 
+   			national_invoice_no, national_invoice_tax_no, local_invoice_tax_no, start_time, end_time) {
+   		$.post(
+ 				'{$context_path}' + "/summary/api/settlement/search",	
+ 	    		 {'serial_num': serial_num, 'project_name':project_name, 'project_constructor':project_constructor,
+ 					'taxpayer_name': taxpayer_name, 'national_invoice_no':national_invoice_no,
+ 					'national_invoice_tax_no': national_invoice_tax_no, 'local_invoice_tax_no':local_invoice_tax_no, 'start_time': start_time, 'end_time': end_time},
+ 	    		function(data) {
+ 	    			if(data.code == 1){
+ 	    				$("#settlementBody").html("");
+        				$("#settlementTemplate").tmpl(data.msg_data.projectSettlements).appendTo("#settlementBody");
+        				
+        				var sumAmount = data.msg_data.sumAmount;
+        				if (typeof(sumAmount.total_cost) == 'undefined'){
+        					return;
+        				}
+        				$("#settlementBody").append("<tr><td>总计:</td><td></td><td></td><td></td><td></td><td></td><td>"+
+        						sumAmount.total_cost+"</td><td></td><td>"+
+        						sumAmount.total_settlement_amount+"</td><td></td><td></td><td></td><td>"+
+        						sumAmount.total_obtain_invoice_num+"</td><td>"+
+        						sumAmount.total_obtain_invoice_amount+"</td><td></td><td>"+
+        						sumAmount.total_withhold_tax_amount+"</td><td>"+
+        						sumAmount.total_appreciation_local_tax_amount+"</td><td>"+
+        						sumAmount.total_refund_tax_amount+"</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>")
+ 	    			}
+ 	    		},
+ 	    		'JSON'
+ 	    	);
+   	}
+
+   	function searchOutertube(serial_num, project_name, project_constructor, taxpayer_name, 
+   			national_invoice_no, national_invoice_tax_no, local_invoice_tax_no, start_time, end_time) {
+   		$.post(
+ 				'{$context_path}' + "/summary/api/outertube/search",	
+ 	    		 {'serial_num': serial_num, 'project_name':project_name, 'project_constructor':project_constructor,
+ 					'taxpayer_name': taxpayer_name, 'national_invoice_no':national_invoice_no,
+ 					'national_invoice_tax_no': national_invoice_tax_no, 'local_invoice_tax_no':local_invoice_tax_no, 'start_time': start_time, 'end_time': end_time},
+ 	    		function(data) {
+ 	    			if(data.code == 1){
+ 	    				$("#outertubeBody").html("");
+        				$("#outertubeTemplate").tmpl(data.msg_data.projectOutertubes).appendTo("#outertubeBody");
+        				var sumAmount = data.msg_data.sumAmount;
+        				if (typeof(sumAmount.total_cost) == 'undefined'){
+        					return;
+        				}
+        				$("#outertubeBody").append("<tr><td>总计:</td><td></td><td></td><td></td><td></td><td></td><td>"+
+        						sumAmount.total_cost+"</td><td></td><td>"+
+        						sumAmount.total_settlement_amount+"</td><td>"+
+        						sumAmount.total_pre_appreciation_tax_amount+"</td><td></td><td>"+
+        						sumAmount.total_pre_corporate_income_tax_amount+"</td><td></td><td>"+
+        						sumAmount.total_urban_tax_amount+"</td><td>"+
+        						sumAmount.total_education_addition_amount+"</td><td>"+
+        						sumAmount.total_local_education_addition_amount+"</td><td>"+
+        						sumAmount.total_stamp_duty_amount+"</td><td>"+
+        						sumAmount.total_labor_union_amount+"</td><td>"+
+        						sumAmount.total_water_construct_amount+"</td><td></td><td></td><td></td><td></td></tr>");
+ 	    			}
+ 	    		},
+ 	    		'JSON'
+ 	    	);
+   	}
+   	
+   	keyDownSearch = function(e) {
+		if (e.keyCode == 13) {
+   			search();
+		}
+   	};
+   	 function search() {
+   		 var searchValue = $('#search_value').val();
+   		 window.location.href = '{$context_path}' + "/summary/search?keyword=" + encodeURIComponent(searchValue);
+   	 }
+   	 
+	</script>
+	
+	<script type="text/html" id="checkTemplate">
+	{literal}
+	<tr>
+	  <td width="80px">${serialNum}</td>
+	  <td>${taxpayerIdentifyNum}</td>
+	  <td>${taxpayerName}</td>
+	  <td>${projectName}</td>
+	  <td>${projectAddress}</td>
+	  <td>${projectConstructor}</td>
+	  <td>${projectTotalCost}</td>
+	  <td>${isDown}</td>
+	  <td>${invoiceAmount}</td>
+	  <td>${appreciationTaxAmount}</td>
+	  <td>${incomeTaxAmount}</td>
+	  <td>${urbanTaxAmount}</td>
+	  <td>${educationAdditionAmount}</td>
+	  <td>${localEducationAdditionAmount}</td>
+	  <td>${stampDutyAmount}</td>
+	  <td>${laborUnionAmount}</td>
+	  <td>${waterConstructAmount}</td>
+	  <td>${payTaxUser}</td>
+	  <td>${contactsPhone}</td>
+	  <td>${operatorName}</td>
+	  <td>${dutyUserName}</td>
+	</tr>
+	{/literal}
+	</script>
+
+	<script type="text/html" id="settlementTemplate">
+	{literal}
+	<tr>
+  	<td>${serialNum}</td>
+  	<td>${taxpayerIdentifyNum}</td>
+  	<td>${taxpayerName}</td>
+  	<td>${projectName}</td>
+  	<td>${projectAddress}</td>
+  	<td>${projectConstructor}</td>
+  	<td>${projectTotalCost}</td>
+  	<td>${isDown}</td>
+  	<td>${settlementAmount}</td>
+  	<td>${serviceProducerName}</td>
+  	<td>${serviceProducerCardNo}</td>
+  	<td>${costInvoiceRate}</td>
+  	<td>${obtainInvoiceNum}</td>
+  	<td>${obtainInvoiceAmount}</td>
+  	<td>${withholdDepartment}</td>
+  	<td>${withholdTaxAmount}</td>
+  	<td>${appreciationLocalTaxAmount}</td>
+  	<td>${refundTaxAmount}</td>
+  	<td>${imposeDepartment}</td>
+  	<td>${payTaxUser}</td>
+  	<td>${contactsPhone}</td>
+  	<td>${operatorName}</td>
+  	<td>${dutyUserName}</td>
+  	<td>${bureauLeader}</td>
+	</tr>
+	{/literal}
+	</script>
+
+	<script type="text/html" id="outertubeTemplate">
+	{literal}
+	<tr>
+  	<td>${serialNum}</td>
+  	<td>${taxpayerIdentifyNum}</td>
+  	<td>${taxpayerName}</td>
+  	<td>${projectName}</td>
+  	<td>${projectAddress}</td>
+  	<td>${projectConstructor}</td>
+  	<td>${projectTotalCost}</td>
+  	<td>${isDown}</td>
+  	<td>${settlementAmount}</td>
+  	<td>${preAppreciationTaxAmount}</td>
+  	<td>${payTaxUserType}</td>
+  	<td>${preCorporateIncomeTaxAmount}</td>
+  	<td>${incomeAffiliation}</td>
+  	<td>${urbanTaxAmount}</td>
+  	<td>${educationAdditionAmount}</td>
+  	<td>${localEducationAdditionAmount}</td>
+  	<td>${stampDutyAmount}</td>
+  	<td>${laborUnionAmount}</td>
+  	<td>${waterConstructAmount}</td>
+  	<td>${payTaxUser}</td>
+  	<td>${contactsPhone}</td>
+  	<td>${operatorName}</td>
+  	<td>${dutyUserName}</td>
+	</tr>
+	{/literal}
+	</script>
+  </body>
+</html>

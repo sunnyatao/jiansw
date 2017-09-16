@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title></title>
+<style type="text/css">
+*{margin: 0;padding: 0;}
+body{font-family: Helvetica, Tahoma, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei", STXihei, STHeiti, Heiti, SimSun, sans-serif;}
+p{font-size: 15px;color: #333;line-height: 28px;}
+h3{font-family: SimHei;font-size: 35px;text-align: center;margin: 30px 0}
+td{font-family:FangSong;}
+.fs{font-family:FangSong;}
+.wrap{width: 600px;margin: 0 auto;}
+.{color: #f00;}
+</style>
+<style media="print" type="text/css">
+.noprint{display : none }
+</style>
+</head>
+<body>
+<!--startprint1-->
+<div class="wrap">
+	<h3>契税应纳信息</h3>
+	<p style="text-indent:2em;">
+		<table>
+			<tr>
+				<td width="160px">项目名称：</td>
+				<td width="160px">{$houseContract.projectName}</td>
+				<td width="160px">纳税人：</td>
+				<td width="160px">{$houseContract.name}</td>
+			</tr>
+			<tr>
+				<td width="160px">楼栋：</td>
+				<td width="160px">{$houseContract.floorName}</td>
+				<td width="160px">房号：</td>
+				<td width="160px">{$houseContract.serialNo}</td>
+			</tr>
+			<tr>
+				<td width="160px">面积：</td>
+				<td width="160px">{$houseContract.area}</td>
+				<td width="160px">单价：</td>
+				<td width="160px">{$houseContract.unitPrice}</td>
+			</tr>
+			<tr>
+				<td width="160px">总价：</td>
+				<td width="160px">{$houseContract.totalPrice}</td>
+				<td width="160px">增值税税率：</td>
+				<td width="160px">{$houseContract.appreciationRate}</td>
+			</tr>
+			<tr>
+				<td width="160px">契税税率：</td>
+				<td width="160px">{$houseContract.contractTaxRate}</td>
+				<td width="160px">契税税额：</td>
+				<td width="160px">{$houseContract.contractTax}</td>
+			</tr>
+			<tr>
+				<td width="160px">印花税税率：</td>
+				<td width="160px">{$houseContract.stampDutyRate|string_format:"%.4f"}</td>
+				<td width="160px">印花税税额：</td>
+				<td width="160px">{$houseContract.stampDutyAmount}</td>
+			</tr>
+			<tr>
+				<td width="160px">房屋类型：</td>
+				<td width="160px">{$houseContract.houseType}</td>
+				<td width="160px">身份证号：</td>
+				<td width="160px">{$houseContract.cardNo}</td>
+			</tr>
+			<tr>
+				<td width="160px">合同签订日期：</td>
+				<td width="160px">{$houseContract.contractDate|date_format:'%Y-%m-%d'}</td>
+				<td width="160px">契税完税：</td>
+				<td width="160px">{$houseContract.contractDown}</td>
+			</tr>
+			<tr>
+				<td width="160px">首付：</td>
+				<td width="160px">{$houseContract.firstPaymentAmount}</td>
+				<td width="160px">按揭：</td>
+				<td width="160px">{$houseContract.mortgageAmount}</td>
+			</tr>
+		</table>
+	</p>
+	<br><br>
+	<p style="text-align:right;" class="">新晃县地税局<br><span class="">{$year}年{$month}月{$day}日</span></p>
+</div>
+<!--endprint1-->
+
+<input id="btnPrint" type="button" class="noprint" value="打印" onclick="javascript:window.print();" />
+<input id="btnPrintPreview" type="button" class="noprint" value="打印预览" onclick=preview(1) />
+<input id="back_history" type="button" class="noprint" value="返回" onclick="history.back()">
+</body>
+{include file='/library/base_js.lbi'}
+<script>
+$(document).ready(function(){
+	window.print();
+});
+
+function preview(oper)
+	{
+		if (oper < 10) {
+			bdhtml=window.document.body.innerHTML;//获取当前页的html代码
+			sprnstr="<!--startprint"+oper+"-->";//设置打印开始区域
+			eprnstr="<!--endprint"+oper+"-->";//设置打印结束区域
+			prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
+			
+			prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html
+			window.document.body.innerHTML=prnhtml;
+			window.print();
+			window.document.body.innerHTML=bdhtml;
+		} else {
+			window.print();
+		}
+	}
+</script>
+</html>

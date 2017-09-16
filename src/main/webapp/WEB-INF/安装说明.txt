@@ -1,0 +1,15 @@
+1、安装jdk1.8	配置环境变量
+2、安装mysql服务，修改root默认密码为root
+	修改方法：输入命令（mysql -u root -p ）进入mysql，输入:   set password for root@localhost = password('root');    flush privileges;
+3、安装navicat111_premium_cs_x86_v11.1.12.0.1437041331.exe mysql客户端工具
+4、启动navicat 客户端工具
+	4.1 连接localhost(root，root)
+	4.2 新建数据库jianan_software
+	4.3 执行导数数据库文件jiansw.sql
+5、进入C:\Windows\System32\drivers\etc目录下面
+	5.1 打开hosts文件，在最尾行加入: 127.0.0.1	db.jiansw.com
+	5.2 如果上述5.1步骤不能保存的话，现将host文件拷贝到桌面，修改之后再考回源目录
+6、解压apache-tomcat-6.0.44-windows-x64.zip文件
+	6.1 将jiansw.war文件拷贝到解压出来tomcat的webapps目录下面
+	6.2 进入tomcat/bin目录下面启动tomcat（startup.dat）
+7、访问:http://localhost:8080/jiansw/projectcheck/list

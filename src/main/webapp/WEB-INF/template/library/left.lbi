@@ -1,0 +1,14 @@
+<div class="col-sm-3 col-md-2 sidebar">
+  <ul class="nav nav-sidebar">
+  	{foreach from=$childNavs item=i name=navInfo key=key}
+  		<li class="{$i.active}"><a href="{$context_path}{$i.authResource.resourcePath}">
+  		{if $smarty.foreach.navInfo.index eq '0'}<i class="glyphicon glyphicon-user"></i>&nbsp;{/if}
+  		{if $smarty.foreach.navInfo.index eq '1'}<i class="glyphicon glyphicon-yen"></i>&nbsp;&nbsp;{/if}
+  		{if $smarty.foreach.navInfo.index eq '2'}<i class="glyphicon glyphicon-log-out"></i>&nbsp;{/if}
+  		{if $smarty.foreach.navInfo.index eq '3'}<i class="glyphicon glyphicon-print"></i>&nbsp;{/if}
+  		{if $smarty.foreach.navInfo.index eq '4'}<i class="glyphicon glyphicon-book"></i>&nbsp;{/if}
+  		{if $smarty.foreach.navInfo.index eq '5'}<i class="glyphicon glyphicon-search"></i>&nbsp;{/if}
+  		{$i.navName}</a></li>
+  	{/foreach}
+  </ul>
+</div>

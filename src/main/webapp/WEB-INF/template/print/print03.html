@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>晃国税证字（{$year}）{$nextSerialNo}号</title>
+<style type="text/css">
+*{margin: 0;padding: 0;}
+body{font-family: Helvetica, Tahoma, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei", STXihei, STHeiti, Heiti, SimSun, sans-serif;}
+p{font-size: 15px;color: #333;line-height: 28px;}
+h3{font-family: SimHei;font-size: 35px;text-align: center;margin: 30px 0}
+.fs{font-size: 18px;}
+.wrap{width: 600px;margin: 0 auto;}
+.{color: #f00;}
+</style>
+<style media="print" type="text/css">
+.noprint{display : none }
+</style>
+</head>
+<body>
+<!--startprint1-->
+<div class="wrap">
+	<h3>税务管理证明单</h3>
+	<p style="text-align:center" class="fs">晃国税证字 [ <span class="fs">{$year}</span>] 第 <span class="fs">{$nextSerialNo}</span>号</p>
+	<br>
+	<p>
+		<span class="fs">{$projectCheck.projectConstructor}</span>:
+	</p>
+	
+	<p style="text-indent:2em;" class="fs">
+		<span class="fs">{$projectCheck.projectName}</span>己完工，金额为<span class="fs">{$invoiceAmount}</span>元。未达到增值税核定起征标准,你单位可按规定办理结算手续。
+	</p>
+	<br>
+	<p style="text-align:center;margin-left:350px;" class="fs">新晃侗族自治县国家税务局<br><span class="fs">{$year}年{$month}月{$day}日</span></p>
+</div>
+<!--endprint1-->
+
+<input id="btnPrint" type="button" class="noprint" value="打印" onclick="javascript:window.print();" />
+<input id="btnPrintPreview" type="button" class="noprint" value="打印预览" onclick=preview(1) />
+<input id="back_history" type="button" class="noprint" value="返回" onclick="history.back()">
+</body>
+{include file='/library/base_js.lbi'}
+<script>
+
+$(document).ready(function(){
+	//$('#btnPrint').bind('click', clickPrint);
+	clickPrint();
+	window.print();
+});
+
+function clickPrint() {
+	alert('update');
+	var id = "{$projectCheck.id}";
+	var serialNo = "{$nextSerialNo}";
+	$.post(
+			'{$context_path}' + "/projectcheck/api/taxserialno/save",	
+    		 {'id': id, 'serial_no': serialNo},
+    		function(data) {
+    			if(data.code == 1){
+    				//console.log('保存成功!')
+    			} else{
+    				//console.log('保存失败!')
+    			}
+    		 },
+    		 'JSON');
+}
+function preview(oper)
+{
+	if (oper < 10) {
+		bdhtml=window.document.body.innerHTML;//获取当前页的html代码
+		sprnstr="<!--startprint"+oper+"-->";//设置打印开始区域
+		eprnstr="<!--endprint"+oper+"-->";//设置打印结束区域
+		prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
+		
+		prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html
+		window.document.body.innerHTML=prnhtml;
+		window.print();
+		window.document.body.innerHTML=bdhtml;
+	} else {
+		window.print();
+	}
+}
+</script>
+</html>

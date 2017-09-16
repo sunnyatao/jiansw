@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="{$context_path}/styles/modal.css">
+	<link rel="stylesheet" type="text/css" href="{$context_path}/styles/bootstrap.3.3.7/bootstrap.min.css">
+
+    <title>用户权限列表</title>
+    {include file='/library/head_top.lbi'}
+    <link href="{$context_path}/styles/bootstrap.3.3.7/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="{$context_path}/styles/member.css" rel="stylesheet">
+    
+    
+    
+  </head>
+
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}		
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 会员管理左侧菜单 -->
+        {include file='/library/left.lbi'}
+       
+        
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h3 class="page-header">分派权限【{$user.userName}】
+          </h3>
+          
+	      <div class="table-responsive">
+        	<table class="table table-striped table-hover member-table">
+        		<tr>
+        			<td width="20%"><label style="margin-left:20px;"><input type="checkbox" class="tx-member-all-chk"/>业务管理</label></td>
+        			<td>
+        				<!-- {foreach from=$member_resources item=resource key=key name=resources_pro} -->
+        					{if $smarty.foreach.resources_pro.index eq 5}<br />{/if}
+        					{if $smarty.foreach.resources_pro.index eq 10}<br />{/if}
+        					{if $smarty.foreach.resources_pro.index eq 15}<br />{/if}
+        					{if $smarty.foreach.resources_pro.index eq 20}<br />{/if}
+        					{if $smarty.foreach.resources_pro.index eq 25}<br />{/if}
+			        		<label style="margin-left:20px;">
+			        			<input type="checkbox" class="tx-member-chk tx-resource" value="{$resource.resourceId}" id="chk_{$resource.resourceId}"/>
+			        			{$resource.resourceName}
+			        		</label>
+			        	<!--  {/foreach}	-->
+        			</td>
+        		</tr>
+        		<tr>
+        			<td width="20%"><label style="margin-left:20px;"><input type="checkbox" class="tx-auth-all-chk"/>权限管理</label></td>
+        			<td>
+        				<!-- {foreach from=$auth_resources item=resource key=key name=resources_pro} -->
+        					{if $smarty.foreach.resources_pro.index eq 5}<br />{/if}
+        					{if $smarty.foreach.resources_pro.index eq 10}<br />{/if}
+        					{if $smarty.foreach.resources_pro.index eq 15}<br />{/if}
+        					{if $smarty.foreach.resources_pro.index eq 20}<br />{/if}
+        					{if $smarty.foreach.resources_pro.index eq 25}<br />{/if}
+			        		<label style="margin-left:20px;">
+			        			<input type="checkbox" class="tx-auth-chk tx-resource" value="{$resource.resourceId}" id="chk_{$resource.resourceId}"/>&nbsp;{$resource.resourceName}
+			        		</label>
+			        	<!--  {/foreach}	-->
+        			</td>
+        		</tr>
+        		<tr>
+        			<td width="20%"><label style="margin-left:20px;"><input type="checkbox" class="tx-auth-all-chk"/>营销管理</label></td>
+        			<td>
+        				<!-- {foreach from=$marketing_resources item=resource key=key name=resources_pro} -->
+        					{if $smarty.foreach.resources_pro.index eq 5}<br />{/if}
+        					{if $smarty.foreach.resources_pro.index eq 10}<br />{/if}
+        					{if $smarty.foreach.resources_pro.index eq 15}<br />{/if}
+        					{if $smarty.foreach.resources_pro.index eq 20}<br />{/if}
+        					{if $smarty.foreach.resources_pro.index eq 25}<br />{/if}
+			        		<label style="margin-left:20px;">
+			        			<input type="checkbox" class="tx-auth-chk tx-resource" value="{$resource.resourceId}" id="chk_{$resource.resourceId}"/>&nbsp;{$resource.resourceName}
+			        		</label>
+			        	<!--  {/foreach}	-->
+        			</td>
+        		</tr>
+        	</table>
+          </div>
+          
+		  <h3 class="page-header"></h3>
+		  <div class="template-btn">
+		  	<button type="button" class="btn btn-primary btn-sm tx-submit">保存</button><span class="tx-error-info" style="color:red;display:none;">请选择至少一个资源</span>
+		  </div>
+	
+      </div>
+      
+    </div>
+	<!-- 引入bash_js -->
+    {include file='/library/base_js.lbi'}
+  </body>
+  
+<script type="text/javascript">
+  $(document).ready(function(){
+	  $(".tx-member-all-chk").bind("click", checkAllMemberChk);
+	  $(".tx-auth-all-chk").bind("click", checkAllAuthChk);
+	  $(".tx-submit").bind("click", submit);
+	  
+	  initUserResource({$user_resource_ids});
+  });
+  
+  function initUserResource(userResourceIds) {
+	  $.each(userResourceIds, function(key, value){
+		  $("#chk_"+value).prop("checked", true);
+	  }) 
+  }
+  
+  var submit = function(event) {
+	  $(".tx-error-info").css("display", "none");
+	  $(".tx-submit").unbind("click");
+	  
+	  var checkedResourceIds = new Array();
+	  $.each($(".tx-resource"), function(){
+		  if ($(this).prop("checked")) {
+			  checkedResourceIds.push($(this).val());
+		  }
+	  });
+	  
+	  if (checkedResourceIds.length == 0) {
+		  $(".tx-submit").bind("click", submit);
+		  $(".tx-error-info").css("display", "block");
+		  return;
+	  }
+	  
+	  $.post(
+  			"{$context_path}/crm/v1/admin/ajax/user_resource/set",	
+      		{'user_id': {$user.userId}, 'resource_ids': checkedResourceIds.join(",")},
+      		function(data) {
+      			//console.log("data");
+      			if (data.code == 1) {
+      				window.location.href = "{$context_path}/crm/v1/admin/user/list";
+      			} else {
+      				alert(data.reason);
+      			}
+      			$(".tx-submit").bind("click", submit);
+      		},
+      		'JSON'
+      	);
+  };
+  
+   var checkAllMemberChk = function(event) {
+	  $currentTarget = $(event.currentTarget);
+	  var currentIsChecked = $currentTarget.prop("checked");
+	  if (currentIsChecked) {	//全选
+		  $(".tx-member-chk").prop("checked", true);
+	  } else {
+		  $(".tx-member-chk").prop("checked", false);
+	  }
+  };
+  
+  var checkAllAuthChk = function(event) {
+	  $currentTarget = $(event.currentTarget);
+	  var currentIsChecked = $currentTarget.prop("checked");
+	  if (currentIsChecked) {	//全选
+		  $(".tx-auth-chk").prop("checked", true);
+	  } else {
+		  $(".tx-auth-chk").prop("checked", false);
+	  }
+  };
+</script>
+</html>

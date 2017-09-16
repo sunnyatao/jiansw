@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+
+    <title>房屋契税录入</title>
+    {include file='/library/head_top.lbi'}
+    <link href="{$context_path}/styles/wjb/wjb-crm-css.css" rel="stylesheet">
+    <link href="{$context_path}/styles/bootstrap.3.3.7/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="{$context_path}/styles/member.css" rel="stylesheet">
+    <link href="{$context_path}/styles/jquery/jquery-ui.min.css" rel="stylesheet">
+    
+  </head>
+
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 会员管理左侧菜单 -->
+        {include file='/library/left.lbi'}
+        
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<h3 class="page-header">房屋契税信息录入  </h3>
+			<div class="mem-info">
+				<div class="mem-info-hd"><span class="tit">基本信息</span></div>
+				<form id='project_check_form' name='project_check_form' method="post" action="{$context_path}/housecontract/submit">
+				<div class="mem-info-bd">
+					<div class="line">
+						  <div class="item"><span class="tit">项目名称：</span>&nbsp;
+						  <span class="con"><input type="text" value="" id="project_name" name="project_name" style="margin-left: -4px"/></span></div>	                			
+						  <div class="item"><span class="tit">纳税人：</span>&nbsp;
+						  <span class="con"><input type="text" value="" id="name" name="name" style="margin-left: -4px"/></span></div>	                			
+						  <div class="item"><span class="tit">楼栋：</span>
+						  <span class="con"><input type="text" value="" id="floor_name" name="floor_name"/></span></div>
+						  <div class="item"><span class="tit">房号：</span>
+						  <span class="con"><input type="text" value="" id="serial_no" name="serial_no"/></span></div>
+						  <div class="item"><span class="tit">面积：</span>
+						  <span class="con"><input type="text" value="" id="area" name="area"/></span></div>
+						  <div class="item"><span class="tit">单价：</span>
+						  <span class="con"><input type="text" value="" id="unit_price" name="unit_price"/></span></div>
+						  <div class="item"><span class="tit">总价：</span>
+						  <span class="con"><input type="text" value="" readonly="readonly" id="total_price" name="total_price"/></span></div>
+						  <div class="item"><span class="tit">增值税税率：</span>
+						  	<select name='appreciation_rate' id='appreciation_rate' style="width: 77px">
+						  		<option value='0.05' selected="selected">5%</option>
+						  		<option value='0.1'>10%</option>
+						  	</select>
+						  </div>
+						  <div class="item"><span class="tit">契税税率：</span>
+						  	<select name='contract_tax_rate' id='contract_tax_rate' style="width: 77px">
+						  		<option value='0.01' selected="selected">1%</option>
+						  		<option value='0.015'>1.5%</option>
+						  		<option value='0.02'>2%</option>
+						  		<option value='0.04'>4%</option>
+						  	</select>
+						  </div>
+						  <div class="item"><span class="tit">契税税额：</span>
+						  <span class="con"><input type="text" value="" readonly="readonly" id="contract_tax" name="contract_tax"/></span></div>
+						  <div class="item"><span class="tit">印花税税率：</span>
+						  	<select name='stamp_duty_rate' id='stamp_duty_rate' style="width: 77px">
+						  		<option value='0.0005' selected="selected">0.05%</option>
+						  		<option value='0'>无</option>
+						  	</select>
+						  	<input readonly="readonly" type="text" value="" id="stamp_duty_amount" name= "stamp_duty_amount" class="input-amount-width"/>
+						  </div>
+						  <div class="item"><span class="tit">房屋类型：</span>
+						  	<select name='house_type' id='house_type' style="width: 77px">
+						  		<option value='住房' selected="selected">住房</option>
+						  		<option value='门面'>门面</option>
+						  		<option value='土地'>土地</option>
+						  		<option value='其它'>其它</option>
+						  	</select>
+						  </div>
+						  <div class="item"><span class="tit">身份证号：</span>
+						  <span class="con"><input type="text" value="" id="card_no" name= "card_no"/></span></div>
+						  <div class="item"><span class="tit">合同签订日期：</span>
+						  <span class="con"><input type="text" value="" id="contract_date" name="contract_date"/></span></div>
+						  <div class="item"><span class="tit">契税完税：</span>
+						  <span class="con"><input type="text" value="" id="contract_down" name="contract_down"/></span></div>
+						  <div class="item"><span class="tit">首付：</span>
+						  <span class="con"><input type="text" value="" id="first_payment_amount" name="first_payment_amount"/></span></div>
+						  <div class="item"><span class="tit">按揭：</span>
+						  <span class="con"><input type="text" value="" id="mortgage_amount" name= "mortgage_amount"/></span></div>
+					 </div>
+				</div>
+				<br/>
+				<button type="button" class="mem-save-btn btn btn-primary tx-save" onclick="saveHouseContract()" style="margin-left:17px">保存</button>
+				<button type="button" class="mem-save-btn btn btn-primary" onclick="toprint()" style="margin-left:17px">打印</button>
+				<input id="contract_house_id" name="contract_house_id" value="" type="hidden"/>
+			</form>
+            </div>
+		  	<!-- 引入bash_js -->
+    {include file='/library/base_js.lbi'}
+    <script src="{$context_path}/javascript/jquery-ui.min.js"></script>
+    <script src="{$context_path}/javascript/jquery.ui.datepicker-zh-CN.js"></script>
+    
+<script>
+$(function(){
+	$("#contract_date").datepicker({ dateFormat: 'yy-mm-dd'});
+});
+
+$(document).ready(function(){
+	$('#area').bind('change', priceChange);
+	$('#unit_price').bind('change', priceChange);
+	$('#contract_tax_rate').bind('change', priceChange);
+	$('#appreciation_rate').bind('change', priceChange);
+	$('#stamp_duty_rate').bind('change', priceChange);
+});
+
+var priceChange = function(event) {
+	var area = toFloat($('#area').val());
+	var unitPrice = toFloat($('#unit_price').val());
+	
+	//字段逻辑关系：面积*单价=总价；契税税额=（面积*单价）/（1+增值税税率）*契税税率
+	var totalAmount = String(area * unitPrice);
+	if (totalAmount == 0) {
+		return;
+	}
+	$('#total_price').val(totalAmount);
+	
+	//增值税税率
+	var appreciationRate = toFloat($('#appreciation_rate').val())
+	//契税税率
+	var contractTaxRate = $('#contract_tax_rate').val();
+	//契税税额
+	var contractTax = totalAmount/(1+appreciationRate) * contractTaxRate;
+	$('#contract_tax').val(toFloat(contractTax));
+	
+	//印花税税率
+	var stampDutyRate = $('#stamp_duty_rate').val();
+	var stampDutyAmount = totalAmount * stampDutyRate;
+	$('#stamp_duty_amount').val(stampDutyAmount);
+};
+
+function toFloat(num) {
+	return Math.round(num*100)/100;
+}
+
+function isfloat(oNum){
+	if (!oNum) 
+		return false;
+	var strP=/^\d+(\.\d+)?$/;
+	if (!strP.test(oNum)) return false;
+	try {
+		if(parseFloat(oNum)!=oNum)
+			return false;
+	} catch(ex) {
+		return false;
+	}
+	return true;
+}
+
+function toprint() {
+	if ($('#contract_house_id').val().trim() == '') {
+		alert('请先保存!');
+		return;
+	}
+	window.location.href = '{$context_path}' + "/housecontract/toprint?id="+$('#contract_house_id').val().trim();
+}
+
+function saveHouseContract() {
+	$('.tx-save').attr("disabled", "disabled");
+	//$('#project_check_form').submit();
+	
+	if ($('#contract_house_id').val() != '') {
+		return;
+	}
+	
+	$.post(
+			'{$context_path}' + "/housecontract/api/submit",	
+			{'name': $('#name').val(), 'floor_name':$('#floor_name').val(), 'serial_no':$('#serial_no').val(),
+				'area':$('#area').val(), 'unit_price':$('#unit_price').val(), 'total_price':$('#total_price').val(),
+				'contract_tax_rate':$('#contract_tax_rate').val(), 'contract_tax':$('#contract_tax').val(),
+				'card_no': $('#card_no').val(), 'contract_date': $('#contract_date').val(), 'contract_down': $('#contract_down').val(),
+				'first_payment_amount': $('#first_payment_amount').val(), 'mortgage_amount': $('#mortgage_amount').val(),
+				'operator_name': $('#operator_name').val(), 'project_name': $('#project_name').val(), 'appreciation_rate': $('#appreciation_rate').val(),
+				'stamp_duty_rate':$('#stamp_duty_rate').val(),
+				'stamp_duty_amount': $('#stamp_duty_amount').val(), 'house_type': $('#house_type').val()},
+			function(data) {
+    			if(data.code == 1){
+    				alert("保存成功!");
+    				$('#contract_house_id').val(data.msg_data.id);
+    				setReadOnly();
+    			}
+				else {
+					alert("保存失败, 服务异常!");
+					$('.tx-save').removeAttr("disabled");
+				}
+			},
+			'JSON');
+}
+
+function setReadOnly() {
+	$('input').attr('readonly', 'readonly');
+	$('select').attr('disabled', 'disabled');
+}
+</script>
+</body>
+</html>

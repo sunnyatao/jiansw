@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="{$context_path}/styles/bootstrap.3.3.7/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{$context_path}/styles/modal.css">
+    <title>导航管理</title>
+    {include file='/library/head_top.lbi'}
+  </head> 
+
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}
+	
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 会员管理左侧菜单 -->
+        {include file='/library/left.lbi'}
+         <!-- 新建导航start -->
+	    <div class="modal fade" id="myModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">新建导航</h4>
+		      </div>
+		      <div class="grid_item">
+				<label class="label-title">名称：</label>
+					<div class="tag-content">
+						<span class="tag-input"><input type="text" id="navName"  value="" maxlength="32" style="width:360px;"></span>
+						<label style='color:red' class="hidden tx-error-nav-name">请输入导航名称</label>
+					</div>
+			  </div>
+		      <div class="modal-body">
+		        <div class="row tx-navigation">
+		        </div>
+	        	{literal}
+	            <script type="text/html" id="navigationTemplate">
+				<div class="col-lg-4">
+					<div class="resources-list">
+						<input type="radio" class="check-member" value="${resourceId}"  name="resource">${resourceName}
+        			</div>
+				</div>
+		        </script>
+			    {/literal}
+			    <label style='color:red' class="hidden tx-error-nav-id">请选择资源</label>
+		      </div>
+		      <div class="modal-footer">
+		       	<button type="button" class="btn btn-primary"  id="saveNavigation" onclick="saveNavigation()">保存</button>
+		        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>      
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	<!-- 新建导航end -->
+	 <!-- 新建二级导航start -->
+	    <div class="modal fade" id="myModel1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">新建二级导航</h4>
+		      </div>
+		      <div class="grid_item">
+				<label class="label-title">名称：</label>
+					<div class="tag-content">
+						<span class="tag-input"><input type="text" id="navName1"  value="" maxlength="32" style="width:360px;"></span>
+						<label style='color:red' class="hidden tx-error-nav-name">请输入导航名称</label>
+					</div>
+			  </div>
+				<label>是否显示在左边栏：
+						是<input type="radio"   value="2" name="level"  checked="checked" ">
+						否<input type="radio"  value="3" name="level" >
+					
+			   </label>
+		      <div class="modal-body">
+		        <div class="row level-navigation">
+		        </div>
+	        	{literal}
+	            <script type="text/html" id="levelNavigationTemplate">
+				<div class="col-lg-4">
+					<div class="resources-list">
+						<input type="radio" class="check-member" value="${resourceId}"  name="resource1">${resourceName}
+        			</div>
+				</div>
+		        </script>
+			    {/literal}
+			    <label style='color:red' class="hidden tx-error-nav-id">请选择资源</label>
+		      </div>
+		      <div class="modal-footer">
+		       	<button type="button" class="btn btn-primary"  id="saveNavigation" onclick="saveNavigation1()">保存</button>
+		        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>      
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	<!-- 新建导航end -->
+	 <!-- 修改导航start -->
+	    <div class="modal fade" id="editNav" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">修改导航</h4>
+		      </div>
+		      <div class="grid_item">
+				<label class="label-title">名称：</label>
+					<div class="tag-content">
+						<span class="tag-input"><input type="text" id="navName2"  value="" maxlength="32" style="width:360px;"></span>
+						<label style='color:red' class="hidden tx-error-nav-name">请输入导航名称</label>
+					</div>
+			  </div>
+		      <div class="modal-body">
+		        <div class="row edit-navigation">
+		        </div>
+	        	{literal}
+	            <script type="text/html" id="editNavigationTemplate">
+					<div class="col-lg-4">
+					<div class="resources-list">
+						{{if $("#resourceId").val() == resourceId}}
+						<input type="radio" class="check-member" value="${resourceId}" checked="checked" name="resource">${resourceName}
+						{{else}} 
+						<input type="radio" class="check-member" value="${resourceId}" name="resource">${resourceName}
+						{{/if}}
+        			</div>
+					</div>
+		        </script>
+			    {/literal}
+			    <label style='color:red' class="hidden tx-error-nav-id">请选择资源</label>
+		      </div>
+		      <div class="modal-footer">
+		       	<button type="button" class="btn btn-primary"  id="saveNavigation" onclick="editNavigation()">保存</button>
+		        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>      
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	<!-- 修改end -->
+	<!-- 删除导航start -->
+	<div class="modal fade" id="deleteNav" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">删除导航</h4>
+	      </div>
+	      <div class="modal-body">
+	                              确定要将此导航删除么？
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" onclick="deleteNav()">确定</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h3 class="page-header" class="h-sm">导航管理</h3>
+           <h3 class="sub-header">
+	          <a href="#" data-toggle="modal" data-target="#myModel" data-whatever="" onclick="">
+	          	<button data-target="#myModal" data-toggle="modal"   class="btn btn-primary btn-sm" type="button" >创建一级导航</button>
+	          </a>
+          </h3>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>#</th>
+                  <th>名称</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="aa">
+                {foreach from=$navigationList item=navigation key=key}
+                <tr class="uplevel" data-level="master">
+                  <td width="20"><span class="glyphicon glyphicon-plus-sign navigationFold"></span></td>
+                  <td>{$navigation.navId}</td>
+                  <td>{$navigation.navName}</td>
+                  <td><a href="#" onclick="" data-target="#editNav" data-toggle="modal" data-whatever="{$navigation.navId},{$navigation.navName},{$navigation.resourceId}">修改</a> -- 
+                  <a href="#" onclick="" data-target="#deleteNav" data-toggle="modal"  data-whatever="{$navigation.navId}">删除</a>--
+                   <a href="#"  onclick="" data-target="#myModel1" data-toggle="modal"  data-whatever="{$navigation.navId},{$navigation.navLevel}">新增</a></td>
+                </tr>
+                {/foreach} 
+              </tbody>
+            </table>
+            <hr/>
+          </div>
+        </div>
+      </div>
+    </div>
+  <input type="hidden" id="resourceList" value="{$resourceList}">
+  <input type="hidden" id="navId" >
+   <input type="hidden" id="resourceId" >
+  <input type="hidden" id="navLevel" >
+	<!-- 引入bash_js -->
+{include file='/library/base_js.lbi'}
+<script type="text/javascript" src="{$context_path}/javascript/jquery.tmpl.min.js"></script>
+<script type="text/javascript">
+$('#myModel').on('shown.bs.modal', function (e) {
+	  var button = $(e.relatedTarget)
+	  var recipient = button.data('whatever') 
+ 	  var paramInfo = recipient.split(",");
+	  var navId = paramInfo[0]; 
+	  $("#navId").val(navId);
+	  var navLevel = paramInfo[1]; 
+	  $("#navLevel").val(navLevel);
+	  var resources= $("#resourceList").val();
+	  $.post(
+	 			'{$context_path}' + "/crm/v1/auth/resource/ajax/list",
+	     		function(data) {
+	     			if (data.code == 1) {
+	     				$(".tx-navigation").html("");
+	     				$('#navigationTemplate').tmpl(data.msg_data.resources).appendTo('.tx-navigation');
+	     			} else {
+	     				alert(data.reason);	
+	     			}
+	     		},
+	     		'JSON'
+	     	);
+})
+$('#myModel1').on('shown.bs.modal', function (e) {
+	  var button = $(e.relatedTarget)
+	  var recipient = button.data('whatever') 
+ 	  var paramInfo = recipient.split(",");
+	  var navId = paramInfo[0]; 
+	  $("#navId").val(navId);
+	  var navLevel = paramInfo[1]; 
+	  $("#navLevel").val(navLevel);
+	  var resources= $("#resourceList").val();
+	  $.post(
+	 			'{$context_path}' + "/crm/v1/auth/resource/ajax/list",
+	     		function(data) {
+	     			if (data.code == 1) {
+	     				$(".level-navigation").html("");
+	     				$('#levelNavigationTemplate').tmpl(data.msg_data.resources).appendTo('.level-navigation');
+	     			} else {
+	     				alert(data.reason);	
+	     			}
+	     		},
+	     		'JSON'
+	     	);
+})
+$('#deleteNav').on('shown.bs.modal', function (event) {
+	 var button = $(event.relatedTarget)
+	 var navId = button.data('whatever') 
+	 $("#navId").val(navId);	 
+})
+$('#editNav').on('shown.bs.modal', function (event) {
+	  var button = $(event.relatedTarget)
+	  var recipient = button.data('whatever') 
+ 	  var paramInfo = recipient.split(",");
+	  var navId = paramInfo[0];
+	  var navName = paramInfo[1];
+	  var resourceId = paramInfo[2];
+	 $("#navId").val(navId);
+	 $("#navName2").val(navName);
+	 $("#resourceId").val(resourceId);
+	 var resources= $("#resourceList").val();
+	 $.post(
+	 			'{$context_path}' + "/crm/v1/auth/resource/ajax/list",
+	     		function(data) {
+	     			if (data.code == 1) {
+	     				$(".edit-navigation").html("");
+	     				$('#editNavigationTemplate').tmpl(data.msg_data.resources).appendTo('.edit-navigation');
+	     			} else {
+	     				alert(data.reason);	
+	     			}
+	     		},
+	     		'JSON'
+	     	);
+})
+	function saveNavigation(){
+	var navName = $("#navName").val();
+	if (navName.trim() == '') {
+		$(".tx-error-nav-name").removeClass("hidden");
+		$(".tx-error-nav-name").show();
+		return;
+	}
+	var resourceId= $("input[name='resource']:checked").val();
+	if (resourceId == null) {
+		$(".tx-error-nav-id").removeClass("hidden");
+		$(".tx-error-nav-id").show();
+		return;
+	}
+	var parentId = $('#navId').val();
+	var navLevel = $('#navLevel').val();
+	$.post(
+			'{$context_path}' + "/crm/v1/navigation/ajax/save",
+    		 {'nav_name': navName, "resource_id": resourceId,'parent_id':parentId,'navLevel':navLevel},
+    		function(data) {
+    			if (data.code == 1) {
+    				$("#saveNavigation").attr('disabled',true);
+    				window.location.href = '{$context_path}'+"/crm/v1/navigation/list";
+    			} else {
+    				$("#saveNavigation").attr('disabled',false);
+    				alert(data.reason);	
+    			}
+    		},
+    		'JSON'
+    	);
+	}
+function saveNavigation1(){
+	var navName = $("#navName1").val();
+	if (navName.trim() == '') {
+		$(".tx-error-nav-name").removeClass("hidden");
+		$(".tx-error-nav-name").show();
+		return;
+	}
+	var resourceId= $("input[name='resource1']:checked").val();
+	if (resourceId == null) {
+		$(".tx-error-nav-id").removeClass("hidden");
+		$(".tx-error-nav-id").show();
+		return;
+	}
+	var parentId = $('#navId').val();
+	var navLevel = $("input[name='level']:checked").val();
+	$.post(
+			'{$context_path}' + "/crm/v1/navigation/ajax/save",
+    		 {'nav_name': navName, "resource_id": resourceId,'parent_id':parentId,'navLevel':navLevel},
+    		function(data) {
+    			if (data.code == 1) {
+    				$("#saveNavigation").attr('disabled',true);
+    				window.location.href = '{$context_path}'+"/crm/v1/navigation/list";
+    			} else {
+    				$("#saveNavigation").attr('disabled',false);
+    				alert(data.reason);	
+    			}
+    		},
+    		'JSON'
+    	);
+	}
+
+	function editNavigation(){
+	var navId = $("#navId").val();
+	var navName = $("#navName2").val();
+	if (navName.trim() == '') {
+		$(".tx-error-nav-name").removeClass("hidden");
+		$(".tx-error-nav-name").show();
+		return;
+	}
+	var resourceId= $("input[name='resource']:checked").val();
+	if (resourceId == null) {
+		$(".tx-error-nav-id").removeClass("hidden");
+		$(".tx-error-nav-id").show();
+		return;
+	}
+	$.post(
+			'{$context_path}' + "/crm/v1/navigation/ajax/edit",
+			 {'nav_name': navName, "resource_id": resourceId,"nav_id":navId},
+			function(data) {
+				if (data.code == 1) {
+					$("#saveNavigation").attr('disabled',true);
+					window.location.href = '{$context_path}'+"/crm/v1/navigation/list";
+				} else {
+					$("#saveNavigation").attr('disabled',false);
+					alert(data.reason);	
+				}
+			},
+			'JSON'
+		);
+	}
+  function deleteNav(){
+	  var navId = $('#navId').val();
+	  $.post(
+				'{$context_path}' + "/crm/v1/navigation/ajax/deleteNav",
+	    		 {'nav_id': navId},
+	    		 function(data) {
+	    			if (data.code == 1) {
+	    				window.location.href = '{$context_path}'+"/crm/v1/navigation/list";
+	    			} else {
+	    				alert(data.reason);	
+	    			}
+	    		},
+	    		'JSON'
+	    	);
+  }
+	$(document).on("click","#aa .navigationFold",function(){
+		var type = $(this).parents("tr.uplevel").attr("data-level"),
+		    level = '',
+		    icon = '',
+		    navId =  $(this).parent("td").next("td").text();
+		if(type == "master"){
+			level = 'subset';
+			icon = '<span class="glyphicon glyphicon-plus-sign navigationFold"></span>';
+		}else if(type == "subset"){
+			level = 'third';
+			icon = '';
+		}
+		var subCon = '';
+		var _this = $(this);
+		$.post(
+			'{$context_path}' + "/crm/v1/navigation/ajax/getNavListByParentId",
+    		 {'parent_id': navId},
+    		function(data) {
+    			if (data.code == 1) {
+    				if(_this.hasClass("glyphicon-plus-sign")){
+    					_this.removeClass("glyphicon-plus-sign").addClass("glyphicon glyphicon-minus-sign");
+    					subCon = '<tr><td colspan="4"><table style="margin-left:15px;width:100%;">';
+    					
+    					for(var i = 0; i<data.msg_data.navList.length; i++){
+	        		    	//console.log(data.msg_data.navList[i].navLevel);
+    						subCon += '<tr class="uplevel" data-level="'+ level +'">';
+	        		        subCon += '<td width="20">'+ icon +'</td>';
+	        		        subCon += '<td width="120">'+ data.msg_data.navList[i].navId +'</td>';
+	        		        subCon += '<td width="315">'+ data.msg_data.navList[i].navName +'</td>';
+	        		        if(data.msg_data.navList[i].navLevel != 3){
+		        		        subCon += '<td><a href="#"  data-target="#editNav" data-toggle="modal" data-whatever='+data.msg_data.navList[i].navId+','+data.msg_data.navList[i].navName+','+data.msg_data.navList[i].resourceId+'>修改</a> -- '+
+		        	                  '<a href="#" data-target="#deleteNav" data-toggle="modal"  data-whatever='+data.msg_data.navList[i].navId+'>删除</a>--'+
+		        	                  '<a href="#" data-target="#myModel" data-toggle="modal"  data-whatever='+data.msg_data.navList[i].navId+','+(data.msg_data.navList[i].navLevel+1)+'>新增</a></td>';
+		        		        subCon += ' </tr>';
+	        		        }else{
+	        		        	subCon += '<td><a href="#"  data-target="#editNav" data-toggle="modal" data-whatever='+data.msg_data.navList[i].navId+','+data.msg_data.navList[i].navName+','+data.msg_data.navList[i].resourceId+'>修改</a> -- '+
+	        	                  '<a href="#" data-target="#deleteNav" data-toggle="modal"  data-whatever='+data.msg_data.navList[i].navId+'>删除</a></td>';
+	        		            subCon += ' </tr>';
+	        		        }
+	    				}
+	    				subCon += '</table></td></tr>';
+	    				_this.parents("tr.uplevel").after(subCon);
+    				}else{
+    					_this.removeClass("glyphicon-minus-sign").addClass("glyphicon glyphicon-plus-sign");
+    					_this.parents("tr.uplevel").next("tr").remove();
+    				}
+    			} else {
+    				alert(data.reason);
+    			}
+    		},
+    		'JSON'
+	    );	
+	})
+</script>       
+  </body>
+</html>

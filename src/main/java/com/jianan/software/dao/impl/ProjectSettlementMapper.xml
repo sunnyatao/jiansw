@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jianan.software.dao.impl.projectSettlement">
+
+	<resultMap id="projectSettlement" type="com.jianan.software.pojo.ProjectSettlement">
+		<id column="id" property="id"/>
+		<id column="serial_num" property="serialNum"/>
+		<id column="taxpayer_identify_num" property="taxpayerIdentifyNum"/>
+		<id column="taxpayer_name" property="taxpayerName"/>
+		<id column="project_name" property="projectName"/>
+		<id column="project_address" property="projectAddress"/>
+		<id column="project_constructor" property="projectConstructor"/>
+		<id column="project_total_cost" property="projectTotalCost"/>
+		<id column="is_down" property="isDown"/>
+		<id column="settlement_amount" property="settlementAmount"/>
+		<id column="service_producer_card_no" property="serviceProducerCardNo"/>
+		<id column="service_producer_name" property="serviceProducerName"/>
+		<id column="cost_invoice_rate" property="costInvoiceRate"/>
+		<id column="obtain_invoice_num" property="obtainInvoiceNum"/>
+		<id column="obtain_invoice_amount" property="obtainInvoiceAmount"/>
+		<id column="withhold_department" property="withholdDepartment"/>
+		<id column="withhold_tax_amount" property="withholdTaxAmount"/>
+		<id column="appreciation_local_tax_amount" property="appreciationLocalTaxAmount"/>
+		<id column="refund_tax_amount" property="refundTaxAmount"/>
+		<id column="impose_department" property="imposeDepartment"/>
+		<id column="impose_department" property="imposeDepartment"/>
+		<id column="pay_tax_user" property="payTaxUser"/>
+		<id column="contacts_phone" property="contactsPhone"/>
+		<id column="operator_id" property="operatorId"/>
+		<id column="duty_user_id" property="dutyUserId"/>
+		<id column="attachment_path" property="attachmentPath"/>
+		<id column="is_deleted" property="isDeleted"/>
+		<id column="created_at" property="createdAt"/>
+		<id column="bureau_leader" property="bureauLeader"/>
+		<id column="operator_name" property="operatorName"/>
+		<id column="duty_user_name" property="dutyUserName"/>
+		<id column="tax_serial_no" property="taxSerialNo"/>
+		<id column="over_time" property="overTime"/>
+		<id column="c_dkje" property="cDkje"/>
+		<id column="c_zsje" property="cZsje"/>
+		<id column="economic_nature" property="economicNature"/>
+		
+		<collection property="checkFiles" column="id" ofType="int" select="getCheckFiles"></collection>
+		<collection property="invoiceInfo" column="id" ofType="int" select="getProjectCheckInvoiceInfoById"></collection>
+	</resultMap>
+	
+	<resultMap type="com.jianan.software.pojo.ProjectSettlementInvoiceInfo" id="projectSettlementInvoiceInfo">
+		<id column="id" property="id" />
+		<id column="project_settlement_id" property="projectCheckId" />
+		<id column="national_invoice_date" property="nationalInvoiceDate" />
+		<id column="national_invoice_no" property="nationalInvoiceNo" />
+		<id column="national_invoice_tax_no" property="nationalInvoiceTaxNo" />
+		<id column="local_invoice_date" property="localInvoiceDate" />
+		<id column="local_invoice_no" property="localInvoiceNo" />
+		<id column="local_invoice_tax_no" property="localInvoiceTaxNo" />
+	</resultMap>
+	
+	<resultMap type="com.jianan.software.pojo.ProjectCheckFile" id="projectCheckFile">
+		<id column="id" property="id"/>
+		<id column="check_id" property="checkId" />
+		<id column="file_name" property="fileName" />
+		<id column="name" property="name" />
+	</resultMap>
+	
+	<select id="getMaxTaxSerialNo" resultType="string">
+		SELECT tax_serial_no from t_project_settlement order by tax_serial_no desc limit 1;
+	</select>
+	
+	<select id="getCheckFiles" parameterType="int" resultMap="projectCheckFile">
+		select * from t_project_settlement_files where check_id=#{checkId};
+	</select>
+	
+	<select id="getMaxProjectSettlement" resultMap="projectSettlement">
+		<![CDATA[ 
+		SELECT * from t_project_settlement order by id desc limit 1;
+		]]>
+	</select>
+	
+	<select id="search" resultMap="projectSettlement" parameterType="string">
+		select * from t_project_settlement where is_deleted=0 and (taxpayer_name like CONCAT('%',#{keyword},'%') or project_name like CONCAT('%',#{keyword},'%')) order by id desc;
+	</select>
+	
+	<select id="getProjectSettlementCount" resultType="int">
+		SELECT count(*) from t_project_settlement where 1=1 and is_deleted=0 
+		<if test="taxpayerName != null">
+		and taxpayer_name like CONCAT('%',#{taxpayerName},'%')
+		</if> 
+	</select>
+
+	<select id="getProjectSettlements" resultMap="projectSettlement" parameterType="map">
+		SELECT * from t_project_settlement where 1=1 and is_deleted=0 
+		<if test="taxpayerName != null">
+		and taxpayer_name like CONCAT('%',#{taxpayerName},'%')
+		</if> 
+		order by id desc limit #{start}, #{pageSize};
+	</select>
+
+	<select id="getProjectSettlementBySerialNo" parameterType="string" resultMap="projectSettlement">
+		SELECT * from t_project_settlement where serial_num=#{serialNum} order by id desc limit 1
+	</select>
+
+	<select id="getProjectCheckByIdentifyNo" parameterType="string" resultMap="projectSettlement">
+		SELECT * from t_project_settlement where taxpayer_identify_num=#{taxpayerIdentifyNum} order by id desc limit 1
+	</select>
+
+	<select id="getProjectCheckByProjectname" parameterType="string" resultMap="projectSettlement">
+		SELECT * from t_project_settlement where project_name=#{projectname} order by id desc limit 1
+	</select>
+	<select id="getProjectCheckInvoiceInfoById" resultMap="projectSettlementInvoiceInfo">
+		SELECT * from t_project_settlement_invoice_info where project_settlement_id=#{checkId};
+	</select>
+	
+	<select id="zksearch" resultMap="projectSettlement" parameterType="map">
+		select DISTINCT tpc.* from t_project_settlement tpc, t_project_settlement_invoice_info tpcii where is_deleted=0
+		<if test="serialNum != null">
+		and tpc.serial_num = #{serialNum}
+		</if> 
+		<if test="projectName != null">
+		and tpc.project_name = #{projectName}
+		</if> 
+		<if test="taxpayerName != null">
+		and tpc.taxpayer_name = #{taxpayerName}
+		</if> 
+		<if test="projectConstructor != null">
+		and tpc.project_constructor = #{projectConstructor}
+		</if> 
+		<if test="nationalInvoiceNo != null">
+		and tpc.id=tpcii.project_check_id and tpcii.national_invoice_no = #{nationalInvoiceNo}
+		</if> 
+		<if test="nationalInvoiceTaxNo != null">
+		and tpc.id=tpcii.project_settlement_id and tpcii.national_invoice_tax_no = #{nationalInvoiceTaxNo}
+		</if> 
+		<if test="localInvoiceTaxNo != null">
+		and tpc.id=tpcii.project_settlement_id and tpcii.local_invoice_tax_no = #{localInvoiceTaxNo}
+		</if> 
+		<if test="taxStartTime != null">
+		and tpc.id=tpcii.project_settlement_id and tpcii.national_invoice_date BETWEEN #{taxStartTime} and #{taxEndTime}
+		</if> 
+		order by tpc.id desc limit #{start}, #{pageSize};
+	</select>
+	
+	<select id="sumSettlementAmount" parameterType="map" resultType="map">
+		select sum(project_total_cost) total_cost, sum(settlement_amount) total_settlement_amount,
+		sum(obtain_invoice_num) total_obtain_invoice_num, sum(obtain_invoice_amount) total_obtain_invoice_amount,
+		sum(withhold_tax_amount) total_withhold_tax_amount, sum(appreciation_local_tax_amount) total_appreciation_local_tax_amount,
+		sum(refund_tax_amount) total_refund_tax_amount from t_project_settlement tpc, t_project_settlement_invoice_info tpcii where is_deleted=0
+		<if test="serialNum != null">
+		and tpc.serial_num = #{serialNum}
+		</if> 
+		<if test="projectName != null">
+		and tpc.project_name = #{projectName}
+		</if> 
+		<if test="taxpayerName != null">
+		and tpc.taxpayer_name = #{taxpayerName}
+		</if> 
+		<if test="projectConstructor != null">
+		and tpc.project_constructor = #{projectConstructor}
+		</if> 
+		<if test="nationalInvoiceNo != null">
+		and tpc.id=tpcii.project_check_id and tpcii.national_invoice_no = #{nationalInvoiceNo}
+		</if> 
+		<if test="nationalInvoiceTaxNo != null">
+		and tpc.id=tpcii.project_settlement_id and tpcii.national_invoice_tax_no = #{nationalInvoiceTaxNo}
+		</if> 
+		<if test="localInvoiceTaxNo != null">
+		and tpc.id=tpcii.project_settlement_id and tpcii.local_invoice_tax_no = #{localInvoiceTaxNo}
+		</if> 
+		<if test="taxStartTime != null">
+		and tpc.id=tpcii.project_settlement_id and tpcii.national_invoice_date BETWEEN #{taxStartTime} and #{taxEndTime}
+		</if> 
+	</select>
+	
+	<select id="getInvoiceFiles" resultMap="projectCheckFile">
+		select * from t_project_check_invoice_files where check_id=#{invoiceId};
+	</select>
+	
+	<insert id="createProjectCheckInvoiceInfo" parameterType="com.jianan.software.pojo.ProjectSettlementInvoiceInfo">
+		insert into t_project_settlement_invoice_info(project_settlement_id, national_invoice_date, national_invoice_no, national_invoice_tax_no,
+		local_invoice_date, local_invoice_tax_no, nationnal_settlement, national_invoice_amount, local_invoice_amount) values(#{projectCheckId}, #{nationalInvoiceDate}, #{nationalInvoiceNo}, #{nationalInvoiceTaxNo},
+		#{localInvoiceDate}, #{localInvoiceTaxNo}, #{nationnalSettlement}, #{nationalInvoiceAmount}, #{localInvoiceAmount});
+	</insert>	 
+
+	<insert id="createProjectSettlement" parameterType="com.jianan.software.pojo.ProjectSettlement" useGeneratedKeys="true" keyProperty="id">
+		insert into t_project_settlement(serial_num, taxpayer_identify_num, taxpayer_name, project_name, project_address, project_constructor, 
+		project_total_cost, is_down, settlement_amount, service_producer_card_no, service_producer_name, cost_invoice_rate, obtain_invoice_num,
+		obtain_invoice_amount, withhold_department, withhold_tax_amount, appreciation_local_tax_amount, refund_tax_amount, impose_department,
+		pay_tax_user, contacts_phone, operator_id, duty_user_id, attachment_path, is_deleted, created_at, operator_name, duty_user_name, bureau_leader, 
+		over_time, c_dkje, c_zsje, economic_nature,old_serial_num, memo)
+		values(#{serialNum}, #{taxpayerIdentifyNum}, #{taxpayerName}, #{projectName}, #{projectAddress}, #{projectConstructor},		
+		#{projectTotalCost},#{isDown},#{settlementAmount}, #{serviceProducerCardNo}, #{serviceProducerName}, #{costInvoiceRate}, #{obtainInvoiceNum}, #{obtainInvoiceAmount},
+		#{withholdDepartment}, #{withholdTaxAmount}, #{appreciationLocalTaxAmount}, #{refundTaxAmount}, #{imposeDepartment}, #{payTaxUser}, #{contactsPhone}, 		
+		#{operatorId}, #{dutyUserId}, #{attachmentPath}, #{isDeleted}, #{createdAt}, #{operatorName}, #{dutyUserName}, #{bureauLeader}, 
+		#{overTime}, #{cDkje}, #{cZsje}, #{economicNature},#{oldSerialNum},#{memo});
+	</insert>
+	
+	<insert id="createProjectCheckFiles" parameterType="java.util.List">
+		insert into t_project_settlement_files(check_id, file_name, name) 
+		values
+		<foreach collection="list" item="item" index="index" separator="," >
+			(#{item.checkId}, #{item.fileName}, #{item.name})
+		</foreach>
+	</insert>
+	
+	<insert id="createInvoiceFiles" parameterType="java.util.List">
+		insert into t_project_settlement_invoice_files(check_id, file_name, name) 
+		values
+		<foreach collection="list" item="item" index="index" separator="," >
+			(#{item.checkId}, #{item.fileName}, #{item.name})
+		</foreach>
+	</insert>
+	
+	<update id="updateSettlement" parameterType="com.jianan.software.pojo.ProjectSettlement">
+		update t_project_settlement set taxpayer_name=#{taxpayerName}, project_name=#{projectName}, project_address=#{projectAddress}, project_constructor=#{projectConstructor},
+		project_total_cost=#{projectTotalCost}, is_down=#{isDown}, settlement_amount=#{settlementAmount}, service_producer_card_no=#{serviceProducerCardNo}, service_producer_name=#{serviceProducerName},
+		cost_invoice_rate=#{costInvoiceRate}, obtain_invoice_num=#{obtainInvoiceNum}, obtain_invoice_amount=#{obtainInvoiceAmount}, withhold_department=#{withholdDepartment},
+		withhold_tax_amount=#{withholdTaxAmount}, appreciation_local_tax_amount=#{appreciationLocalTaxAmount}, refund_tax_amount=#{refundTaxAmount}, impose_department=#{imposeDepartment}, 
+		pay_tax_user=#{payTaxUser}, contacts_phone=#{contactsPhone}, operator_name=#{operatorName}, duty_user_name=#{dutyUserName}, bureau_leader=#{bureauLeader},
+		over_time=#{overTime}, c_dkje=#{cDkje}, c_zsje=#{cZsje}, economic_nature=#{economicNature}
+		where serial_num=#{serialNum};
+	</update>
+	
+	<update id="delete" parameterType="string">
+		update t_project_settlement set is_deleted = 1 where serial_num=#{serialNum}
+	</update>
+	
+	<update id="updateTaxSerialNo" parameterType="map">
+		update t_project_settlement set tax_serial_no=#{serialNo} where id=#{id} 
+	</update>
+</mapper>
+

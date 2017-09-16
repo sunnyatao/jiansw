@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+
+    <title>权限异常</title>
+    {include file='/library/head_top.lbi'}
+    <link href="{$context_path}/styles/wjb/wjb-crm-css.css" rel="stylesheet">
+    <link href="{$context_path}/styles/bootstrap.3.3.7/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="{$context_path}/styles/member.css" rel="stylesheet">
+    
+    
+  </head>
+
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h3 class="page-header">
+		    <div class="">
+				 对不起,您没有操作该资源的权限,请联系管理员.
+			</div>
+          </h3>
+	      <!-- end 会员列表内容 -->
+	      
+      </div>
+    </div>
+	<!-- 引入bash_js -->
+    {include file='/library/base_js.lbi'}
+  </body>
+</html>

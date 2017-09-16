@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="{$context_path}/styles/modal.css">
+	<link rel="stylesheet" type="text/css" href="{$context_path}/styles/bootstrap.3.3.7/bootstrap.min.css">
+
+    <title>管理员列表</title>
+    {include file='/library/head_top.lbi'}
+    <link href="{$context_path}/styles/bootstrap.3.3.7/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="{$context_path}/styles/member.css" rel="stylesheet">
+  </head>
+
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}
+	<!--新增管理员 -->
+			<div class="modal-content">
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" id="guanbi" class="close btn-danger" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">添加管理员</h4>
+				      </div>
+				      <div class="modal-body">
+				        <tag class="tag horizontal">
+							<div class="grid_item">
+								<label class="label-title">账号：</label>
+								<div class="tag-content" style="padding-left:70px">
+									<span class="tag-input">
+									<input type="text" id="u_name" value="" maxlength="32" style="width:360px;"></span>
+									<label style='color:red' class="hidden tx-error-user-name">请输入账号</label>
+									<span class="msg msg-error" id="userNameHas">
+										<span >该账号已经存在</span>
+									</span>
+								</div>
+							</div>
+							<div class="grid_item">
+								<label class="label-title">密码：</label>
+								<div class="tag-content" style="padding-left:70px"> 
+									<span class="tag-input"><input type="password" id="password"  value="" maxlength="50" style="width:360px;"></span>
+									<label style='color:red' class="hidden tx-error-user-password">请输入密码</label>
+									<label style='color:red' class="hidden tx-error-password-length">请输入至少6位密码</label>
+								</div>
+							</div>
+							<div class="grid_item">
+								<label class="label-title">确认密码：</label>
+								<div class="tag-content">   <!--密码重复校验  -->
+									<span class="tag-input"><input type="password" id="passwordAgain"  value="" maxlength="50" style="width:360px;"></span>
+									<label style='color:red' class="hidden tx-error-user-passwordAgain">再次输入密码</label>
+									<label style='color:red' class="hidden tx-error-passwordAgain-length">两次密码输入不一致</label>
+								</div>
+							</div>
+							<div class="grid_item">
+								<label class="label-title">角色选择：</label>
+								<div class="tag-content">
+									<span class="tag-input">
+										<select name=roleNames id = "roles">
+											<option value="0">请选择角色...</option>';
+										</select> 
+									</span>
+									<label style='color:red' class="hidden tx-error-user-role">请选择角色</label>
+								</div>
+							</div>
+						</tag>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				        <button type="button" id="submitUser" class="btn btn-primary" onclick="saveUser()">确定</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</div>
+		<!--修改密码 -->
+		<div class="modal-content">
+			<div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" id="guanbi" class="close btn-danger" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+			      </div>
+			      <div class="modal-body">
+			        <tag class="tag horizontal">
+						<div class="grid_item">
+							<label class="label-title">账号：</label>
+							<div class="tag-content">
+								<span class="tag-input"><input type="text" id="editUserName"  value="" maxlength="32" style="width:360px;" readonly></span>
+							</div>
+						</div>
+						<div class="grid_item">
+							<label class="label-title">旧密码：</label>
+							<div class="tag-content">
+								<span class="tag-input"><input type="text" id="oldPassword"  value="" maxlength="50" style="width:360px;"></span>
+								<label style='color:red' class="hidden tx-error-user-oldPassword">请输入旧密码</label>
+								<label style='color:red' class="hidden tx-error-oldPpassword-length">请输入至少6位旧密码</label>
+							</div>
+						</div>
+						<div class="grid_item">
+							<label class="label-title">新密码：</label>
+							<div class="tag-content">
+								<span class="tag-input"><input type="text" id="newPassword"  value="" maxlength="50" style="width:360px;"></span>
+								<label style='color:red' class="hidden tx-error-user-newPassword">请输入新密码</label>
+								<label style='color:red' class="hidden tx-error-newPassword-length">请输入至少6位新密码</label>
+							</div>
+						</div>
+					</tag>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			        <button type="button" id="submitEditUser" class="btn btn-primary" onclick="editUser()">确定</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+		</div>
+		<!--使失效 -->
+		<div class="modal fade" id="disableStatus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">使账户失效</h4>
+		      </div>
+		      <div class="modal-body">
+		                              确定要将此账户设置为不可用状态么？
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary" onclick="setUserUnable()">确定</button>
+		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<div class="modal fade" id="enableStatus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">恢复账户状态</h4>
+		      </div>
+		      <div class="modal-body">
+		                              确定恢复此账户的状态么？
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary" onclick="setUserUnable()">确定</button>
+		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 会员管理左侧菜单 -->
+        {include file='/library/left.lbi'}
+       
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h3 class="page-header">管理员列表
+          </h3>
+	      <!-- end 会员列表内容 -->
+	      <h3 class="sub-header">
+          <a href="javascript:void(-1);" data-toggle="modal" data-target="#myModel" >
+          	<button data-target="#myModal" data-toggle="modal" class="btn btn-primary btn-sm" type="button" onclick="getRoles()">添加管理员</button>
+          </a>
+          </h3>
+	      <div class="table-responsive">
+		      <table class="table table-striped">
+	              <thead>
+	                <tr>
+	                  <th>管理员id</th>
+	                  <th>管理员账号</th>
+	                  <th>加入时间</th>
+	                  <th>最后登录时间</th>
+	                  <th>状态</th>
+	                  <th>操作</th>
+	                </tr>
+	              </thead>
+	              <tbody>
+	              	<!-- {foreach from=$userList item=userInfo key=key} -->
+	              	 <tr>
+	              	  <th>{$userInfo.userId}</th>
+	                  <th>{$userInfo.userName}</th>
+	                  <th>{$userInfo.createdOn|date_format:"%Y-%m-%d %H:%M:%S"}</th>
+	                  <th>{$userInfo.lastLoginTime|date_format:"%Y-%m-%d %H:%M:%S"}</th>
+	                  <th>
+	                  	<!-- {if $userInfo.status == 1} -->正常
+	                  	<!-- {else} -->失效
+	                  	<!-- {/if} -->
+	                  </th>
+	                  <th><a href="#" onclick="" data-target="#editUser" data-toggle="modal" data-whatever="{$userInfo.userId},{$userInfo.userName},{$userInfo.password}">修改密码</a>---
+	                  <!-- {if $userInfo.status == 1} --><a href="#" onclick="" data-target="#disableStatus" data-toggle="modal" data-whatever="{$userInfo.userId},2">使失效</a>
+	                  	<!-- {else} --><a href="#" onclick="" data-target="#enableStatus" data-toggle="modal" data-whatever="{$userInfo.userId},1">恢复正常</a>
+	                  	<!-- {/if} -->---
+	                  	<a href="#" data-toggle="modal" data-target="#dispatchNav" data-whatever="{$userInfo.userId}" data-ids="{$userInfo.navIds}">分配导航</a>---<a target="_blank" href="{$context_path}/crm/v1/admin/user/resource/list?user_id={$userInfo.userId}">分配权限</a></th>
+	                </tr>
+	              	<!-- {/foreach} -->
+	              </tbody>
+	           </table>
+        	</div>
+        	 {include file='/library/page.lbi'}
+      </div>
+    </div>
+    <input type="hidden" id="editUserId">
+    <input type="hidden" id="status">
+    <input type="hidden" id="navIds">
+    <!-- 分配导航con -->
+    <div class="modal fade" id="dispatchNav" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">分配导航</h4>
+	      </div>
+	      <div class="modal-body">
+	        <div class="row tx-navigation">
+	        </div>
+        	{literal}
+            <script type="text/html" id="navigationTemplate">
+				<div class="col-lg-4">
+					<div class="navigation-list">
+	        			<input type="hidden" value="${navId}">
+						{{if $("#navIds").val().indexOf(navId)!= -1}}
+						<input type="checkbox" class="check-member" id="${navId}" name="navIds" value="${navId}" checked="checked">
+						{{else}} 
+						<input type="checkbox" class="check-member" id="${navId}" name="navIds" value="${navId}">
+						{{/if}}
+						<label>${navName}</label>
+        			</div>
+				</div>
+		        </script>
+		    {/literal}
+	      </div>
+	      <div class="modal-footer">
+	       	<button type="button" class="btn btn-primary" onclick="saveNavigation()">保存</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>      
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<!-- 引入bash_js -->
+    {include file='/library/base_js.lbi'}
+     <script src="{$context_path}/javascript/md5.js"></script>
+     <script src="{$context_path}/javascript/common/page.js"></script>
+    <script type="text/javascript" src="{$context_path}/javascript/jquery.tmpl.min.js"></script>
+    <script type="text/javascript">
+    function saveUser(){
+    	var userName = $("#u_name").val();
+    	var password = $("#password").val();
+    	var roleId = $("#roles").find("option:selected").val();
+    	var passwordAgain = $("#passwordAgain").val();
+    	
+    	//console.log(userName);
+    	if (userName.trim() == '') {
+    		$(".tx-error-user-name").removeClass("hidden");
+    		$(".tx-error-user-name").show();
+    		return;
+    	}else {
+    		$(".tx-error-user-name").addClass("hidden");
+    	}
+    	if (password.trim() == '') {
+    		$(".tx-error-user-password").removeClass("hidden");
+    		$(".tx-error-user-password").show();
+    		return;
+    	}else {
+    		$(".tx-error-user-password").addClass("hidden");
+    	}
+    	if (password.length < 6) {
+    		$(".tx-error-password-length").removeClass("hidden");
+    		$(".tx-error-password-length").show();
+    		return;
+    	}else {
+    		$(".tx-error-password-length").addClass("hidden");
+    	}
+    	if (passwordAgain.trim() == '') {
+    		$(".tx-error-user-passwordAgain").removeClass("hidden");
+    		$(".tx-error-user-passwordAgain").show();
+    		return;
+    	}else {
+    		$(".tx-error-user-passwordAgain").addClass("hidden");
+    	}
+    	if(passwordAgain.trim()!= password.trim()) {
+    		$(".tx-error-passwordAgain-length").removeClass("hidden");
+    		$(".tx-error-passwordAgain-length").show();
+    		return;
+    	}else {
+    		$(".tx-error-passwordAgain-length").addClass("hidden");
+    	} 
+    	if(roleId == 0) {
+    		$(".tx-error-user-role").removeClass("hidden");
+    		$(".tx-error-user-role").show();
+    		return;
+    	}else {
+    		$(".tx-error-user-role").addClass("hidden");
+    	}
+    	$("#submitUser").attr('disabled',"true");
+    	$.post(
+    			'{$context_path}' + "/crm/v1/admin/ajax/save",
+        		{'user_name': userName, "password": hex_md5(password),"roleId":roleId},
+        		function(data) {
+        			if (data.code == 1) {
+        				window.location.href = '{$context_path}'+"/crm/v1/admin/user/list";
+        			} else {
+        				$("#submitUser").removeAttr('disabled');
+        				alert(data.reason);	
+        				$("#userName").val("");
+        			}
+        		},
+        		'JSON'
+        	);
+    }
+  //修改密码
+    $('#editUser').on('show.bs.modal',function(event){
+    	 var button = $(event.relatedTarget)
+    	 var recipient = button.data('whatever') 
+    	 var paramInfo= recipient.split(",");
+    	 //console.log(paramInfo);
+    	 $("#editUserId").val(paramInfo[0]);
+    	 $("#editUserName").val(paramInfo[1]);
+
+    })
+     $('#disableStatus').on('show.bs.modal',function(event){
+    	 var button = $(event.relatedTarget)
+    	 var recipient = button.data('whatever') 
+    	 var paramInfo= recipient.split(",");
+    	 $("#editUserId").val(paramInfo[0]);
+    	 $("#status").val(paramInfo[1]);
+    })
+     $('#enableStatus').on('show.bs.modal',function(event){
+    	 var button = $(event.relatedTarget)
+    	 var recipient = button.data('whatever') 
+    	 var paramInfo= recipient.split(",");
+    	 $("#editUserId").val(paramInfo[0]);
+    	 $("#status").val(paramInfo[1]);
+    })
+    function editUser(){
+    	var userId = $("#editUserId").val();
+    	var oldPassword = $("#oldPassword").val();
+    	var newPassword = $("#newPassword").val();
+    	if (oldPassword.trim() == '') {
+    		$(".tx-error-user-oldPassword").removeClass("hidden");
+    		$(".tx-error-user-oldPassword").show();
+    		return;
+    	}
+    	if (oldPassword.length < 6) {
+    		$(".tx-error-oldPpassword-length").removeClass("hidden");
+    		$(".tx-error-oldPpassword-length").show();
+    		return;
+    	}
+    	if (newPassword.trim() == '') {
+    		$(".tx-error-user-newPassword").removeClass("hidden");
+    		$(".tx-error-user-newPassword").show();
+    		return;
+    	}
+    	if (newPassword.length < 6) {
+    		$(".tx-error-newPassword-length").removeClass("hidden");
+    		$(".tx-error-newPassword-length").show();
+    		return;
+    	}
+    	$("#submitEditUser").attr('disabled',true);
+    	$.post(
+    			'{$context_path}' + "/crm/v1/admin/ajax/editPassword",
+        		{'user_id': userId, "old_password": hex_md5(oldPassword),"new_password":hex_md5(newPassword)},
+        		function(data) {
+        			if (data.code == 1) {
+        				window.location.href = '{$context_path}'+"/crm/v1/admin/user/list";
+        			} else {
+        				$("#submitEditUser").attr('disabled',false);
+        				alert(data.reason);
+        			}
+        		},
+        		'JSON'
+        	);
+   }
+  function setUserUnable(){
+	  var userId = $("#editUserId").val();
+	  var status =  $("#status").val();
+	  $.post(
+  			'{$context_path}' + "/crm/v1/admin/ajax/changeUserStatus",
+      		 {'user_id': userId, "status": status},
+      		function(data) {
+      			if (data.code == 1) {
+      				window.location.href = '{$context_path}'+"/crm/v1/admin/user/list";
+      			} else {
+      				alert(data.reason);
+      			}
+      		},
+      		'JSON'
+      	);
+  }
+  $('#dispatchNav').on('shown.bs.modal', function (e) {
+	  var button = $(e.relatedTarget)
+ 	  var editUserId= button.data('whatever')
+ 	  var paramInfo= button.data('ids')
+ 	  $("#editUserId").val(editUserId);
+ 	  $("#navIds").val(paramInfo);
+	  $.post(
+ 			'{$context_path}' + "/crm/v1/navigation/ajax/navigation/list",
+     		function(data) {
+     			if (data.code == 1) {
+     				$(".tx-navigation").html("");
+     				$('#navigationTemplate').tmpl(data.msg_data.navigations).appendTo('.tx-navigation');
+     			} else {
+     				alert(data.reason);	
+     			}
+     		},
+     		'JSON'
+     	);
+  })
+  function saveNavigation(){
+	  var userId =  $("#editUserId").val();
+	  var navIds = $("input:checkbox[name='navIds']:checked").map(function(index,elem) {
+			return $(elem).val();
+		}).get().join(',');
+	   $.post(
+	 			'{$context_path}' + "/crm/v1/admin/ajax/dispatchNavigation",
+	 			 {'user_id': userId, "navIds": navIds},
+	     		function(data) {
+	     			if (data.code == 1) {
+	     				window.location.href = '{$context_path}'+"/crm/v1/admin/user/list";
+	     			} else {
+	     				alert(data.reason);	
+	     			}
+	     		},
+	     		'JSON'
+	     	);
+  }
+  
+  function getRoles() {
+	  $.post(
+ 			'{$context_path}' + "/crm/v1/admin/getRoles",
+     		function(data) {
+     			if (data.code == 1) {
+	     			var roles = data.msg_data.crmAuthRoles;
+	     			for(var i = 0; i< roles.length; i++) {
+		     			var option = '<option value='+roles[i].roleId+'>'+roles[i].roleName+'</option>';
+		     			$("#roles").append(option);
+	     			}
+     			} else {
+     				//console.log(data.reason);	
+     			}
+     		},
+     		'JSON'
+     	);
+  }
+    </script>
+  </body>
+</html>

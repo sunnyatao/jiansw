@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+
+    <title>税票信息录入</title>
+    {include file='/library/head_top.lbi'}
+    <link href="{$context_path}/styles/wjb/wjb-crm-css.css" rel="stylesheet">
+    <link href="{$context_path}/styles/bootstrap.3.3.7/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="{$context_path}/styles/member.css" rel="stylesheet">
+    <link href="{$context_path}/styles/jquery/jquery-ui.min.css" rel="stylesheet">
+    
+    
+  </head>
+
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 会员管理左侧菜单 -->
+        {include file='/library/left.lbi'}
+        
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<h3 class="page-header">税票信息录入  </h3>
+			<div class="mem-info">
+				<div class="mem-info-hd"><span class="tit">基本工程信息</span></div>
+				<div class="mem-info-bd">
+					<div class="line">
+					<form id='project_check_form' name='project_check_form' method="post" action="{$context_path}/projectouterube/taxinfo/submit">
+						  {if $containsInvoiceInfo eq '0'}
+						  <div class="item"><span class="tit">国税开票日期：</span>&nbsp;
+						  <span class="con"><input type="text" value="" id="national_invoice_date" name= "national_invoice_date"/></span></div>
+						  <div class="item"><span class="tit">国税发票号码：</span>&nbsp;
+						  <span class="con"><input type="text" value="" id="national_invoice_no" name= "national_invoice_no"/></span></div>
+						  <div class="item"><span class="tit">国税税票号码：</span>&nbsp;
+						  <span class="con"><input type="text" value="" id="national_invoice_tax_no" name= "national_invoice_tax_no"/></span></div>
+						  <br/>
+						  <div class="item"><span class="tit">地税开票日期：</span>&nbsp;
+						  <span class="con"><input type="text" value="" id="local_invoice_date" name= "local_invoice_date"/></span></div>
+						  <div class="item"><span class="tit">地税税票号码：</span>&nbsp;
+						  <span class="con"><input type="text" value="" id="local_invoice_tax_no" name= "local_invoice_tax_no"/></span></div>
+						  {/if}
+						  {if $containsInvoiceInfo eq '1'}
+						  <div class="item"><span class="tit">国税开票日期：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$invoiceInfo.nationalInvoiceDate|date_format:'%Y-%m-%d'}" id="national_invoice_date" name= "national_invoice_date"/></span></div>
+						  <div class="item"><span class="tit">国税发票号码：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$invoiceInfo.nationalInvoiceNo}" id="national_invoice_no" name= "national_invoice_no"/></span></div>
+						  <div class="item"><span class="tit">国税税票号码：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$invoiceInfo.nationalInvoiceTaxNo}" id="national_invoice_tax_no" name= "national_invoice_tax_no"/></span></div>
+						  <br/>
+						  <div class="item"><span class="tit">地税开票日期：</span>&nbsp;
+						  <span class="con"><input type="text" value="{if $invoiceInfo.localInvoiceDate eq null}{else}{$invoiceInfo.localInvoiceDate|date_format:'%Y-%m-%d'}{/if}" id="local_invoice_date" name= "local_invoice_date"/></span></div>
+						  <div class="item"><span class="tit">地税税票号码：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$invoiceInfo.localInvoiceTaxNo}" id="local_invoice_tax_no" name= "local_invoice_tax_no"/></span></div>
+						  {/if}
+						  <div class="item"><span class="tit">编号：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$outertube.serialNum}" id="serial_num" name= "serial_num" readonly="readonly"/></span></div>	                			
+					 	  <div class="item"><span class="tit">预缴增值税比率：</span>
+						  	<select name='pre_appreciation_rate' disabled="disabled" id='pre_appreciation_rate' style="width:77px;margin-left: 4px">
+						  		<option value='0.02' {if $outertube.preAppreciationRate eq '0.02'}selected="selected"{/if}>2%</option>
+						  		<option value='0.03' {if $outertube.preAppreciationRate eq '0.03'}selected="selected"{/if}>3%</option>
+						  	</select>
+						  	<input readonly="readonly" type="text" value="{$outertube.preAppreciationTaxAmount}" id="pre_appreciation_tax_amount" name= "pre_appreciation_tax_amount" class="input-amount-width"/>
+						  </div>
+						  <div class="item"><span class="tit">预缴企业所得比率：</span>&nbsp;
+						  	<select name='pre_corporate_income_tax_rate' disabled="disabled" id='pre_corporate_income_tax_rate' style="width: 77px">
+						  		<option value='0.002' selected="selected">0.2%</option>
+						  	</select>
+						  	<input readonly="readonly" type="text" value="{$outertube.preCorporateIncomeTaxAmount}" id="pre_corporate_income_tax_amount" name="pre_corporate_income_tax_amount" class="input-amount-width"/>
+						  </div>
+						  <div class="item"><span class="tit">印花税：</span>
+						  	<input readonly="readonly" type="text" value="{$outertube.stampDutyAmount}" id="stamp_duty_amount" name= "stamp_duty_amount" style="margin-left: 4px"/>
+						  </div>
+						  <div class="item"><span class="tit">城建税率：</span>&nbsp;
+						  	<select name='urban_tax_rate' id='urban_tax_rate' style="width: 77px;" disabled="disabled">
+						  		<option value='0.05' {if $outertube.preCorporateIncomeTaxRate eq '0.05'}selected="selected"{/if}>5%</option>
+						  		<option value='0.1' {if $outertube.preCorporateIncomeTaxRate eq '0.1'}selected="selected"{/if}>10%</option>
+						  	</select>
+						  	<input readonly="readonly" type="text" value="{$outertube.preCorporateIncomeTaxAmount}" id="urban_tax_amount" name= "urban_tax_amount" class="input-amount-width"/>
+						  </div>
+						  <div class="item"><span class="tit">教育费附加：</span>
+						  <span class="con"><input readonly="readonly" type="text" value="{$outertube.educationAdditionAmount}" id="education_addition_amount" name= "education_addition_amount" style="margin-left: 4px"/></span></div>
+						  <div class="item"><span class="tit">地方教育费附加：</span>
+						  <span class="con"><input readonly="readonly" type="text" value="{$outertube.localEducationAdditionAmount}" id="local_education_addition_amount" name= "local_education_addition_amount" style="margin-left: 4px"/></span></div>
+						  <div class="item"><span class="tit">工会经费：</span>
+						  	<input readonly="readonly" type="text" value="{$outertube.laborUnionAmount}" id="labor_union_amount" name= "labor_union_amount" style="margin-left: 4px"/>
+						  </div>
+						  <div class="item"><span class="tit">水利建设专项收入：</span>
+						  	<input readonly="readonly" type="text" value="{$outertube.waterConstructAmount}" id="water_construct_amount" name= "water_construct_amount" style="margin-left: 4px"/>
+						  </div>
+						  {if $containsInvoiceInfo eq '1'}
+						  <div class="item"><span class="tit"><a href="{$context_path}/projectouterube/viewinvoicefile?serial_num={$outertube.serialNum}" target="_blank">相关附件</a></span>
+						  </div>
+						  {/if}
+					 </div>
+				</div>
+				<br/>
+            </div>
+            {if $containsInvoiceInfo eq '0'}
+				<button type="button" class="mem-save-btn btn btn-primary" onclick="saveProjectCheckTaxInfo()" style="margin-left:14px">保存</button>
+				<button type="button" class="mem-save-btn btn btn-primary" onclick="toprint(0)" style="margin-left:14px">打印</button>
+			{/if}
+			{if $containsInvoiceInfo eq '1'}
+				<button type="button" class="mem-save-btn btn btn-primary" onclick="toprint(1)" style="margin-left:14px">打印</button>
+				<button type="button" class="mem-save-btn btn btn-primary" onclick="toscan()" style="margin-left:14px">扫描</button>
+				<button type="button" class="mem-save-btn btn btn-primary" onclick="history.back()" style="margin-left:14px">返回</button>
+			{/if}
+			</form>
+		</div>
+	  </div>
+	</div>
+		  	<!-- 引入bash_js -->
+    {include file='/library/base_js.lbi'}
+    <script src="{$context_path}/javascript/jquery-ui.min.js"></script>
+    <script src="{$context_path}/javascript/jquery.ui.datepicker-zh-CN.js"></script>
+    
+<script>
+$(function(){
+	$( "#national_invoice_date" ).datepicker({ dateFormat: 'yy-mm-dd'});
+	$( "#local_invoice_date" ).datepicker({ dateFormat: 'yy-mm-dd'});
+});
+
+function toscan() {
+	window.location.href = "{$context_path}/projectouterube/toscan_invoice?serial_num={$outertube.serialNum}"
+}
+
+function toFloat(num) {
+	return Math.round(num*100)/100;
+}
+
+function isfloat(oNum){
+	if (!oNum) 
+		return false;
+	var strP=/^\d+(\.\d+)?$/;
+	if (!strP.test(oNum)) return false;
+	try {
+		if(parseFloat(oNum)!=oNum)
+			return false;
+	} catch(ex) {
+		return false;
+	}
+	return true;
+}
+
+function saveProjectCheckTaxInfo() {
+	national_invoice_date = $("#national_invoice_date").val();
+	national_invoice_no = $("#national_invoice_no").val();
+	national_invoice_tax_no = $("#national_invoice_tax_no").val();
+	if (national_invoice_date == "") {
+		alert("国税开票日期不能为空");
+		return;
+	}
+	if (national_invoice_no == "") {
+		alert("国税发票号不能为空");
+		return;
+	}
+	if (national_invoice_tax_no == "") {
+		alert("国税税票号不能为空");
+		return;
+	}
+	
+	local_invoice_date = $("#local_invoice_date").val();
+	local_invoice_tax_no = $("#local_invoice_tax_no").val();
+	if (national_invoice_date == "") {
+		alert("地税开票日期不能为空");
+		return;
+	}
+	if (local_invoice_tax_no == "") {
+		alert("地税税票号不能为空");
+		return;
+	}
+	$('#project_check_form').submit();
+}
+
+function validate() {
+	national_invoice_date = $("#national_invoice_date").val();
+	national_invoice_no = $("#national_invoice_no").val();
+	national_invoice_tax_no = $("#national_invoice_tax_no").val();
+	if (national_invoice_date == "") {
+		alert("国税开票日期不能为空");
+		return false;
+	}
+	if (national_invoice_no == "") {
+		alert("国税发票号不能为空");
+		return false;
+	}
+	if (national_invoice_tax_no == "") {
+		alert("国税税票号不能为空");
+		return false;
+	}
+	
+	local_invoice_date = $("#local_invoice_date").val();
+	local_invoice_tax_no = $("#local_invoice_tax_no").val();
+	if (national_invoice_date == "") {
+		alert("地税开票日期不能为空");
+		return false;
+	}
+	if (local_invoice_tax_no == "") {
+		alert("地税税票号不能为空");
+		return false;
+	}
+	return true;
+}
+
+function toprint(label) {
+	if (label == 1) {
+		//直接打印
+		window.location.href = '{$context_path}' + "/projectouterube/bills/toprint?serial_num={$outertube.serialNum}";
+		return;
+	}
+	
+	if (label == 0) {
+		if (!validate()) {
+			return;
+		}
+		
+		$.post(
+				'{$context_path}' + "/projectouterube/api/taxinfo/submit",	
+				{'serial_num':$('#serial_num').val(),
+					'national_invoice_date': $('#national_invoice_date').val(), 
+					'national_invoice_tax_no': $('#national_invoice_tax_no').val(), 
+					'national_invoice_no': $('#national_invoice_no').val(), 
+					'local_invoice_date': $('#local_invoice_date').val(), 
+					'local_invoice_tax_no': $('#local_invoice_tax_no').val()},
+	    		function(data) {
+	    			if(data.code == 1){
+	    				window.location.href = '{$context_path}' + "/projectouterube/bills/toprint?serial_num={$outertube.serialNum}";
+	    			} else {
+	    				alert("保存失败 !");
+	    			}
+	    		},
+				'JSON');
+	}
+}
+</script>
+</body>
+</html>

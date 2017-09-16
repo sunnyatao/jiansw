@@ -1,0 +1,40 @@
+ <!-- start page -->
+<nav aria-label="Page navigation" class="text-center">
+  <ul class="pagination tx-ul">
+    <li class="tx-pre-page">	<!-- class: disabled -->
+      <a href="#" aria-label="Previous" class="tx-pre-click-event">
+        <span aria-hidden="true">上一页</span>
+      </a>
+    </li>		
+    <li class="tx-next-page">
+      <a href="#" aria-label="Next" class="tx-next-click-event">
+        <span aria-hidden="true">下一页</span>
+      </a>
+    </li>
+    <li class="info"><span>共{$page.totalPage}页, {$page.totalCount}条记录</span></li>
+    <li class="info"><span>去第<input type="text" style="width:50px; height: 20px" value="" class="page-num tx-page-onkeydown">页</span></li>
+  </ul>
+</nav>
+ <!-- end page -->
+ 
+<script language="javascript">
+	    var totalPage = {$page.totalPage};
+		var currentPage = {$page.currentPage};
+		var next = {$page.next};
+		var pre = {$page.pre};
+		
+		var urlParams = window.location.href.split("?");
+		var url = urlParams[0] + "?";
+		if (urlParams.length > 1) {
+			var param = urlParams[1];		//page=2&status=1
+			var params = param.split('&');
+			for (var i = 0; i < params.length; i++) {
+				if (params[i].indexOf('page=') > -1) {
+					continue;
+				}
+				url += params[i] + "&"
+			}
+		}
+		
+		var tagetUrl =  url;
+</script>

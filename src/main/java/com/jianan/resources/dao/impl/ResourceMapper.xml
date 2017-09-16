@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lepu.hst.crm.web.resources.dao">
+	<resultMap id="resourceMap" type="com.jianan.software.pojo.CrmAuthResource">
+		<id column="resource_id" property="resourceId"></id>
+		<result column="resource_name" property="resourceName"/>
+		<result column="resource_type" property="resourceType"/>
+		<result column="resource_path" property="resourcePath"/>
+		<result column="resource_desc" property="resourceDesc"/>
+		<result column="created_on" property="createdOn"/>
+	</resultMap>
+	<select id = "getResourceList" resultMap="resourceMap" parameterType="com.jianan.software.util.Page" >
+		select * from auth_resource order by resource_id desc limit ${start}, ${pageSize};
+	</select>
+	<select id="getAllResource" resultMap="resourceMap">
+		select * from auth_resource
+	</select>
+	<select id="getResourceById" parameterType= "int" resultMap="resourceMap">
+		select * from auth_resource where resource_id = #{resourceId}
+	</select>
+	<select id="getResourceCount" resultType="int">
+		select count(*) from auth_resource 
+	</select>
+	<insert id="createResource" parameterType="com.jianan.software.pojo.CrmAuthResource">
+		insert into auth_resource (resource_name,resource_path,resource_desc,resource_type,created_on) values (#{resourceName},#{resourcePath},#{resourceDesc},#{resourceType},#{createdOn})
+	</insert>
+	<update id="updateResource" parameterType="com.jianan.software.pojo.CrmAuthResource">
+		update auth_resource set resource_name=#{resourceName},resource_path=#{resourcePath},resource_desc=#{resourceDesc},resource_type=#{resourceType},created_on=#{createdOn} where resource_id=#{resourceId}
+	</update>
+	<delete id="deleteResource" parameterType="string">
+		delete from auth_resource where resource_id = #{resourceId}
+	</delete>
+	<delete id="deleteNavigationByResourceId" parameterType="string">
+		delete from auth_navigation where resource_id = #{resourceId}
+	</delete>
+	<delete id="deleteUserResourceByResourceId" parameterType="string">
+		delete from auth_user_resource where resource_id = #{resourceId}
+	</delete>
+	<delete id="deleteRoleResourceByResourceId" parameterType="string">
+		delete from auth_role_resource where resource_id = #{resourceId}
+	</delete>
+	
+	<delete id="removeUserResources" parameterType="int">
+		delete from auth_user_resource where user_id=#{userId};
+	</delete>
+	
+	<insert id="insertUserResources" parameterType="java.util.List">
+		insert into auth_user_resource(user_id, resource_id, created_on, created_by) values
+		<foreach collection="list" item="userResource" separator="," >
+			(#{userResource.userId}, #{userResource.resourceId}, now(), #{userResource.createdBy})
+		</foreach>
+	</insert>
+	
+</mapper>

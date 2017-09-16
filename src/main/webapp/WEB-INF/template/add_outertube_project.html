@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+
+    <title>外管工程录入</title>
+    {include file='/library/head_top.lbi'}
+    <link href="{$context_path}/styles/wjb/wjb-crm-css.css" rel="stylesheet">
+    <link href="{$context_path}/styles/bootstrap.3.3.7/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="{$context_path}/styles/member.css" rel="stylesheet">
+    
+    
+  </head>
+
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 会员管理左侧菜单 -->
+        {include file='/library/left.lbi'}
+        
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<div class="mem-info">
+				<form id='project_check_form' name='project_check_form' method="post" action="{$context_path}/projectouterube/submit">
+				<div class="mem-info-bd">
+					<div class="line">
+						  <div class="item"><span class="tit">编号：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$nextSerialNo}" style="margin-left: -4px" id="serial_num" name= "serial_num" readonly="readonly"/></span></div>	                			
+						  <div class="item"><span class="tit">纳税人识别号：</span>
+						  <span class="con"><input type="text" value="" id="taxpayer_identify_num" name= "taxpayer_identify_num"/></span></div>
+						  <div class="item"><span class="tit">纳税人名称：</span>
+						  <span class="con"><input type="text" value="" id="taxpayer_name" name= "taxpayer_name"/></span></div>
+						  <div class="item"><span class="tit">工程项目名称：</span>
+						  <span class="con"><input type="text" value="" id="project_name" name= "project_name"/></span></div>
+						  <div class="item"><span class="tit">工程项目地址：</span>
+						  <span class="con"><input type="text" value="新晃侗族自治县" id="project_address" name= "project_address"/></span></div>
+						  <div class="item"><span class="tit">工程发包方：</span>
+						  <span class="con"><input type="text" value="" id="project_constructor" name= "project_constructor"/></span></div>
+						  <div class="item"><span class="tit">发包方纳税人识别号：</span>
+						  <span class="con"><input type="text" value="" id="constructor_identify_num" name= "constructor_identify_num"/></span></div>
+						  <div class="item"><span class="tit">工程总造价：</span>
+						  <span class="con"><input type="text" value="" id="project_total_cost" name= "project_total_cost"/></span></div>
+					 	  <div class="item"><span class="tit">是否完工：</span>
+						  <select name='is_down' id='is_down' style="width:77px;">
+						  		<option value='完工' selected="selected">完工</option>
+						  		<option value='进度款'>进度款</option>
+						  </select></div>
+					 	  <div class="item"><span class="tit">本次结算金额：</span>&nbsp;
+						  <span class="con"><input type="text" value="" style="margin-left: -4px" id="settlement_amount" name= "settlement_amount"/></span></div>
+						  <div class="item"><span class="tit">预缴增值税比率：</span>
+						  	<select name='pre_appreciation_rate' style="width:77px;" id='pre_appreciation_rate'>
+						  		<option value='0.02' selected="selected">2%</option>
+						  		<option value='0.03'>3%</option>
+						  	</select>
+						  	<input readonly="readonly" type="text" value="" id="pre_appreciation_tax_amount" name= "pre_appreciation_tax_amount" class="input-amount-width"/>
+						  </div>
+						  <div class="item"><span class="tit">纳税人类型：</span>
+						  	<select name='pay_tax_user_type' id='pay_tax_user_type'>
+						  		<option value='一般纳税人' selected="selected" id='pay_tax_user_type_a'>一般纳税人</option>
+						  		<option value='小规纳税人' id='pay_tax_user_type_b'>小规纳税人</option>
+						  	</select>
+						  </div>
+						  <div class="item"><span class="tit">计税方式：</span>
+						  	<select name='tax_type' id='tax_type'>
+						  		<option value='一般计税方法' selected="selected">一般计税方法</option>
+						  		<option value='老项目工程'>老项目工程</option>
+						  		<option value='清包工工程'>清包工工程</option>
+						  		<option value='甲供材工程'>甲供材工程</option>
+						  	</select>
+						  </div>
+						  <div class="item"><span class="tit">预缴企业所得比率：</span>&nbsp;
+						  	<select name='pre_corporate_income_tax_rate' style="margin-left: -4px; width: 77px" id='pre_corporate_income_tax_rate'>
+						  		<option value='0.002' selected="selected">0.2%</option>
+						  	</select>
+						  	<input readonly="readonly" type="text" value="" id="pre_corporate_income_tax_amount" name="pre_corporate_income_tax_amount" class="input-amount-width"/>
+						  </div>
+					 	  <div class="item"><span class="tit">所得税归属：</span>
+						  	<select name='income_affiliation' id='income_affiliation' style="width: 109px">
+						  		<option value='地税' selected="selected">地税</option>
+						  		<option value='国税'>国税</option>
+						  	</select>
+						  </div>
+						  <div class="item"><span class="tit">城建税率：</span>&nbsp;
+						  	<select name='urban_tax_rate' id='urban_tax_rate' style="margin-left: -4px; width: 77px">
+						  		<option value='0.05' selected="selected">5%</option>
+						  		<option value='0.1'>10%</option>
+						  	</select>
+						  	<input readonly="readonly" type="text" value="" id="urban_tax_amount" name= "urban_tax_amount" class="input-amount-width"/>
+						  </div>
+					 	  <div class="item"><span class="tit">教育费附加：</span>
+						  <span class="con"><input readonly="readonly" type="text" value="" id="education_addition_amount" name= "education_addition_amount"/></span></div>
+					 	  <div class="item"><span class="tit">地方教育费附加：</span>
+						  <span class="con"><input readonly="readonly" type="text" value="" id="local_education_addition_amount" name= "local_education_addition_amount"/></span></div>
+						  <div class="item"><span class="tit">印花税：</span>
+						  	<select name='stamp_duty_rate' id='stamp_duty_rate' style="display:none">
+						  		<option value='0.003'>3‰</option>
+						  	</select>
+						  	<input readonly="readonly" type="text" value="" id="stamp_duty_amount" name= "stamp_duty_amount"/>
+						  </div>
+					 	  <div class="item"><span class="tit">工会经费：</span>
+						  	<input readonly="readonly" type="text" value="" id="labor_union_amount" name= "labor_union_amount"/>
+						  </div>
+					 	  <div class="item"><span class="tit">水利建设专项收入：</span>
+						  	<input readonly="readonly" type="text" value="" id="water_construct_amount" name= "water_construct_amount"/>
+						  </div>
+						  <div class="item"><span class="tit">是否开票：</span>
+						  	<select name='is_invoiced' id='is_invoiced' style="width: 77px">
+						  		<option value='0' selected="selected" id='is_invoiced_no'>否</option>
+						  		<option value='1' disabled="disabled" id='is_invoiced_yes_1'>增值税普通发票</option>
+						  		<option value='2' disabled="disabled" id='is_invoiced_yes_2'>增值税专用发票</option>
+						  	</select>
+						  </div>
+					 	  <div class="item"><span class="tit">纳税经办人：</span>&nbsp;
+						  <span class="con"><input type="text" value="" id="pay_tax_user" name= "pay_tax_user" style="margin-left: -4px"/></span></div>
+					 	  <div class="item"><span class="tit">联系电话：</span>
+						  <span class="con"><input type="text" value="" id="contacts_phone" name= "contacts_phone"/></span></div>
+					 	  <div class="item"><span class="tit">经办人：</span>
+						  <span class="con"><input type="text" value="{$operatorName}" id="operator_name" name= "operator_name"/></span></div>
+					 	  <div class="item"><span class="tit">负责人：</span>
+						  <select name='duty_user_name' id='duty_user_name' style="width: 77px">
+						  		<!-- {foreach from=$dutyUsers item=dutyUser key=key} -->
+						  		<option value='{$dutyUser.name}'>{$dutyUser.name}</option>
+						  		<!-- {/foreach} -->      
+						  </select>
+					 	  </div>
+					 </div>
+				</div>
+				<input type="hidden" name='submit_next_type' id='submit_next_type' value='0'/>
+				<br/>				
+				<button type="button" class="mem-save-btn btn btn-primary tx-save" onclick="saveProjectCheck(0)" style="margin-left:17px">保存</button>
+				<button type="button" class="mem-save-btn btn btn-primary tx-save" onclick="saveProjectCheck(1)" style="margin-left:17px">打印</button>
+				<button type="button" class="mem-save-btn btn btn-primary tx-save" onclick="nextProjectCheck()" style="margin-left:17px">下一工程</button>
+			</form>
+            </div>
+		  	<!-- 引入bash_js -->
+    {include file='/library/base_js.lbi'}
+    <script src="{$context_path}/javascript/bootstrap.3.3.7/bootstrap-datetimepicker.min.js"></script>
+    <script src="{$context_path}/javascript/bootstrap.3.3.7/bootstrap-datetimepicker.zh-CN.js"></script>
+    
+<script>
+$(document).ready(function(){
+   $('#project_total_cost').bind('change', totalCostOnchange);
+   $('#taxpayer_name').bind('change', taxpayerOnchange);
+   $('#settlement_amount').bind('change', settlementAmountOnchange);
+   $('#pre_appreciation_rate').bind('change', appreciationRateOnchange);
+   $('#urban_tax_rate').bind('change', urbanTaxRateOnchange);
+   $('#taxpayer_identify_num').bind('change', taxpayerIdentifyNumOnchange);
+   $('#project_name').bind('change', projectNameOnchange);
+   $('#pay_tax_user_type').bind('change', taxUserTypeOnchange);
+});
+
+taxUserTypeOnchange = function(event) {
+	taxUserTypeVal = $('#pay_tax_user_type').val();
+	if (taxUserTypeVal == '小规纳税人') {
+		$('#is_invoiced_yes_1').removeAttr("disabled");
+		$('#is_invoiced_yes_2').removeAttr("disabled");
+	} else {
+		$('#is_invoiced_yes_1').attr('disabled', 'disabled');
+		$('#is_invoiced_yes_2').attr('disabled', 'disabled');
+		$('#is_invoiced_no').attr('selected', 'selected');
+	}
+};
+
+projectNameOnchange = function(event) {
+	projectName = $('#project_name').val();
+	$.post(
+			'{$context_path}' + "/projectouterube/api/get_by/projectname",	
+    		 {'project_name': projectName},
+    		function(data) {
+    			if(data.code == 1){
+    				var msgData = data.msg_data;
+    				var taxpayerIdentifyNum = msgData.taxpayer_identify_num;
+    				var taxpayerName = msgData.taxpayer_name;
+    				var projectConstructor = msgData.project_constructor;
+    				var constructorIdentifyNum = msgData.constructor_identify_num;
+    				var contactsPhone = msgData.contacts_phone;
+    				var projectTotalCost = msgData.project_total_cost;
+    				var incomeAffiliation = msgData.income_affiliation;
+    				var isDown = msgData.is_down;
+    				var payTaxUser = msgData.pay_tax_user;
+    				var taxpayerName = msgData.taxpayer_name;
+    				var payTaxUserType = msgData.pay_tax_user_type;
+    				$('#taxpayer_identify_num').val(taxpayerIdentifyNum);
+    				$('#taxpayer_name').val(taxpayerName);
+    				$('#project_constructor').val(projectConstructor);
+    				$('#contacts_phone').val(contactsPhone);
+    				$('#pay_tax_user').val(taxpayerName);
+    				$('#constructor_identify_num').val(constructorIdentifyNum);
+    				
+    				$('#project_total_cost').val(projectTotalCost);
+    				//$('#settlement_amount').val(projectTotalCost);
+    				//changeAmounts(projectTotalCost);
+    				
+    				if (isDown == false) {
+    					$('#is_down_n').attr('checked','true');
+    				} else {
+    					$('#is_down_y').attr('checked','true');
+    				}
+    				
+    				if (payTaxUserType == '一般纳税人') {
+    					$('#pay_tax_user_type_a').attr('selected', 'selected');
+    				} else if (payTaxUserType == '小规纳税人') {
+    					$('#pay_tax_user_type_b').attr('selected', 'selected');
+    				}
+    			}
+    		},
+    		'JSON'
+    	);  
+};
+
+taxpayerIdentifyNumOnchange = function(event) {
+	taxpayerIdentifyNum = $('#taxpayer_identify_num').val();
+	$.post(
+			'{$context_path}' + "/projectouterube/api/get_by/identifynum",	
+    		 {'taxpayer_identify_num': taxpayerIdentifyNum},
+    		function(data) {
+    			if(data.code == 1){
+    				var msgData = data.msg_data;
+    				var contactsPhone = msgData.contacts_phone;
+    				var payTaxUser = msgData.pay_tax_user;
+    				var taxpayerName = msgData.taxpayer_name;
+    				$('#contacts_phone').val(contactsPhone);
+    				$('#pay_tax_user').val(payTaxUser);
+    				$('#taxpayer_name').val(taxpayerName);
+    			}
+    		},
+    		'JSON'
+    	);  
+};
+
+taxpayerOnchange = function(event) {
+	var taxpayerName = $('#taxpayer_name').val();
+	$("#pay_tax_user").val(taxpayerName);
+	$('#taxpayer_name').unbind('change');
+};
+
+//城建税率修改
+urbanTaxRateOnchange = function(event) {
+	//城建税率
+	var urbanTaxRate = parseFloat($('#urban_tax_rate').val());
+	appreciationTaxAmount = toFloat($('#pre_appreciation_tax_amount').val());
+	$('#urban_tax_amount').val(toFloat(appreciationTaxAmount*urbanTaxRate));
+};
+
+//总造价修改
+totalCostOnchange = function(event) {
+	var totalCost = $('#project_total_cost').val();
+	if (!isfloat(totalCost)) {
+		alert("请输入金额");
+		return;
+	}
+	
+	var settlementAmount = totalCost;
+	$('#settlement_amount').val(totalCost);
+	
+	changeAmounts(settlementAmount);	
+	
+	$('#project_total_cost').unbind('change');
+};
+
+//修改开票金额
+settlementAmountOnchange = function(event) {
+	var settlementAmount = $('#settlement_amount').val();
+	
+	//判断开票金额
+	if (!isfloat(settlementAmount)) {
+		alert('请输入正确的开票金额.');
+		return;
+	}
+	changeAmounts(settlementAmount);	
+};
+
+function toFloat(num) {
+	return Math.round(num*100)/100;
+}
+
+appreciationRateOnchange = function(event) {
+	//开票金额
+	var settlementAmount = $('#settlement_amount').val();
+	changeAmounts(settlementAmount);
+};
+
+function changeAmounts(settlementAmount) {
+	//预缴增值税比率
+	var preAppreciationRate = parseFloat($('#pre_appreciation_rate').val());
+	var preAppreciationTaxAmount = 0;
+	if (preAppreciationRate == 0.02) {
+		preAppreciationTaxAmount = settlementAmount/(1+0.11)*preAppreciationRate;
+	} else {
+		preAppreciationTaxAmount = settlementAmount/(1+preAppreciationRate)*preAppreciationRate;
+	}
+	$('#pre_appreciation_tax_amount').val(toFloat(preAppreciationTaxAmount));
+	
+	//预缴企业所得比率
+	var preCorporateIncomeTaxRate = parseFloat($('#pre_corporate_income_tax_rate').val())
+	var preCorporateIncomeTaxAmount = 0;
+	if (preAppreciationRate == 0.02) {
+		preCorporateIncomeTaxAmount = settlementAmount / (1+0.11)*(0.2/100);
+	} else {
+		preCorporateIncomeTaxAmount = settlementAmount / (1+preCorporateIncomeTaxRate)*(0.2/100)
+	}
+	$('#pre_corporate_income_tax_amount').val(toFloat(preCorporateIncomeTaxAmount));
+	
+	//城建税率
+	var urbanTaxRate = parseFloat($('#urban_tax_rate').val());
+	$('#urban_tax_amount').val(toFloat(preAppreciationTaxAmount*urbanTaxRate));
+	
+	//教育附加费
+	$('#education_addition_amount').val(toFloat(preAppreciationTaxAmount*0.03));
+	
+	//地方教育费附加
+	$('#local_education_addition_amount').val(toFloat(preAppreciationTaxAmount*0.02));
+	
+	//印花税率
+	var stampDutyRate = parseFloat($('#stamp_duty_rate').val());
+	$('#stamp_duty_amount').val(toFloat(settlementAmount*stampDutyRate));
+	
+	//工会经费
+	var laborUnionAmount = 0;
+	if (preAppreciationRate == 0.02) {
+		laborUnionAmount = (settlementAmount / (1+0.11)) * (0.12/100); 
+	} else {
+		laborUnionAmount = (settlementAmount / (1+preAppreciationRate)) * (0.12/100); 
+	}
+	$('#labor_union_amount').val(toFloat(laborUnionAmount));
+	
+	//水利建设专项收入
+	var waterConstructAmount = 0;
+	if (preAppreciationRate == 0.02) {
+		waterConstructAmount = settlementAmount/(1+0.11)*(0.06/100);
+	} else {
+		waterConstructAmount = settlementAmount/(1+preAppreciationRate)*(0.06/100);
+	}
+	$('#water_construct_amount').val(toFloat(waterConstructAmount));
+}
+
+function isfloat(oNum){
+	if (!oNum) 
+		return false;
+	var strP=/^\d+(\.\d+)?$/;
+	if (!strP.test(oNum)) return false;
+	try {
+		if(parseFloat(oNum)!=oNum)
+			return false;
+	} catch(ex) {
+		return false;
+	}
+	return true;
+}
+
+function saveProjectCheck(nextType) {
+	$('.tx-save').attr("disabled", "disabled");
+	var identifyNum = $('#taxpayer_identify_num').val();
+	if (identifyNum.length < 18 || identifyNum.length > 19) {
+		alert("纳税人识别号不能小于18位，不能大于19位, 请重新输入!");
+		$('.tx-save').removeAttr("disabled");
+		return;
+	}
+	
+	//$('#submit_next_type').val(nextType);
+	//alert("提交成功");
+	//$('#project_check_form').submit();
+	serialNum = $('#serial_num').val();
+	$.post(
+			'{$context_path}' + "/projectouterube/api/submit",	
+			{'serial_num': serialNum, 'taxpayer_identify_num':$('#taxpayer_identify_num').val(),'taxpayer_name' :$('#taxpayer_name').val(),
+				'project_name':$('#project_name').val(),'project_address':$('#project_address').val(),'project_constructor' :$('#project_constructor').val(),
+				'constructor_identify_num':$('#constructor_identify_num').val(),
+				'project_total_cost' :$('#project_total_cost').val(),'is_down' :$('#is_down').val(),
+				'settlement_amount':$('#settlement_amount').val(), 'pre_appreciation_rate':$('#pre_appreciation_rate').val(), 'pre_appreciation_tax_amount':$('#pre_appreciation_tax_amount').val(),
+				'pre_corporate_income_tax_rate':$('#pre_corporate_income_tax_rate').val(), 'pre_corporate_income_tax_amount':$('#pre_corporate_income_tax_amount').val(), 'urban_tax_rate':$('#urban_tax_rate').val(), 
+				'urban_tax_amount':$('#urban_tax_amount').val(), 'education_addition_amount':$('#education_addition_amount').val(),
+				'local_education_addition_amount':$('#local_education_addition_amount').val(), 'stamp_duty_rate':$('#stamp_duty_rate').val(), 'stamp_duty_amount':$('#stamp_duty_amount').val(), 
+				'labor_union_amount':$('#labor_union_amount').val(), 'water_construct_amount':$('#water_construct_amount').val(), 'is_invoiced':$('#is_invoiced').val(), 
+				'operator_name':$('#operator_name').val(),'duty_user_name':$('#duty_user_name').val(),
+				'pay_tax_user':$('#pay_tax_user').val(),'contacts_phone':$('#contacts_phone').val(), 'pay_tax_user_type':$('#pay_tax_user_type').val(), 'tax_type':$('#tax_type').val()},
+    		function(data) {
+    			if(data.code == 1){
+    				alert("保存成功!");
+    				if (nextType == 0) {
+    					//保存按钮: 跳转到列表页面
+    					window.location.href = '{$context_path}' + "/projectouterube/list"
+    				} else if (nextType == 1) {
+    					//打印：提示是否去打印页面
+    					if (confirm("是否打印?")) {
+    						window.location.href = '{$context_path}' + "/projectouterube/toprint?serial_num="+serialNum;
+    					}
+    				} else if (nextType == 2) {
+    					//下一工程： 跳转到下一个工程录入页面
+    					window.location.href = '{$context_path}' + "/projectouterube/toadd"
+    				} else if (nextType == 3) {
+    					//工程结算：跳转到工程结算
+    					window.location.href = '{$context_path}' + "/projectsettlement/toadd"
+    				}
+    			} else {
+    				alert("保存失败, 服务异常!");
+    				$('.tx-save').removeAttr("disabled");
+    			}
+    		},
+    		'JSON'
+    	);  
+}
+
+function nextProjectCheck() {
+	window.location.href = '{$context_path}' + "/projectouterube/toadd";
+}
+</script>
+</body>
+</html>

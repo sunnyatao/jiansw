@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jianan.software.dao.impl.housecontract">
+
+	<resultMap id="houseContract" type="com.jianan.software.pojo.HouseContract">
+		<id column="id" property="id"/>
+		<id column="name" property="name"/>
+		<id column="floor_name" property="floorName" />
+		<id column="serial_no" property="serialNo" />
+		<id column="area" property="area" />
+		<id column="unit_price" property="unitPrice" />
+		<id column="total_price" property="totalPrice" />
+		<id column="contract_tax_rate" property="contractTaxRate" />
+		<id column="contract_tax" property="contractTax" />
+		<id column="card_no" property="cardNo" />
+		<id column="contract_date" property="contractDate" />
+		<id column="contract_down" property="contractDown" />
+		<id column="first_payment_amount" property="firstPaymentAmount" />
+		<id column="mortgage_amount" property="mortgageAmount" />
+		<id column="operator_id" property="operatorId" />
+		<id column="operator_name" property="operatorName" />
+		<id column="created_at" property="createdAt" />
+		<id column="project_name" property="projectName" />
+		<id column="appreciation_rate" property="appreciationRate" />
+		<id column="appreciation_amount" property="appreciationAmount" />
+		<id column="stamp_duty_rate" property="stampDutyRate" />
+		<id column="stamp_duty_amount" property="stampDutyAmount" />
+		<id column="house_type" property="houseType" />
+		
+		<collection property="checkFiles" column="id" ofType="int" select="getCheckFiles"></collection>
+		<collection property="taxInfo" column="id" ofType="int" select="getHouseConstractTaxInfo"></collection>
+	</resultMap>
+	
+	<resultMap id="houseContractTaxInfo" type="com.jianan.software.pojo.HouseContractTaxInfo">
+		<id column="id" property="id"/>
+		<id column="house_contract_id" property="houseContractId"/>
+		<id column="contact_tax_no" property="contractTaxNo"/>
+		<id column="stamp_tax_no" property="stampTaxNo"/>
+		<id column="contact_tax_date" property="contractTaxDate"/>
+		<id column="stamp_tax_date" property="stampTaxDate"/>
+		<id column="created_at" property="createdAt"/>
+		<id column="operator_id" property="operatorId"/>
+		<id column="operator_name" property="operatorName"/>
+	</resultMap>
+	
+	<resultMap type="com.jianan.software.pojo.ProjectCheckFile" id="projectCheckFile">
+		<id column="id" property="id"/>
+		<id column="check_id" property="checkId" />
+		<id column="file_name" property="fileName" />
+		<id column="name" property="name" />
+	</resultMap>
+	
+	<select id="getCheckFiles" parameterType="int" resultMap="projectCheckFile">
+		select * from t_house_contract_files where check_id=#{checkId};
+	</select>
+	
+	<select id="getHouseConstractBy" parameterType="int" resultMap="houseContract">
+		select * from t_house_contract where id=#{id};
+	</select>
+	
+	<select id="getHouseConstractTaxInfo" parameterType="int" resultMap="houseContractTaxInfo">
+		select * from t_house_contract_tax_info where house_contract_id=#{houseContractId}
+	</select>
+	
+	<select id="search" resultMap="houseContract" parameterType="string">
+		select * from t_house_contract where is_deleted=0 and name like CONCAT('%',#{keyword},'%') order by id desc;
+	</select>
+	
+	<select id="getHouseContractCount" resultType="int" parameterType="map">
+		select count(*) from t_house_contract where 1=1 and is_deleted=0
+		<if test="name != null">
+		and name like CONCAT('%',#{name},'%')
+		</if> 
+	</select>
+
+	<select id="getHouseContracts" parameterType="map" resultMap="houseContract">
+		select * from t_house_contract where 1=1 and is_deleted=0
+		<if test="name != null">
+		and name like CONCAT('%', #{name}, '%')
+		</if> order by id desc limit #{start}, #{pageSize};
+	</select>
+	
+	<select id="searchContract" parameterType="map" resultMap="houseContract">
+		select DISTINCT thc.* from t_house_contract thc, t_house_contract_tax_info thcti where is_deleted=0
+		<if test="name != null">
+		and thc.name=#{name}
+		</if>
+		<if test="floorName != null">
+		and thc.floor_name=#{floorName}
+		</if>
+		<if test="taxStartTime != null">
+		and thc.id=thcti.house_contract_id and thcti.contact_tax_date BETWEEN #{taxStartTime} and #{taxEndTime}
+		</if>
+		order by thc.id desc limit #{start}, #{pageSize};
+	</select>
+	
+	<select id="getInvoiceFiles" resultMap="projectCheckFile">
+		select * from t_house_contract_invoice_files where check_id=#{invoiceId};
+	</select>
+	
+	<insert id="createProjectCheck" parameterType="com.jianan.software.pojo.HouseContract" useGeneratedKeys="true" keyProperty="id">
+		insert into t_house_contract(name, floor_name, serial_no, area, unit_price, total_price, contract_tax_rate, contract_tax,
+		card_no, contract_date, contract_down, first_payment_amount, mortgage_amount, operator_id, operator_name, created_at, 
+		project_name, appreciation_rate, appreciation_amount, stamp_duty_rate, stamp_duty_amount, house_type)
+		values(#{name}, #{floorName}, #{serialNo}, #{area}, #{unitPrice}, #{totalPrice}, #{contractTaxRate}, #{contractTax},
+		#{cardNo}, #{contractDate},#{contractDown},#{firstPaymentAmount},#{mortgageAmount},#{operatorId}, #{operatorName},#{createdAt},
+		#{projectName}, #{appreciationRate}, #{appreciationAmount}, #{stampDutyRate}, #{stampDutyAmount}, #{houseType})
+	</insert>
+	
+	<insert id="createHouseContractTaxInfo" parameterType="com.jianan.software.pojo.HouseContractTaxInfo">
+		insert into t_house_contract_tax_info(house_contract_id, contact_tax_no, stamp_tax_no, contact_tax_date,
+		stamp_tax_date, created_at, operator_id, operator_name) 
+		values(#{houseContractId}, #{contractTaxNo}, #{stampTaxNo}, #{contractTaxDate},
+		#{stampTaxDate}, #{createdAt}, #{operatorId}, #{operatorName})
+	</insert>
+	
+	<insert id="createProjectCheckFiles" parameterType="java.util.List">
+		insert into t_house_contract_files(check_id, file_name, name) 
+		values
+		<foreach collection="list" item="item" index="index" separator="," >
+			(#{item.checkId}, #{item.fileName}, #{item.name})
+		</foreach>
+	</insert>
+	
+	<insert id="createInvoiceFiles" parameterType="java.util.List">
+		insert into t_house_contract_invoice_files(check_id, file_name, name) 
+		values
+		<foreach collection="list" item="item" index="index" separator="," >
+			(#{item.checkId}, #{item.fileName}, #{item.name})
+		</foreach>
+	</insert>
+	
+	<update id="delete" parameterType="string">
+		update t_house_contract set is_deleted=1 where id = #{serialNum}
+	</update>
+</mapper>
+

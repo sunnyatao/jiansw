@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lepu.hst.crm.web.admin.dao.user">
+	<resultMap id="adminUser" type="com.jianan.software.pojo.CrmAdminUser">
+		<id column="user_id" property="userId"></id>
+		<result column="user_name" property="userName"/>
+		<result column="password" property="password" />
+		<result column="salt" property="salt" />
+		<result column="last_login_time" property="lastLoginTime" />
+		<result column="created_on" property="createdOn" />
+		<result column="created_by" property="createdBy" />
+		<result column="status" property="status" />
+		
+		<collection property="navIds" ofType="int" column="user_id" select="getNavIdsByUserId">
+		</collection>	
+	</resultMap>
+	<select id="getUserById" resultMap="adminUser" parameterType="int">
+		select * from crm_admin_user where user_id=#{userId};
+	</select>
+	<select id="getUserList" resultMap="adminUser" parameterType="com.jianan.software.util.Page" >
+		select * from crm_admin_user order by user_id limit #{start}, #{pageSize};
+	</select>
+	<select id="getNavIdsByUserId" parameterType="int" resultType="int">
+		select nav_id from auth_user_nav where user_id = #{userId}
+	</select>
+	<select id="getUserCount" resultType="int">
+		select count(*) from crm_admin_user;
+	</select>
+	<select id="getUserByUserName" parameterType="string" resultType="int">
+		select count(*) from crm_admin_user where user_name = #{userName}
+	</select>
+	<select id="getPasswordByUserId"  parameterType="int" resultType="string">
+		select password from crm_admin_user where user_id = #{userId}
+	</select>
+	<select id="getSaltByUserId" resultType="string">
+		select salt from crm_admin_user where user_id = #{userId}
+	</select>
+	<insert id="saveUser" parameterType="com.jianan.software.pojo.CrmAdminUser" useGeneratedKeys="true" keyProperty="userId">
+		insert into  crm_admin_user (user_name,password,salt,created_on,last_login_time,status) values(#{userName},#{password},#{salt},#{createdOn},#{lastLoginTime},#{status})
+	</insert>
+	<insert id="dispatchNavigation" parameterType="map" >
+		insert into  auth_user_nav (user_id,nav_id,created_on) values(#{userId},#{navId},#{createdOn})
+	</insert>
+	<update id="editPassword" parameterType="com.jianan.software.pojo.CrmAdminUser">
+		update crm_admin_user set password=#{password} where user_id = #{userId}
+	</update>
+	<update id="changeUserStatus" parameterType="map">
+		update crm_admin_user set status=#{status} where user_id = #{userId}
+	</update>
+	<delete id= "deleteNavigationByUserId" parameterType="string">
+		delete from auth_user_nav where user_id = #{userId}
+	</delete>
+	<select id="getResourcesIdsBy" parameterType="int" resultType="int">
+		select resource_id from auth_role_resource where role_id = #{roleId}
+	</select>
+	<insert id="insertCrmAuthUserResources" parameterType="List">
+		insert into auth_user_resource(user_id,resource_id,created_on,created_by) values
+		<foreach collection="list" item="userResource" separator="," >
+		(#{userResource.userId},#{userResource.resourceId},#{userResource.createdOn},#{userResource.createdBy})
+		</foreach>
+	</insert>
+	<insert id="insertCrmAuthUserRole" parameterType="com.jianan.software.pojo.CrmAuthUserRole">
+		insert into auth_user_role(user_id,role_id,created_on,created_by) values(#{userId},#{roleId},#{createdOn},#{createdBy})
+	</insert>
+	<select id="getAdminUserByUserName" parameterType="String" resultMap="adminUser" >
+		select * from crm_admin_user where user_name = #{userName}
+	</select>
+	<update id="updateAdminUser" parameterType="com.jianan.software.pojo.CrmAdminUser">
+		update crm_admin_user set password = #{password} where user_name = #{userName};
+	</update>
+	
+</mapper>

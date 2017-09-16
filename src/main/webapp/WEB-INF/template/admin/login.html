@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>欢迎登录建安行业管理软件</title>
+
+    <link href="{$context_path}/styles/bootstrap.3.3.7/bootstrap.css" rel="stylesheet">
+
+    <link href="{$context_path}/styles/bootstrap.3.3.7/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <link href="{$context_path}/styles/sigin.css" rel="stylesheet">
+
+	<script src="{$context_path}/javascript/html5shiv.min.js"></script>
+	<script src="{$context_path}/javascript/respond.min.js"></script>
+  </head>
+
+  <body>
+	<div class="login-bg"></div>
+    <div class="container">
+
+      <form class="form-signin">
+        <h2 class="form-signin-heading text-center">欢迎登录</h2>
+        <input type="text" id="inputUsername" class="form-control" value="" placeholder="请输入用户名" required autofocus><label class="tx-err-username-label" style="color:red; display:none">请输入用户名</label>
+        <input type="password" id="inputPassword" class="form-control" value="" placeholder="请输入密码" required><label class="tx-err-password-label" style="color:red; display:none">请输入密码</label>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me" id="remember-me"> 记住我
+          </label>
+        </div>
+        <label class="tx-err-login-label" style="color:red; display:none"></label>
+        <button class="btn btn-lg btn-primary btn-block tx-submit-login" onclick="login()" type="button">登录</button>
+      </form>
+
+    </div> <!-- /container -->
+
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    {include file='/library/base_js.lbi'}
+    <script src="{$context_path}/javascript/md5.js"></script>
+    <script src="{$context_path}/javascript/jquery.cookie.js"></script>
+    <script type="text/javascript">
+   	 	$(document).ready(function(){
+   	 		$(".tx-submit-login").bind("click", login);
+   	 		$("#inputPassword").bind("keydown", gotoLogin);
+   	 		
+   	 		var username=$.cookie("username");
+   	 		var password=$.cookie("password");
+   	 		$("#inputUsername").val(username);
+   	 		$("#inputPassword").val(password);
+   	 	});
+   	 	
+   	 	var gotoLogin = function(e) {
+	   	 	if (e.keyCode == 13) {
+	   	 		login();		
+	   	 	}
+   	 	};
+    
+    	var login = function(e) {
+   			$(".tx-err-username-label").css("display", "none");
+   			$(".tx-err-password-label").css("display", "none");
+    		var userName = $("#inputUsername").val();
+    		if (userName == "") {
+    			$(".tx-err-username-label").css("display", "block");
+    			return;
+    		}
+    		var password = $("#inputPassword").val();
+    		if (password == "") {
+    			$(".tx-err-password-label").css("display", "block");
+    			return;
+    		}
+    		
+    		var targetUrl = '{$target_url}';
+    		$.post(
+    	    		"{$context_path}/crm/v1/auth/ajax/login",
+    	    		{'user_name': userName, 'password': hex_md5(password)},
+    	    		function(data) {
+    	    			if (data.code == 1) {
+    	    				if ($('#remember-me').is(':checked')) {
+	    	    				//cookie实现记住我
+	    	    				$.cookie("username", userName, { expires: 7, path: '/'});
+	    	    				$.cookie("password", password, { expires: 7, path: '/'});
+    	    				}
+    	    				
+    	    				if (targetUrl != null && targetUrl !='' && targetUrl !='null') {
+    	    					window.location.href = targetUrl;
+    	    				} else {
+    	    					window.location.href = "{$context_path}/projectcheck/list"
+    	    				}
+    	    			} else {
+    	    				$(".tx-err-login-label").html(data.reason);
+    	    				$(".tx-err-login-label").css("display", "block");
+    	    			}
+    	    		},
+    	    		'JSON'
+    	    	);
+    	};
+    </script>
+  </body>
+</html>

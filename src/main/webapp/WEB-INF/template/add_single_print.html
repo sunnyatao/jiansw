@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+
+    <title>录入打印信息</title>
+    {include file='/library/head_top.lbi'}
+    <link href="{$context_path}/styles/wjb/wjb-crm-css.css" rel="stylesheet">
+    <link href="{$context_path}/styles/bootstrap.3.3.7/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="{$context_path}/styles/member.css" rel="stylesheet">
+    <link href="{$context_path}/styles/jquery/jquery-ui.min.css" rel="stylesheet">
+    
+    
+  </head>
+
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 会员管理左侧菜单 -->
+        {include file='/library/left.lbi'}
+        
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<h3 class="page-header">打印信息  </h3>
+			<div class="mem-info">
+				<div class="mem-info-bd">
+					<div class="line">
+					<form id='project_check_form' name='project_check_form' method="post" action="{$context_path}/projectouterube/taxinfo/submit">
+						  <div class="item"><span class="tit">编号：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$nextSerialNo}" id="serial_no" name= "serial_no" readonly="readonly"/></span></div>	                			
+						  <div class="item"><span class="tit">姓名：</span>&nbsp;
+						  <span class="con"><input type="text" value="" id="name" name= "name"/></span></div>
+						  <div class="item"><span class="tit">身份证号：</span>&nbsp;
+						  <span class="con"><input type="text" value="" id="service_producer_card_no" name= "service_producer_card_no"/></span></div>
+						  <div class="item"><span class="tit">面积：</span>&nbsp;
+						  <span class="con"><input type="text" value="" id="area" name= "area"/></span></div>
+						  <div class="item"><span class="tit">地址：</span>&nbsp;
+						  <span class="con"><input type="text" value="" id="address" name= "address"/></span></div>
+						  <div class="item"><span class="tit">建安增值税：</span>&nbsp;
+						  <span class="con"><input type="text" value="" id="amount" name= "amount"/></span></div>
+					 </div>
+				</div>
+				<br/>
+            </div>
+			<button type="button" class="mem-save-btn btn btn-primary" onclick="saveProjectCheckTaxInfo(0)" style="">保存</button>
+			<button type="button" class="mem-save-btn btn btn-primary" onclick="saveProjectCheckTaxInfo(1)" style="">打印</button>
+			</form>
+		</div>
+	  </div>
+	</div>
+		  	<!-- 引入bash_js -->
+    {include file='/library/base_js.lbi'}
+    <script src="{$context_path}/javascript/jquery-ui.min.js"></script>
+    
+<script>
+
+function saveProjectCheckTaxInfo(type) {
+	if (!validate()) {
+		return;
+	}
+	$.post(
+			'{$context_path}' + "/summary/api/prints/submit",	
+			{'serial_num':$('#serial_num').val(),
+				'name': $('#name').val(), 
+				'service_producer_card_no': $('#service_producer_card_no').val(), 
+				'area': $('#area').val(), 
+				'serial_no': $('#serial_no').val(), 
+				'amount': $('#amount').val(),
+				'address': $('#address').val()},				
+    		function(data) {
+    			if(data.code == 1){
+    				alert("添加成功!");
+    				if (type == 0) {
+    					window.location.href = '{$context_path}' + "/summary/prints/list";
+    				} else if (type == 1) {
+    					window.location.href = '{$context_path}' + "/summary/singleprint/goto?id=" + data.msg_data.id;
+    				}
+    			} else {
+    				alert("保存失败 !");
+    			}
+    		},
+			'JSON');
+}
+
+function validate() {
+	if ($('#name').val() == '') {
+		alert("姓名不能为空");
+		return False;
+	}
+	if ($('#service_producer_card_no').val() == '') {
+		alert("身份证号码不能为空")
+		return false;
+	}
+	if ($('#area').val() == '') {
+		alert("面积不能为空")
+		return false;
+	}
+	if ($('#amount').val() == '') {
+		alert("建安增值税不能为空");
+		return false;
+	}
+	return true;
+}
+</script>
+</body>
+</html>

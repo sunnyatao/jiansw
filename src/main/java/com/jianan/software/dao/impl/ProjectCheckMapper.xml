@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jianan.software.dao.impl.projectCheck">
+
+	<resultMap id="projectCheck" type="com.jianan.software.pojo.ProjectCheck">
+		<id column="id" property="id"/>
+		<id column="serial_num" property="serialNum"/>
+		<id column="taxpayer_identify_num" property="taxpayerIdentifyNum"/>
+		<id column="taxpayer_name" property="taxpayerName"/>
+		<id column="project_name" property="projectName"/>
+		<id column="project_address" property="projectAddress"/>
+		<id column="project_constructor" property="projectConstructor"/>
+		<id column="constructor_identify_num" property="constructorIdentifyNum"/>
+		<id column="project_total_cost" property="projectTotalCost"/>
+		<id column="is_down" property="isDown"/>
+		<id column="invoice_amount" property="invoiceAmount"/>
+		<id column="appreciation_rate" property="appreciationRate"/>
+		<id column="appreciation_tax_amount" property="appreciationTaxAmount"/>
+		<id column="income_rate" property="incomeRate"/>
+		<id column="income_tax_amount" property="incomeTaxAmount"/>
+		<id column="income_affiliation" property="incomeAffiliation"/>
+		<id column="urban_tax_rate" property="urbanTaxRate"/>
+		<id column="urban_tax_amount" property="urbanTaxAmount"/>
+		<id column="education_addition_amount" property="educationAdditionAmount"/>
+		<id column="local_education_addition_amount" property="localEducationAdditionAmount"/>
+		<id column="stamp_duty_rate" property="stampDutyRate"/>
+		<id column="stamp_duty_amount" property="stampDutyAmount"/>
+		<id column="labor_union_amount" property="laborUnionAmount"/>
+		<id column="water_construct_amount" property="waterConstructAmount"/>
+		<id column="pay_tax_user" property="payTaxUser"/>
+		<id column="contacts_phone" property="contactsPhone"/>
+		<id column="operator_id" property="operatorId"/>
+		<id column="duty_user_id" property="dutyUserId"/>
+		<id column="attachment_path" property="attachmentPath"/>
+		<id column="is_deleted" property="isDeleted"/>
+		<id column="created_at" property="createdAt"/>
+		<id column="bureau_leader" property="bureauLeader"/>
+		<id column="operator_name" property="operatorName"/>
+		<id column="duty_user_name" property="dutyUserName"/>
+		<id column="tax_serial_no" property="taxSerialNo"/>
+		
+		<collection property="checkFiles" column="id" ofType="int" select="getCheckFiles"></collection>
+		<collection property="invoiceInfo" column="id" ofType="int" select="getProjectCheckInvoiceInfoById"></collection>
+	</resultMap>
+	
+	<resultMap type="com.jianan.software.pojo.ProjectCheckInvoiceInfo" id="projectCheckInvoiceInfo">
+		<id column="id" property="id" />
+		<id column="project_check_id" property="projectCheckId" />
+		<id column="national_invoice_date" property="nationalInvoiceDate" />
+		<id column="national_invoice_no" property="nationalInvoiceNo" />
+		<id column="national_invoice_tax_no" property="nationalInvoiceTaxNo" />
+		<id column="local_invoice_date" property="localInvoiceDate" />
+		<id column="local_invoice_no" property="localInvoiceNo" />
+		<id column="local_invoice_tax_no" property="localInvoiceTaxNo" />
+		<id column="national_invoice_amount" property="nationalInvoiceAmount" />
+		<id column="local_invoice_amount" property="localInvoiceAmount" />
+	</resultMap>
+
+	<resultMap type="com.jianan.software.pojo.SinglePrint" id="singlePrint">
+		<id column="id" property="id" />
+		<id column="name" property="name"/>
+		<id column="service_producer_card_no" property="serviceProducerCardNo"/>
+		<id column="area" property="area"/>
+		<id column="serial_no" property="serialNo"/>
+		<id column="amount" property="amount"/>
+		<id column="created_at" property="createdAt"/>
+		<id column="operator_name" property="operatorName"/>
+		<id column="operator_id" property="operatorId"/>
+		<id column="address" property="address"/>
+	</resultMap>
+	
+	<resultMap type="com.jianan.software.pojo.ProjectCheckFile" id="projectCheckFile">
+		<id column="id" property="id"/>
+		<id column="check_id" property="checkId" />
+		<id column="file_name" property="fileName" />
+		<id column="name" property="name" />
+	</resultMap>
+	
+	<select id="getCheckFiles" parameterType="int" resultMap="projectCheckFile">
+		select * from t_project_check_files where check_id=#{checkId};
+	</select>
+	
+	<select id="getMaxPrintSerialNo" resultType="int">
+		select serial_no from t_single_print where is_deleted=0 order by serial_no desc limit 1;
+	</select>
+	
+	<select id="getSinglePrintCount" resultType="int">
+		select count(*) from t_single_print;
+	</select>
+	
+	<select id="getSinglePrints" resultType="map" resultMap="singlePrint">
+		select * from t_single_print where 1=1 order by id desc limit #{start}, #{pageSize};
+	</select>
+	
+	<select id="getSinglePrint" parameterType="int" resultMap="singlePrint">
+		select * from t_single_print where id=#{id};
+	</select>
+	
+	<select id="getProjectCheckCount" resultType="int" parameterType="map">
+		select count(*) from t_project_check where 1=1 and is_deleted = 0
+		<if test="taxpayerName != null">
+		and taxpayer_name like CONCAT('%',#{taxpayerName},'%')
+		</if> 
+		;
+	</select>
+	
+	<select id="getMaxProjectCheck" resultMap="projectCheck" >
+		<![CDATA[ 
+		SELECT * from t_project_check order by id desc limit 1
+		]]>
+	</select>
+	
+	<select id="getMaxTaxSerialNo" resultType="string">
+		SELECT tax_serial_no from t_project_check order by tax_serial_no desc limit 1;
+	</select>
+	
+	<select id="getProjectCheckByIdentifyNo" parameterType="string" resultMap="projectCheck">
+		SELECT * from t_project_check where taxpayer_identify_num=#{taxpayerIdentifyNum} order by id desc limit 1
+	</select>
+
+	<select id="getProjectCheckByProjectname" parameterType="string" resultMap="projectCheck">
+		SELECT * from t_project_check where project_name=#{projectname} order by id desc limit 1
+	</select>
+	
+	<select id="getProjectCheckBySerialNo" parameterType="string" resultMap="projectCheck">
+		SELECT * from t_project_check where serial_num=#{serialNum} order by id desc limit 1
+	</select>
+	
+	<select id="getProjectChecks" resultMap="projectCheck" parameterType="map">
+		SELECT * from t_project_check where 1=1 and is_deleted = 0
+		<if test="taxpayerName != null">
+		and taxpayer_name like CONCAT('%',#{taxpayerName},'%')
+		</if> 
+		 order by id desc limit #{start}, #{pageSize};
+	</select>
+	
+	<select id="search" resultMap="projectCheck" parameterType="string">
+		SELECT * from t_project_check where is_deleted = 0 and (taxpayer_name like CONCAT('%',#{keyword},'%') or project_name like CONCAT('%',#{keyword},'%')) order by id desc;
+	</select>
+	
+	<select id="zksearch" resultMap="projectCheck" parameterType="map">
+		select DISTINCT tpc.* from t_project_check tpc, t_project_check_invoice_info tpcii where is_deleted=0
+		<if test="serialNum != null">
+		and tpc.serial_num = #{serialNum}
+		</if> 
+		<if test="projectName != null">
+		and tpc.project_name = #{projectName}
+		</if> 
+		<if test="taxpayerName != null">
+		and tpc.taxpayer_name = #{taxpayerName}
+		</if> 
+		<if test="projectConstructor != null">
+		and tpc.project_constructor = #{projectConstructor}
+		</if> 
+		<if test="nationalInvoiceNo != null">
+		and tpc.id=tpcii.project_check_id and tpcii.national_invoice_no = #{nationalInvoiceNo}
+		</if> 
+		<if test="nationalInvoiceTaxNo != null">
+		and tpc.id=tpcii.project_check_id and tpcii.national_invoice_tax_no = #{nationalInvoiceTaxNo}
+		</if> 
+		<if test="localInvoiceTaxNo != null">
+		and tpc.id=tpcii.project_check_id and tpcii.local_invoice_tax_no = #{localInvoiceTaxNo}
+		</if> 
+		<if test="taxStartTime != null">
+		and tpc.id=tpcii.project_check_id and tpcii.national_invoice_date BETWEEN #{taxStartTime} and #{taxEndTime}
+		</if> 
+		order by tpc.id desc limit #{start}, #{pageSize};
+	</select>
+	
+	<select id="sumCheckAmount" parameterType="map" resultType="map">
+		SELECT sum(project_total_cost) total_cost, sum(invoice_amount) total_invoice_amount, sum(appreciation_tax_amount) total_appreciation_tax_amount, 
+		sum(income_tax_amount) total_income_tax_amount, sum(urban_tax_amount) total_urban_tax_amount,
+		sum(education_addition_amount) total_education_addition_amount, sum(education_addition_amount) total_education_addition_amount, 
+		sum(stamp_duty_amount) total_stamp_duty_amount, sum(labor_union_amount) total_labor_union_amount, sum(water_construct_amount) total_water_construct_amount 
+		from t_project_check tpc, t_project_check_invoice_info tpcii where is_deleted=0
+		<if test="serialNum != null">
+		and tpc.serial_num = #{serialNum}
+		</if> 
+		<if test="projectName != null">
+		and tpc.project_name = #{projectName}
+		</if> 
+		<if test="taxpayerName != null">
+		and tpc.taxpayer_name = #{taxpayerName}
+		</if> 
+		<if test="projectConstructor != null">
+		and tpc.project_constructor = #{projectConstructor}
+		</if> 
+		<if test="nationalInvoiceNo != null">
+		and tpc.id=tpcii.project_check_id and tpcii.national_invoice_no = #{nationalInvoiceNo}
+		</if> 
+		<if test="nationalInvoiceTaxNo != null">
+		and tpc.id=tpcii.project_check_id and tpcii.national_invoice_tax_no = #{nationalInvoiceTaxNo}
+		</if> 
+		<if test="localInvoiceTaxNo != null">
+		and tpc.id=tpcii.project_check_id and tpcii.local_invoice_tax_no = #{localInvoiceTaxNo}
+		</if> 
+		<if test="taxStartTime != null">
+		and tpc.id=tpcii.project_check_id and tpcii.national_invoice_date BETWEEN #{taxStartTime} and #{taxEndTime}
+		</if> 
+	</select>
+	
+	<select id="getProjectCheckInvoiceInfoById" resultMap="projectCheckInvoiceInfo">
+		SELECT * from t_project_check_invoice_info where project_check_id=#{checkId};
+	</select>
+	
+	<select id="getInvoiceFiles" resultMap="projectCheckFile">
+		select * from t_project_check_invoice_files where check_id=#{invoiceId};
+	</select>
+	
+	<insert id="createProjectCheck" parameterType="com.jianan.software.pojo.ProjectCheck" useGeneratedKeys="true" keyProperty="id">
+		insert into t_project_check(serial_num, taxpayer_identify_num, taxpayer_name, project_name, project_address, project_constructor,
+		project_total_cost, is_down, invoice_amount, appreciation_rate, appreciation_tax_amount, income_rate, income_tax_amount, income_affiliation, urban_tax_rate, urban_tax_amount,
+		education_addition_amount, local_education_addition_amount, stamp_duty_rate, stamp_duty_amount, labor_union_amount, water_construct_amount, pay_tax_user, contacts_phone, 
+		operator_id, duty_user_id, attachment_path, is_deleted, created_at, operator_name, duty_user_name, bureau_leader, old_serial_num, constructor_identify_num) values(#{serialNum}, #{taxpayerIdentifyNum}, #{taxpayerName}, #{projectName}, #{projectAddress}, #{projectConstructor},
+		#{projectTotalCost},#{isDown},#{invoiceAmount},#{appreciationRate}, #{appreciationTaxAmount}, #{incomeRate}, #{incomeTaxAmount}, #{incomeAffiliation}, #{urbanTaxRate}, #{urbanTaxAmount},
+		#{educationAdditionAmount}, #{localEducationAdditionAmount}, #{stampDutyRate}, #{stampDutyAmount}, #{laborUnionAmount}, #{waterConstructAmount}, #{payTaxUser}, #{contactsPhone}, 
+		#{operatorId}, #{dutyUserId}, #{attachmentPath}, #{isDeleted}, #{createdAt}, #{operatorName}, #{dutyUserName}, #{bureauLeader}, #{oldSerialNum}, #{constructorIdentifyNum});
+	</insert>
+	
+	<insert id="createProjectCheckInvoiceInfo" parameterType="com.jianan.software.pojo.ProjectCheckInvoiceInfo">
+		insert into t_project_check_invoice_info(project_check_id, national_invoice_date, national_invoice_no, national_invoice_tax_no,
+		local_invoice_date, local_invoice_tax_no, national_invoice_amount, local_invoice_amount) values(#{projectCheckId}, #{nationalInvoiceDate}, #{nationalInvoiceNo}, #{nationalInvoiceTaxNo},
+		#{localInvoiceDate}, #{localInvoiceTaxNo}, #{nationalInvoiceAmount}, #{localInvoiceAmount});
+	</insert>
+	
+	<insert id="createSinglePrintInfo" parameterType="com.jianan.software.pojo.SinglePrint" useGeneratedKeys="true" keyProperty="id">
+		insert into t_single_print(name, service_producer_card_no, area, serial_no, amount, created_at, operator_name, operator_id, address)
+		value(#{name}, #{serviceProducerCardNo}, #{area}, #{serialNo}, #{amount}, #{createdAt}, #{operatorName}, #{operatorId}, #{address})
+	</insert>
+	
+	<insert id="createProjectCheckFiles" parameterType="java.util.List">
+		insert into t_project_check_files(check_id, file_name, name) 
+		values
+		<foreach collection="list" item="item" index="index" separator="," >
+			(#{item.checkId}, #{item.fileName}, #{item.name})
+		</foreach>
+	</insert>
+	
+	<insert id="createInvoiceFiles" parameterType="java.util.List">
+		insert into t_project_check_invoice_files(check_id, file_name, name) 
+		values
+		<foreach collection="list" item="item" index="index" separator="," >
+			(#{item.checkId}, #{item.fileName}, #{item.name})
+		</foreach>
+	</insert>
+	
+	
+	<update id="updateProjectCheck" parameterType="com.jianan.software.pojo.ProjectCheck">
+		update t_project_check set taxpayer_name=#{taxpayerName}, project_name=#{projectName}, project_address=#{projectAddress}, project_constructor=#{projectConstructor},
+		project_total_cost=#{projectTotalCost}, is_down=#{isDown}, invoice_amount=#{invoiceAmount}, appreciation_rate=#{appreciationRate},
+		appreciation_tax_amount=#{appreciationTaxAmount}, income_rate=#{incomeRate}, income_tax_amount=#{incomeTaxAmount},
+		income_affiliation=#{incomeAffiliation}, urban_tax_rate=#{urbanTaxRate}, urban_tax_amount=#{urbanTaxAmount}, education_addition_amount=#{educationAdditionAmount},
+		local_education_addition_amount=#{localEducationAdditionAmount}, stamp_duty_rate=#{stampDutyRate}, stamp_duty_amount=#{stampDutyAmount}, labor_union_amount=#{laborUnionAmount},
+		water_construct_amount=#{waterConstructAmount}, pay_tax_user=#{payTaxUser}, contacts_phone=#{contactsPhone}, operator_name=#{operatorName}, duty_user_name=#{dutyUserName}
+		where serial_num=#{serialNum}
+	</update>
+	
+	<update id="delete" parameterType="string">
+		update t_project_check set is_deleted = 1 where serial_num=#{serialNum}
+	</update>
+	
+	<update id="updateTaxSerialNo" parameterType="map">
+		update t_project_check set tax_serial_no=#{serialNo} where id=#{id} and tax_serial_no=0;
+	</update>
+	
+	<update id="deletetSinglePrint" parameterType="int">
+		update t_single_print set is_deleted=1 where id=#{id}
+	</update>
+</mapper>
+

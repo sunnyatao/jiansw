@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="{$context_path}/styles/modal.css">
+	<link rel="stylesheet" type="text/css" href="{$context_path}/styles/bootstrap.3.3.7/bootstrap.min.css">
+
+    <title>编辑个人资料</title>
+    {include file='/library/head_top.lbi'}
+    <link href="{$context_path}/styles/bootstrap.3.3.7/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="{$context_path}/styles/member.css" rel="stylesheet">
+  </head>
+		
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}
+	
+	<div class="col-col-12">
+		<div class="page-section">
+			<h4 id="personId" class="personal-etitle">编辑个人资料<a href="{$context_path}/crm/v1/admin/user/list" class="person-link">管理员列表</a></h4>
+			<div class="labelText">
+				<tag class="tag horizontal" style="text-align:center">
+					<div class="personal_item">
+						<label class="label-title" style="width:110px">管理员的账号:</label>
+						<div class="tag-content" style="padding-left:70px">
+							 <span class="tag-input"><input class="userName" type="text"  value="{$userName}" maxlength="32" style="width:360px;" readonly="readonly"></span>
+					    </div>
+					</div>
+				    <div class="personal_item">
+						<label class="label-title" style="width:110px">旧密码:</label>
+						<div class="tag-content" style="padding-left:70px"> 
+							<span class="tag-input"><input type="password" id="password"  value="" maxlength="50" style="width:360px;"></span>
+							<label style='color:red' class="hidden tx-error-user-password">请输入密码</label>  <!-- 为空时的提醒 -->
+							<label style='color:red' class="hidden tx-error-password-length">输入密码不正确，请重新输入</label><!--密码和数据库中的匹配以后判断不相同的  -->
+						</div>
+					</div>
+					<div class="personal_item" >
+						<label class="label-title"  style="width:110px">新密码:</label>
+						<div class="tag-content" style="padding-left:70px"> 
+							<span class="tag-input"><input type="password" id="newPassword"  value="" maxlength="50" style="width:360px;"></span>
+							<label style='color:red' class="hidden tx-error-user-newPassword">请输入新密码</label>  <!-- 为空时的提醒 -->
+						</div>
+					</div>
+					<div class="personal_item" >
+						<label class="label-title"  style="width:110px">重新输入新密码:</label>
+						<div class="tag-content" style="padding-left:70px"> 
+							<span class="tag-input"><input type="password" id="newAgainPassword"  value="" maxlength="50" style="width:360px;"></span>
+							<label style='color:red' class="hidden tx-error-user-newAgainPassword">请输入校验新密码</label>  <!-- 为空时的提醒 -->
+							<label style='color:red' class="hidden tx-error-user-checkPassword">两次密码不一致，请重新输入</label>  <!-- 密码校验是的提醒 -->
+						</div>
+					</div>
+					<div class="personal_btn">
+						<label class="saveTip hidden" style="color:red" ></label>
+						<button type="button" class="btn btn-primary" id="btn" onclick="save()">保存</button>
+		        		<button type="button" class="btn btn-default" onclick="clearText()">重置</button>
+	        		</div> 
+			  	</tag>
+		  	</div>
+		</div>
+	</div>
+	
+	{include file='/library/base_js.lbi'}
+     <script src="{$context_path}/javascript/md5.js"></script>
+     <script type="text/javascript" src="{$context_path}/javascript/jquery.tmpl.min.js"></script>
+     
+     <script type="text/javascript">
+     
+     function  save() {
+    	  var password = $("#password").val();
+    	  if(password.trim() == '') {
+    		  $(".tx-error-user-password").removeClass("hidden");
+    		  $(".tx-error-user-password").show();
+    		  return;
+    	  } else {
+    		  $(".tx-error-user-password").addClass("hidden");
+    	  }
+    	  var newPassword = $("#newPassword").val();
+    	  if(newPassword.trim() == '') {
+    		  $(".tx-error-user-newPassword").removeClass("hidden");
+    		  $(".tx-error-user-newPassword").show();
+    		  return;
+    	  } else {
+    		  $(".tx-error-user-newPassword").addClass("hidden");
+    	  }
+    	  var newAgainPassword = $("#newAgainPassword").val();
+    	  if(newAgainPassword.trim() == '') {
+    		  $(".tx-error-user-newAgainPassword").removeClass("hidden");
+    		  $(".tx-error-user-newAgainPassword").show();
+    		  return;
+    	  } else {
+    		  $(".tx-error-user-newAgainPassword").addClass("hidden");
+    	  }
+    	  if(newAgainPassword.trim() != newPassword.trim()) {
+    		  $(".tx-error-user-checkPassword").removeClass("hidden");
+    		  $(".tx-error-user-checkPassword").show();
+    		  return ;
+    	  } else {
+    		  $(".tx-error-user-checkPassword").addClass("hidden");
+    	  }
+    	  
+    	  var userName = $(".userName").val();
+    	  $.post(
+    			  '{$context_path}' + "/crm/v1/admin/ajax/updatePassword",
+    			  {"password":hex_md5(password),"newPassword":hex_md5(newPassword),"userName":userName},
+    			  function(data) {
+    				  if(data.code == 1) {//修改成功，给一个修改成功的提示
+    					 $(".saveTip").html("密码更改成功");
+    				  	 $(".saveTip").removeClass("hidden");
+    				  	 $(".saveTip").show();
+    				  	 $("#btn").attr('disabled',true);
+    				  } else {
+    					 if(data.msg_data == "errorPassword") {
+    						 $(".saveTip").html("旧密码输入错误，请重新输入");
+    						 $(".saveTip").removeClass("hidden");
+    						 $(".saveTip").show();
+    					 } else {
+	    				  	 $(".saveTip").html("密码更改失败");
+	    				  	 $(".saveTip").removeClass("hidden");
+	    				  	 $(".saveTip").show();
+    					 }
+    				  }
+    			  },
+    			  'JSON'
+    		 );
+   	  }
+     
+     function clearText() {
+    	 $("#password").val("");
+    	 $("#newPassword").val("");
+    	 $("#newAgainPassword").val("");
+    	 $(".tx-error-user-password").addClass("hidden");
+    	 $(".tx-error-user-newPassword").addClass("hidden");
+    	 $(".saveTip").addClass("hidden");
+    	 $("#btn").attr('disabled',false);
+     }
+     </script>
+	</body>
+</html>

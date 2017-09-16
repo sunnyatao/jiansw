@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+
+    <title>会员信息</title>
+    {include file='/library/head_top.lbi'}
+    <link href="{$context_path}/styles/wjb/wjb-crm-css.css" rel="stylesheet">
+    <link href="{$context_path}/styles/bootstrap.3.3.7/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="{$context_path}/styles/member.css" rel="stylesheet">
+    
+    
+  </head>
+
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 会员管理左侧菜单 -->
+        {include file='/library/member_left.lbi'}
+        
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<h3 class="page-header">{$user.userName}  </h3>
+			<ul class="nav nav-tabs">
+				<li role="presentation" {if $status eq 1}class="active"{/if}><a href="#" onclick="getMemberInfo(1,{$user.userId})">会员信息</a></li>
+				<li role="presentation" {if $status eq 2}class="active"{/if}><a href="#" onclick="getOrderInfo(2,{$user.userId},'{$user.userName}')">交易记录</a></li>
+				<li role="presentation" {if $status eq 3}class="active"{/if}><a href="#" onclick="getPromoteInfo(3,{$user.userId},'{$user.userName}')">营销记录</a></li>
+			</ul>
+			<div class="mem-info">
+				<div class="mem-info-hd"><span class="tit">基本信息</span><a href="{$context_path}/crm/v1/member/detail?user_id={$user.userId}&action=edit">修改</a></div>
+				<form id="memberInfoForm" name="memberInfoForm" method="post" action="edit?user_id={$user.userId}&action=edit">
+				<div class="mem-info-bd">
+					<div class="line">
+						  <input type="hidden" value={$user.userId} id="userId" name="user_id">
+						  <div class="item"><span class="tit">会员名：</span>
+						  <span class="con"><input type="text" value="{$user.userName}" id="userName" name= "user_name"/></span></div>	                			
+						  <div class="item"><span class="tit">性别：</span>
+						  <span class="con">
+						  <!-- {if $user.gender != 2} -->
+						   <input type="radio" class="check-member"  name="gender" value = "1" checked="checked"/>男
+						   <input type="radio" class="check-member"  name="gender" value = "2"/>女
+						  <!-- {elseif $user.gender == 2} -->
+						  <input type="radio" class="check-member"  name="gender" value = "1"/>男
+						   <input type="radio" class="check-member"  name="gender" value = "2" checked="checked"/>女
+						  <!--{/if} -->
+						 </span></div>
+						  <div class="item"><span class="tit">生日：</span>
+						  <span class="con">
+						  <!-- {if $user.birthday == ""} -->
+						  	<input type="text"  value="" data-date-format="yyyy-mm-dd" class="mem-datetimepicker" id="birthday" name="birthday">
+						  <!-- {else} -->
+						  	<input type="text"  value="{$user.birthday}" data-date-format="yyyy-mm-dd" class="mem-datetimepicker" id="birthday" name="birthday"></span></div>
+						  <!--{/if} -->
+					 </div>
+					 <div class="line">
+						  <div class="item"><span class="tit">会员等级：</span><span class="con"><input type="text" value="{$user.rank}" id="rank" name= "rank"/></span></div>
+						  <div class="item"><span class="tit">电子邮件：</span>
+						  <span class="con">
+						  <!-- {if $user.email == ""} -->
+						  	<input type="text" value="" id="email" name= "email"/>
+						  <!-- {else} -->
+						    <input type="text" value="{$user.email}" id="email" name= "email"/>
+						  <!--{/if} --></span></div>	
+					</div>
+					<div class="line">
+						  <div class="item"><span class="tit">qq号：</span>
+						  <span class="con">
+						  <!-- {if $user.qq == ""} -->
+						  	<input type="text" value="" id="qq" name= "qq"/>
+						  <!-- {else} -->
+						    <input type="text" value="{$user.qq}" id="qq" name= "qq"/>
+						  <!--{/if} --></span>
+                           </div>
+						  <div class="item"><span class="tit">手机：</span>
+						  <span class="con">
+						  <!-- {if $user.mobile == ""} -->
+						  	<input type="text" value="" id="mobile" name= "mobile"/>
+						  <!-- {else} -->
+						    <input type="text" value="{$user.mobile}" id="mobile" name= "mobile"/>
+						  <!--{/if} --></span></div>	
+					</div>
+					<div class="line">
+						<div class="item"><span class="tit">所在地：</span><span class="con"><!-- {if $user.provinceName == ""} -->-<!-- {else} -->{$user.provinceName}<!--{/if} -->/<!-- {if $user.cityName == ""} -->-<!-- {else} -->{$user.cityName}<!--{/if} -->/<!-- {if $user.districtName == ""} -->-<!-- {else} -->{$user.districtName}<!--{/if} --></span></div>
+						<div class="item"><span class="tit">联系地址：</span><span class="con"><!-- {if $user.street == ""} -->-<!-- {else} -->{$user.street}<!--{/if} --></span></div>
+					</div>
+				</div>
+				 <button type="button" class="mem-save-btn btn btn-primary" onclick="saveUserInfo()" style="">保存</button>
+			</form>
+            </div>
+            <div class="mem-info">
+				<div class="mem-info-hd"><span class="tit">会员行为</span></div>
+				<div class="mem-info-bd">
+					<div class="line">
+					  <div class="item"><span class="tit">注册时间：</span>
+					  <span class="con"><!-- {if $user.regTime == ""} -->-<!-- {else} -->{$user.regTime}<!--{/if} --></span></div>
+					  <div class="item"><span class="tit">最后登录时间：</span>
+					  <span class="con"><!-- {if $user.lastLoginTime == ""} -->-<!-- {else} -->{$user.lastLoginTime}<!--{/if} --></span></div>
+					  <div class="item"><span class="tit">首次购买时间：</span>
+					  <span class="con"><!-- {if $user.firstPayTime == ""} -->-<!-- {else} -->{$user.firstPayTime}<!--{/if} --></span></div>  
+					  <div class="item"><span class="tit">最后购买时间：</span>
+					  <span class="con"><!-- {if $user.latestPayTime == ""} -->-<!-- {else} -->{$user.latestPayTime}<!--{/if} --></span></div>  
+					</div>
+				</div>
+            </div>
+            <div class="mem-info">
+				<div class="mem-info-hd"><span class="tit">自定义信息</span></div>
+				<form id="tagValuesInfo" name="tagValuesInfo" method="post" action="saveUserTags?user_id={$user.userId}">
+				<div class="mem-info-bd">
+				<!-- {foreach from=$tagList item=tag } -->
+					<div class="item">
+					     <span class="tit">{$tag.tagName}</span>
+					     <!-- {if $tag.tagType == 1} -->
+					     	  <!-- {foreach from=$tag.tagVluesList item=tagvalue } -->
+					     	  		<input type="hidden" value="{$tagvalue.tagValueId}">
+					     	 		<input type="checkbox" class="check-member" id="{$tagvalue.tagValueId}" data-tagtype="{$tag.tagType}" name="{$tagvalue.tagValueId}">{$tagvalue.value}
+					     	  <!-- {/foreach} --> 
+					      <!-- {elseif $tag.tagType == 2} -->
+					      	 <!-- {foreach from=$tag.tagVluesList item=tagvalue } -->
+					      	 		<input type="hidden" value="{$tagvalue.tagValueId}">
+					     	 		<input type="radio" class="check-member" id="{$tagvalue.tagValueId}"   value = "{$tagvalue.tagValueId}" data-tagtype="{$tag.tagType}" name="{$tag.tagId}">{$tagvalue.value}
+					     	  <!-- {/foreach} --> 
+					     <!-- {elseif $tag.tagType == 3} -->
+					     	 		<input type="text" class="check-member" id="tag{$tag.tagId}" data-tagtype="{$tag.tagType}" value="" name="tag{$tag.tagId}">
+					     <!-- {elseif $tag.tagType == 4} -->
+					     	 		<!-- <input type="text" class="check-member"  name="{$tag.tagType}" value=""> -->
+									<input type="text"  value="" data-date-format="yyyy-mm-dd" class="mem-datetimepicker" id="tag{$tag.tagId}" data-tagtype="{$tag.tagType}" name="tag{$tag.tagId}">	  
+					      <!-- {/if} -->
+					</div>
+				<!-- {/foreach} --> 
+            </div>
+             <button type="button" class="mem-save-btn btn btn-primary" onclick = "saveUserTags()">保存</button>
+           </form>
+        </div>
+		  	<!-- 引入bash_js -->
+    {include file='/library/base_js.lbi'}
+    <script src="{$context_path}/javascript/bootstrap.3.3.7/bootstrap-datetimepicker.min.js"></script>
+    <script src="{$context_path}/javascript/bootstrap.3.3.7/bootstrap-datetimepicker.zh-CN.js"></script>
+<script>
+$('.mem-datetimepicker').datetimepicker({
+	language: 'zh-CN',
+	weekStart: 1,
+    todayBtn:  1,
+	autoclose: 1,
+	todayHighlight: 1,
+	startView: 2,
+	minView: 2,
+	forceParse: 0
+ });
+$(document).ready(function(){
+   var userId = document.getElementById("userId").value;
+   //console.log($("#userId"));
+   
+   $.post(
+	   		'{$context_path}' + "/crm/v1/member/getUserTagVlues",	
+	       		{'user_id':userId},
+	       		function(data) {
+	       			if(data.code == 1){		
+	       				 var tagVluesList = data.msg_data.tagVluesList;	
+	       				for(var i = 0;i<tagVluesList.length;i++){
+	       					var tagValue = document.getElementById(tagVluesList[i].tagValueId);
+	       				    var tag = document.getElementById("tag"+tagVluesList[i].tagId);
+	       					if(tagValue!= null){
+	       						var tagVal = tagValue.getAttribute("data-tagtype");
+	       						if(tagVal==1){
+	        						tagValue.checked="checked";
+	        					}
+	        					else if(tagVal==2){
+	        						tagValue.checked="checked";
+	        					}
+	       					 }
+	       					else if(tag!= null){
+	       						var tagVal = tag.getAttribute("data-tagtype");
+	       						if(tagVal == 3){
+	        						tag.value = tagVluesList[i].value;
+	        					 }else if(tagVal == 4){
+	        					    tag.value = tagVluesList[i].value;
+	        					}   
+	       				   }
+	       				}
+	       			}
+	       		},
+	       		'JSON'
+	       	);
+	});
+function getMemberInfo(status,userId){
+	window.location.href= "{$context_path}/crm/v1/member/detail?status="+status+"&user_id="+userId; 
+}
+function getOrderInfo(status,userId,userName){
+	window.location.href= "{$context_path}/crm/v1/member/orderInfo?status="+status+"&user_id="+userId+"&user_name="+userName;
+}
+function getPromoteInfo(status,userId){
+	window.location.href= "{$context_path}/crm/v1/member/promoteInfo?status="+status+"&user_id="+userId+"&user_name="+userName;  
+}
+function saveUserInfo(){
+	$("#memberInfoForm").submit();
+}
+function saveUserTags(){
+	$("#tagValuesInfo").submit();
+}
+</script>
+</body>
+</html>

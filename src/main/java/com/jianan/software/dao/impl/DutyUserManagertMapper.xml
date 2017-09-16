@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jianan.software.dao.impl.dutyUserManagerDao">
+
+	<resultMap id="dutyUser" type="com.jianan.software.pojo.DutyUser">
+		<id column="id" property="id"/>
+		<id column="name" property="name"/>
+		<id column="is_deleted" property="isDeleted" />
+	</resultMap>
+
+	<resultMap id="bureauLeader" type="com.jianan.software.pojo.BureauLeader">
+		<id column="id" property="id"/>
+		<id column="name" property="name"/>
+		<id column="is_deleted" property="isDeleted" />
+	</resultMap>
+	
+	<select id="getDutyUsers" resultMap="dutyUser">
+		select * from t_duty_user where is_deleted=0;
+	</select>
+
+	<select id="getBureauLeaders" resultMap="bureauLeader">
+		select * from t_bureau_leader where is_deleted=0;
+	</select>
+	
+	<update id="deleteBureauLeader" parameterType="int">
+		update t_bureau_leader set is_deleted=1 where id=#{bureauLeaderId};
+	</update>
+
+	<update id="deleteDutyUser" parameterType="int">
+		update t_duty_user set is_deleted=1 where id=#{dutyUserId};
+	</update>
+	
+	<insert id="insertBureauLeader" parameterType="com.jianan.software.pojo.BureauLeader" useGeneratedKeys="true" keyProperty="id">
+		insert into t_bureau_leader(name) values(#{name});
+	</insert>
+
+	<insert id="insertDutyUser" parameterType="com.jianan.software.pojo.DutyUser" useGeneratedKeys="true" keyProperty="id">
+		insert into t_duty_user(name) values(#{name});
+	</insert>
+</mapper>
+

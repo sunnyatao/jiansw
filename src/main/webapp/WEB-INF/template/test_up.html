@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无刷新上传文件 - 页面只有一个上传</title>
+        <!--<link rel="stylesheet" href="css/WizardWuUpload_Blue.css" />-->
+        <link rel="stylesheet" href="{$context_path}/styles/WizardWuUpload_Green.css" />
+        <!--<link rel="stylesheet" href="css/WizardWuUpload_Silver.css" />-->
+		
+		<script type="text/javascript" src="{$context_path}/javascript/jquery.json.js"></script>
+        <script type="text/javascript" src="{$context_path}/javascript/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="{$context_path}/javascript/jquery.form.js"></script>
+    	<script type="text/javascript" src="{$context_path}/javascript/WizardWuUpload.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                //傳入的參數，為該 divUploadArea 區塊中，所有 DOM 对象(控件) 的 id 編號，如: divUploadArea1、spanUploadSelect1、WizardWuFileUpload1、...
+                $(this).loadUploadContent('1'); //載入第一個上傳區塊 divUploadArea1 所需要的 form 及 jQuery 內容
+                //$(this).loadUploadContent('2'); //載入第二個上傳區塊 divUploadArea2 所需要的 form 及 jQuery 內容
+            });
+        </script>
+</head>
+
+<body>
+    <div class="UploadArea" id="divUploadArea1">
+        <div class="UploadButton">
+            <span id="spanUploadSelect1">选择文件</span>
+            <!--上传用的file控件-->
+            <input id="WizardWuFileUpload1" type="file" name="file1" multiple="multiple"/>
+        </div>
+    </div>
+    
+    <!-- <form action="http://localhost:8080/jiansw/upload/api/up" method='post' enctype='multipart/form-data'>
+    	<input type="file" name="file2" value="D:\dataset\img01.jpg"/>
+    	<input type="submit" value="提交">
+    </form> -->
+</body>
+</html>

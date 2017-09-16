@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lepu.hst.crm.web.common">
+	<resultMap id="userResource" type="com.jianan.software.pojo.CrmAuthUserResource">
+		<id column="user_resource_id" property="userResourceId"></id>
+		<result column="user_id" property="userId"/>
+		<result column="resource_id" property="resourceId"/>
+		<result column="created_on" property="createdOn"/>
+		<result column="created_by" property="createdBy"/>
+		
+		<association property="authResource" column="resource_id" select="getResourceById" ></association>
+	</resultMap>
+	
+	<resultMap type="com.jianan.software.pojo.CrmAuthResource" id="resource">
+		<id column="resource_id" property="resourceId"/>
+		<result column="resource_name" property="resourceName"/>
+		<result column="resource_path" property="resourcePath"/>
+		<result column="resource_desc" property="resourceDesc"/>
+		<result column="created_on" property="createdOn"/>
+		<result column="created_by" property="createdBy"/>
+		<result column="resource_type" property="resourceType"/>
+	</resultMap>
+	
+	<resultMap type="com.jianan.software.pojo.CrmAuthNavigation" id="navigation">
+		<id column="nav_id" property="navId"></id>
+		<result column="nav_name" property="navName"/>
+		<result column="parent_id" property="parentId"/>
+		<result column="resource_id" property="resourceId"/>
+		<result column="created_by" property="createdBy"/>
+		<result column="created_on" property="createdOn"/>
+		<result column="sort_value" property="sortValue"/>
+		<result column="nav_level" property="navLevel"/>
+		<result column="relate_resource_id" property="relateResourceId"/>
+		
+		<association property="authResource" column="resource_id" select="getResourceById" ></association>
+	</resultMap>
+	
+	<resultMap type="com.jianan.software.pojo.CrmAuthUserNav" id="userNav">
+		<id column="unav_id" property="unavId"/>
+		<result column="user_id" property="userId"/>
+		<result column="nav_id" property="navId"/>
+		<result column="created_on" property="createdOn"/>
+		<result column="created_by" property="createdBy"/>
+		
+		<association property="navigation" column="nav_id" select="getNavigationById" ></association>
+	</resultMap>
+	
+	<select id="getAllUserResources" resultMap="userResource">
+		select * from auth_user_resource;
+	</select>
+	
+	<select id="getResourceById" resultMap="resource" parameterType="int">
+		select * from auth_resource where resource_id=#{resourceId};
+	</select>
+	
+	<select id="getAllResources" resultMap="resource">
+		select * from auth_resource;
+	</select>
+	
+	<select id="getAllNavigations" resultMap="navigation">
+		select * from auth_navigation order by sort_value;
+	</select>
+	
+	<select id="getAllUserNavs" resultMap="userNav">
+		select * from auth_user_nav;
+	</select>
+	
+	<select id="getNavigationById" parameterType="int" resultMap="navigation">
+		select * from auth_navigation where nav_id=#{navId};
+	</select>
+	
+	<select id="getTopNavIdByResourceUri" parameterType="string" resultType="int">
+		select an.parent_id from auth_resource ar, auth_navigation an where ar.resource_path = #{uri} and an.resource_id=ar.resource_id and an.parent_id!=0 limit 1;
+	</select>
+</mapper>

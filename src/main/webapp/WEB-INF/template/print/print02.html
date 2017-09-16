@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>晃国税证字（{$year}）{$singlePrint.serialNoStr}号</title>
+<style type="text/css">
+*{margin: 0;padding: 0;}
+body{font-family: Helvetica, Tahoma, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei", STXihei, STHeiti, Heiti, SimSun, sans-serif;}
+p{font-size: 15px;color: #333;line-height: 28px;}
+h3{font-size: 18px;text-align: center;margin: 30px 0}
+.wrap{width: 600px;margin: 0 auto;}
+.{color: #f00;}
+</style>
+<style media="print" type="text/css">
+.noprint{display : none }
+</style>
+</head>
+<body>
+<!--startprint1-->
+<div class="wrap">
+	<h3>晃国税证字<span class="">（{$year}）{$singlePrint.serialNoStr}</span>号</h3>
+	<p>新晃县房地产管理局、不动产登记中心：</p>
+	<p style="text-indent:2em;">
+		<span class="">{$singlePrint.name}</span>(身份证号:<span class="">{$singlePrint.serviceProducerCardNo}</span>)私人住宅楼(<span class="">{$singlePrint.area}㎡</span>)工程位于{$singlePrint.address},该住宅楼工程已在我局缴纳增值税<span class="">{$amount}</span>元。请予办理房屋产权登记手续。
+	</p>
+	<br><br>
+	<p style="text-align:right;">新晃县国家税务局<br><span class="">{$year}年{$month}月{$day}日</span></p>
+</div>
+
+<!--endprint1-->
+
+<input id="btnPrint" type="button" class="noprint" value="打印" onclick="javascript:window.print();" />
+<input id="btnPrintPreview" type="button" class="noprint" value="打印预览" onclick=preview(1) />
+<input id="back_history" type="button" class="noprint" value="返回" onclick="history.back()">
+
+</body>
+{include file='/library/base_js.lbi'}
+<script>
+
+$(document).ready(function(){
+	$('#btnPrint').bind('click', clickPrint);
+	window.print();
+});
+
+clickPrint = function(event) {
+	id = "{$projectCheck.id}";
+	serialNo = "{$nextSerialNo}";
+	$.post(
+			'{$context_path}' + "/projectcheck/api/taxserialno/save",	
+    		 {'id': id, 'serial_no': serialNo},
+    		function(data) {
+    			if(data.code == 1){
+    				//console.log('保存成功!')
+    			} else{
+    				//console.log('保存失败!')
+    			}
+    		 },
+    		 'JSON');
+};
+	function preview(oper)
+	{
+		if (oper < 10) {
+			bdhtml=window.document.body.innerHTML;//获取当前页的html代码
+			sprnstr="<!--startprint"+oper+"-->";//设置打印开始区域
+			eprnstr="<!--endprint"+oper+"-->";//设置打印结束区域
+			prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
+			
+			prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html
+			window.document.body.innerHTML=prnhtml;
+			window.print();
+			window.document.body.innerHTML=bdhtml;
+		} else {
+			window.print();
+		}
+	}
+</script>
+</html>

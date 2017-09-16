@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>代开增值税发票缴纳税款申报单</title>
+<style type="text/css">
+*{margin: 0;padding: 0;}
+body{background: #fff;color: #030303;font-family: "Roboto","Helvetica",arial,sans-serif;font-size: 13px;}
+//.font-red{color: #f00;}
+.wrap{width: 800px;margin: 0 auto;}
+.wrap h1{text-align: center;font-size: 22px;line-height: 50px;}
+.wrap h3{font-size: 18px;line-height: 42px;}
+.wrap p{line-height: 24px;}
+.p-left{padding-left: 80px;}
+.ta-right{text-align: right;padding-right: 20px;}
+.signature{text-align: right;font-weight: bold;}
+.signature span{font-weight: normal;margin-left: 3px;}
+.wrap ol{margin-left: 30px;line-height: 26px;}
+.d-form{width:100%;text-align: center;border-collapse: collapse;margin-bottom:-1px;}
+.d-form td{border:1px solid #333;padding:3px 0;height: 20px; line-height: 20px;}
+</style>
+<style media="print" type="text/css">
+.noprint{display : none }
+</style>
+</head>
+<body>
+<div class="wrap">
+	<!--startprint1-->
+	<h1 style="text-align: center; margin-bottom: -5px">代开增值税发票缴纳税款申报单</h1>
+	<h3>代开人声明：</h3>
+	<p>本次缴纳税款申报单提供的开票信息真实、完整、准确，符合有关法律、法规。<br>现申请<span class="font-red">
+	代开增值税专用发票{if $is_zp_invoice eq 'y'}<img src="{$context_path}/images/yes.png" width="12" style="margin-bottom:-2px;">{else}口{/if}&nbsp;增值税普通发票{if $is_normal_invoice eq 'y'}<img src="{$context_path}/images/yes.png" width="12" style="margin-bottom:-2px;">{else}口{/if}。</span></p>
+	<p class="signature">代开人（签章）：
+		<span class="font-red" style="margin-left:80px;">{$year}年</span>
+		<span class="font-red">{$month}月</span>
+		<span class="font-red">{$day}日</span>
+	</p>
+	<table class="d-form" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="110" rowspan="3">购买方信息</td>
+			<td width="110">名称</td>
+			<td width="222" class="font-red">{$project_constructor}</td>
+			<td width="154">纳税人识别号</td>
+			<td width="200">{$constructor_identify_num}</td>
+		</tr>
+		<tr>
+			<td>地址</td>
+			<td class="font-red"></td>
+			<td>开户银行</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>电话</td>
+			<td class="font-red"></td>
+			<td>银行账号</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td rowspan="3">销售方信息</td>
+			<td>名称</td>
+			<td class="font-red">{$taxpayer_name}</td>
+			<td>纳税人识别号</td>
+			<td class="font-red">{$taxpayer_identify_num}</td>
+		</tr>
+		<tr>
+			<td>地址</td>
+			<td class="font-red">{$project_address}</td>
+			<td>开户银行</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>电话</td>
+			<td class="font-red">{$contact_phone}</td>
+			<td>银行账号</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td colspan="2">代开人类型</td>
+			<td colspan="3" class="font-red">自然人{if $tax_pay_type eq 'z'}<img src="{$context_path}/images/yes.png" width="12" style="margin-bottom:-2px;">{else}口{/if} 其他纳税人{if $tax_pay_type eq 'o'}<img src="{$context_path}/images/yes.png" width="12" style="margin-bottom:-2px;">{else}口{/if}</td>
+		</tr>
+		<tr>
+			<td colspan="2">减免税标识（代开普通<br>发票，符合条件填写）</td>
+			<td colspan="3">是口<span class="font-red">否<img src="{$context_path}/images/yes.png" width="12" style="margin-bottom:-2px;"></span></td>
+		</tr>
+	</table>
+	<table class="d-form" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="110">减免税种</td>
+			<td width="343" colspan="4">减免税类型</td>
+			<td width="343" colspan="3">减免原因</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td colspan="4"></td>
+			<td colspan="3"></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td colspan="4"></td>
+			<td colspan="3"></td>
+		</tr>
+		<tr>
+			<td width="110">货物或应税<br>劳务、服务名称</td>
+			<td width="100">规格型号<br>（服务类型）</td>
+			<td width="80">计量<br>单位</td>
+			<td width="80">数量</td>
+			<td width="83">单价</td>
+			<td width="143">不含税<br>销售额</td>
+			<td width="100">征收率</td>
+			<td width="100">税额</td>
+		</tr>
+		<tr>
+			<td class="font-red">{$service_name}</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td class="font-red">{$sale_amount|string_format:"%.2f"}</td>
+			<td class="font-red">{$appreciation_rate}</td>
+			<td class="font-red">{$tax_amount|string_format:"%.2f"}</td>
+		</tr>
+		<tr>
+			<td>…</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</table>
+	<table class="d-form" cellpadding="0" cellspacing="0">
+		<tr>
+			<td width="110">价税合计（大写）</td>
+			<td width="263" class="font-red">{$current_big_invoice_amount}</td>
+			<td width="200">价税合计（小写）</td>
+			<td width="232" class="font-red">{$current_invoice_amount|string_format:"%.2f"}</td>
+		</tr>
+		<tr>
+			<td>减免税（费）额</td>
+			<td colspan="3"></td>
+		</tr>
+		<tr>
+			<td>应补税额</td>
+			<td colspan="3" class="font-red">{$need_tax_amount|string_format:"%.2f"}</td>
+		</tr>
+		<tr>
+			<td>备注</td>
+			<td colspan="3"></td>
+		</tr>
+		<tr>
+			<td>是否为异地代开</td>
+			<td colspan="3">是口    否口</td>
+		</tr>
+		<tr>
+			<td rowspan="2">受理<br>税务<br>机关</td>
+			<td colspan="3" align="left">税务机关税款征收岗位<br>税收完税凭证号： <br> 
+				<p class="ta-right">（签字）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3" align="left">税务机关代开发票岗位<br>发票代码： <br>发票号码：<br> <p class="ta-right">（签字）&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;日</p></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td colspan="3"></td>
+		</tr>
+		<tr>
+			<td>经办人</td>
+			<td colspan="3" align="left">经核对，所开发票与申报单内容一致。<br>
+			<p class="p-left">经办人（签字）： {$pay_tax_user}</p>
+			<p class="ta-right font-red">{$year}年&nbsp;&nbsp;{$month}月&nbsp;&nbsp;{$day}日</p></td>
+		</tr>
+	</table>
+	<!--endprint1-->
+	<br />
+	<input id="btnPrint" type="button" class="noprint" value="打印" onclick="javascript:window.print();" />
+	<input id="btnPrint" type="button" class="noprint" value="打印预览" onclick=preview(1) />
+	<input id="back_history" type="button" class="noprint" value="返回" onclick="history.back()">
+</div>
+</body>
+
+{include file='/library/base_js.lbi'}
+
+<script>
+$(document).ready(function(){
+	window.print();
+});
+	function preview(oper)
+	{
+		if (oper < 10) {
+			bdhtml=window.document.body.innerHTML;//获取当前页的html代码
+			sprnstr="<!--startprint"+oper+"-->";//设置打印开始区域
+			eprnstr="<!--endprint"+oper+"-->";//设置打印结束区域
+			prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
+			
+			prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html
+			window.document.body.innerHTML=prnhtml;
+			window.print();
+			window.document.body.innerHTML=bdhtml;
+		} else {
+			window.print();
+		}
+	}
+</script>
+</html>

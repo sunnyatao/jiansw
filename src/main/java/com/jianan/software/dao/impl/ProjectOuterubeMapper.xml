@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jianan.software.dao.impl.outerubeDao">
+
+	<resultMap id="projectOutertube" type="com.jianan.software.pojo.ProjectOutertube">
+		<id column="id" property="id"/>
+		<id column="serial_num" property="serialNum"/>
+		<id column="taxpayer_identify_num" property="taxpayerIdentifyNum"/>
+		<id column="taxpayer_name" property="taxpayerName"/>
+		<id column="project_name" property="projectName"/>
+		<id column="project_address" property="projectAddress"/>
+		<id column="project_constructor" property="projectConstructor"/>
+		<id column="constructor_identify_num" property="constructorIdentifyNum"/>
+		<id column="project_total_cost" property="projectTotalCost"/>
+		<id column="is_down" property="isDown"/>
+		<id column="settlement_amount" property="settlementAmount"/>
+		
+		<id column="pre_appreciation_rate" property="preAppreciationRate"/>
+		<id column="pre_appreciation_tax_amount" property="preAppreciationTaxAmount"/>
+		<id column="pre_corporate_income_tax_rate" property="preCorporateIncomeTaxRate"/>
+		<id column="pre_corporate_income_tax_amount" property="preCorporateIncomeTaxAmount"/>
+		<id column="urban_tax_rate" property="urbanTaxRate"/>
+		<id column="urban_tax_amount" property="urbanTaxAmount"/>
+		<id column="education_addition_amount" property="educationAdditionAmount"/>
+		<id column="local_education_addition_amount" property="localEducationAdditionAmount"/>
+		<id column="stamp_duty_rate" property="stampDutyRate"/>
+		<id column="stamp_duty_amount" property="stampDutyAmount"/>
+		<id column="labor_union_amount" property="laborUnionAmount"/>
+		<id column="water_construct_amount" property="waterConstructAmount"/>
+		<id column="is_invoiced" property="isInvoiced"/>
+		
+		<id column="pay_tax_user" property="payTaxUser"/>
+		<id column="contacts_phone" property="contactsPhone"/>
+		<id column="operator_id" property="operatorId"/>
+		<id column="duty_user_id" property="dutyUserId"/>
+		<id column="attachment_path" property="attachmentPath"/>
+		<id column="is_deleted" property="isDeleted"/>
+		<id column="created_at" property="createdAt"/>
+		<id column="bureau_leader" property="bureauLeader"/>
+		<id column="operator_name" property="operatorName"/>
+		<id column="duty_user_name" property="dutyUserName"/>
+		<id column="pay_tax_user_type" property="payTaxUserType"/>
+		<id column="tax_type" property="taxType"/>
+		<id column="income_affiliation" property="incomeAffiliation"/>
+		
+		<collection property="checkFiles" column="id" ofType="int" select="getCheckFiles"></collection>
+		<collection property="invoiceInfo" column="id" ofType="int" select="getProjectCheckInvoiceInfoById"></collection>
+	</resultMap>
+	
+	<resultMap type="com.jianan.software.pojo.ProjectOutertubeInvoiceInfo" id="projectCheckInvoiceInfo">
+		<id column="id" property="id" />
+		<id column="project_outerube_id" property="projectOuterubeId" />
+		<id column="national_invoice_date" property="nationalInvoiceDate" />
+		<id column="national_invoice_no" property="nationalInvoiceNo" />
+		<id column="national_invoice_tax_no" property="nationalInvoiceTaxNo" />
+		<id column="local_invoice_date" property="localInvoiceDate" />
+		<id column="local_invoice_no" property="localInvoiceNo" />
+		<id column="local_invoice_tax_no" property="localInvoiceTaxNo" />
+	</resultMap>
+	
+	<resultMap type="com.jianan.software.pojo.ProjectCheckFile" id="projectCheckFile">
+		<id column="id" property="id"/>
+		<id column="check_id" property="checkId" />
+		<id column="file_name" property="fileName" />
+		<id column="name" property="name" />
+	</resultMap>
+	
+	<select id="getProjectOuterubeCount" resultType="int" parameterType="map">
+		select count(*) from t_project_outertube where 1=1 and is_deleted = 0
+		<if test="taxpayerName != null">
+		and taxpayer_name like CONCAT('%',#{taxpayerName},'%')
+		</if> 
+	</select>
+	
+	<select id="getMaxProjectCheck" resultMap="projectOutertube">
+		<![CDATA[ 
+		SELECT * from t_project_outertube order by id desc limit 1
+		]]>
+	</select>
+	
+	<select id="search" resultMap="projectOutertube" parameterType="string">
+		select * from t_project_outertube where is_deleted = 0 and (taxpayer_name like CONCAT('%',#{keyword},'%') or project_name like CONCAT('%',#{keyword},'%')) order by id desc;
+	</select>
+	
+	<select id="zksearch" resultMap="projectOutertube" parameterType="map">
+		select DISTINCT tpc.* from t_project_outertube tpc, t_project_outertube_invoice_info tpcii where is_deleted=0
+		<if test="serialNum != null">
+		and tpc.serial_num = #{serialNum}
+		</if> 
+		<if test="projectName != null">
+		and tpc.project_name = #{projectName}
+		</if> 
+		<if test="taxpayerName != null">
+		and tpc.taxpayer_name = #{taxpayerName}
+		</if> 
+		<if test="projectConstructor != null">
+		and tpc.project_constructor = #{projectConstructor}
+		</if> 
+		<if test="nationalInvoiceNo != null">
+		and tpc.id=tpcii.project_check_id and tpcii.national_invoice_no = #{nationalInvoiceNo}
+		</if> 
+		<if test="nationalInvoiceTaxNo != null">
+		and tpc.id=tpcii.project_outerube_id and tpcii.national_invoice_tax_no = #{nationalInvoiceTaxNo}
+		</if> 
+		<if test="localInvoiceTaxNo != null">
+		and tpc.id=tpcii.project_outerube_id and tpcii.local_invoice_tax_no = #{localInvoiceTaxNo}
+		</if> 
+		<if test="taxStartTime != null">
+		and tpc.id=tpcii.project_outerube_id and tpcii.national_invoice_date BETWEEN #{taxStartTime} and #{taxEndTime}
+		</if> 
+		order by tpc.id desc limit #{start}, #{pageSize};
+	</select>
+	
+	<select id="sumOuterubeAmount" parameterType="map" resultType="map">
+		select sum(project_total_cost) total_cost, sum(settlement_amount) total_settlement_amount,
+		sum(pre_appreciation_tax_amount) total_pre_appreciation_tax_amount,
+		sum(pre_corporate_income_tax_amount) total_pre_corporate_income_tax_amount,
+		sum(urban_tax_amount) total_urban_tax_amount,
+		sum(education_addition_amount) total_education_addition_amount,
+		sum(local_education_addition_amount) total_local_education_addition_amount,
+		sum(stamp_duty_amount) total_stamp_duty_amount,
+		sum(labor_union_amount) total_labor_union_amount,
+		sum(water_construct_amount) total_water_construct_amount from t_project_outertube tpc, t_project_outertube_invoice_info tpcii where is_deleted=0
+		<if test="serialNum != null">
+		and tpc.serial_num = #{serialNum}
+		</if> 
+		<if test="projectName != null">
+		and tpc.project_name = #{projectName}
+		</if> 
+		<if test="taxpayerName != null">
+		and tpc.taxpayer_name = #{taxpayerName}
+		</if> 
+		<if test="projectConstructor != null">
+		and tpc.project_constructor = #{projectConstructor}
+		</if> 
+		<if test="nationalInvoiceNo != null">
+		and tpc.id=tpcii.project_check_id and tpcii.national_invoice_no = #{nationalInvoiceNo}
+		</if> 
+		<if test="nationalInvoiceTaxNo != null">
+		and tpc.id=tpcii.project_outerube_id and tpcii.national_invoice_tax_no = #{nationalInvoiceTaxNo}
+		</if> 
+		<if test="localInvoiceTaxNo != null">
+		and tpc.id=tpcii.project_outerube_id and tpcii.local_invoice_tax_no = #{localInvoiceTaxNo}
+		</if> 
+		<if test="taxStartTime != null">
+		and tpc.id=tpcii.project_outerube_id and tpcii.national_invoice_date BETWEEN #{taxStartTime} and #{taxEndTime}
+		</if> 
+	</select>
+	
+	<select id="getProjectCheckByIdentifyNo" parameterType="string" resultMap="projectOutertube">
+		SELECT * from t_project_outertube where taxpayer_identify_num=#{taxpayerIdentifyNum} order by id desc limit 1
+	</select>
+
+	<select id="getProjectCheckByProjectname" parameterType="string" resultMap="projectOutertube">
+		SELECT * from t_project_outertube where project_name=#{projectname} order by id desc limit 1
+	</select>
+	
+	<select id="getProjectCheckBySerialNo" parameterType="string" resultMap="projectOutertube">
+		SELECT * from t_project_outertube where serial_num=#{serialNum} order by id desc limit 1
+	</select>
+	
+	<select id="getProjectChecks" resultMap="projectOutertube" parameterType="map">
+		SELECT * from t_project_outertube where 1=1  and is_deleted = 0
+		<if test="taxpayerName != null">
+		and taxpayer_name like CONCAT('%',#{taxpayerName},'%')
+		</if> 
+		order by id desc limit #{start}, #{pageSize};
+	</select>
+	
+	<select id="getProjectCheckInvoiceInfoById" resultMap="projectCheckInvoiceInfo">
+		SELECT * from t_project_outertube_invoice_info where project_outerube_id=#{checkId};
+	</select>
+	
+	<select id="getCheckFiles" parameterType="int" resultMap="projectCheckFile">
+		select * from t_project_outertube_files where check_id=#{checkId};
+	</select>
+	
+	<select id="getInvoiceFiles" resultMap="projectCheckFile">
+		select * from t_project_outertube_invoice_files where check_id=#{invoiceId};
+	</select>
+	
+	<insert id="createProjectCheck" parameterType="com.jianan.software.pojo.ProjectOutertube"  useGeneratedKeys="true" keyProperty="id">
+		insert into t_project_outertube(serial_num, taxpayer_identify_num, taxpayer_name, project_name, project_address, project_constructor,project_total_cost, is_down, 
+		settlement_amount, pre_appreciation_rate, pre_appreciation_tax_amount, pre_corporate_income_tax_rate,pre_corporate_income_tax_amount,urban_tax_rate,urban_tax_amount,education_addition_amount,local_education_addition_amount,
+		stamp_duty_rate, stamp_duty_amount, labor_union_amount, water_construct_amount, is_invoiced, pay_tax_user, contacts_phone, operator_id, duty_user_id, attachment_path, is_deleted, created_at, operator_name, duty_user_name, 
+		bureau_leader, pay_tax_user_type, tax_type, old_serial_num, identify_no, memo, income_affiliation, constructor_identify_num) 		
+		values(#{serialNum}, #{taxpayerIdentifyNum}, #{taxpayerName}, #{projectName}, #{projectAddress}, #{projectConstructor}, #{projectTotalCost}, #{isDown},
+		#{settlementAmount}, #{preAppreciationRate}, #{preAppreciationTaxAmount}, #{preCorporateIncomeTaxRate},
+		#{preCorporateIncomeTaxAmount}, #{urbanTaxRate}, #{urbanTaxAmount}, #{educationAdditionAmount}, #{localEducationAdditionAmount},
+		#{stampDutyRate}, #{stampDutyAmount}, #{laborUnionAmount}, #{waterConstructAmount}, #{isInvoiced}, #{payTaxUser}, #{contactsPhone}, 
+		#{operatorId}, #{dutyUserId}, #{attachmentPath}, #{isDeleted}, #{createdAt}, #{operatorName}, #{dutyUserName}, 
+		#{bureauLeader}, #{payTaxUserType}, #{taxType}, #{oldSerialNum}, #{identifyNo}, #{memo}, #{incomeAffiliation}, #{constructorIdentifyNum});
+	</insert>
+	
+	<insert id="createProjectCheckInvoiceInfo" parameterType="com.jianan.software.pojo.ProjectCheckInvoiceInfo">
+		insert into t_project_outertube_invoice_info(project_outerube_id, national_invoice_date, national_invoice_no, national_invoice_tax_no,
+		local_invoice_date, local_invoice_tax_no, local_invoice_amount) values(#{projectOuterubeId}, #{nationalInvoiceDate}, #{nationalInvoiceNo}, #{nationalInvoiceTaxNo},
+		#{localInvoiceDate}, #{localInvoiceTaxNo}, #{localInvoiceAmount});
+	</insert>
+	
+	
+	<insert id="createProjectCheckFiles" parameterType="java.util.List">
+		insert into t_project_outertube_files(check_id, file_name, name) 
+		values
+		<foreach collection="list" item="item" index="index" separator="," >
+			(#{item.checkId}, #{item.fileName}, #{item.name})
+		</foreach>
+	</insert>
+	
+	<insert id="createInvoiceFiles" parameterType="java.util.List">
+		insert into t_project_outertube_invoice_files(check_id, file_name, name) 
+		values
+		<foreach collection="list" item="item" index="index" separator="," >
+			(#{item.checkId}, #{item.fileName}, #{item.name})
+		</foreach>
+	</insert>
+	
+	<update id="updateOutertube" parameterType="com.jianan.software.pojo.ProjectCheck">
+		update t_project_outertube set taxpayer_name=#{taxpayerName}, project_name=#{projectName}, project_address=#{projectAddress}, project_constructor=#{projectConstructor},
+		project_total_cost=#{projectTotalCost}, is_down=#{isDown}, settlement_amount=#{settlementAmount}, pre_appreciation_rate=#{preAppreciationRate}, pre_appreciation_tax_amount=#{preAppreciationTaxAmount},
+		pre_corporate_income_tax_rate=#{preCorporateIncomeTaxRate}, pre_corporate_income_tax_amount=#{preCorporateIncomeTaxAmount}, urban_tax_rate=#{urbanTaxRate}, urban_tax_amount=#{urbanTaxAmount},
+		education_addition_amount=#{educationAdditionAmount}, local_education_addition_amount=#{localEducationAdditionAmount}, stamp_duty_rate=#{stampDutyRate}, stamp_duty_amount=#{stampDutyAmount},
+		labor_union_amount=#{laborUnionAmount}, water_construct_amount=#{waterConstructAmount}, is_invoiced=#{isInvoiced},
+		pay_tax_user=#{payTaxUser}, contacts_phone=#{contactsPhone}, operator_name=#{operatorName}, duty_user_name=#{dutyUserName},
+		tax_type=#{taxType}, income_affiliation=#{incomeAffiliation}
+		where serial_num=#{serialNum}
+	</update>
+	
+	<update id="delete" parameterType="string">
+		update t_project_outertube set is_deleted = 1 where serial_num=#{serialNum}
+	</update>
+</mapper>
+

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title></title>
+<style type="text/css">
+*{margin: 0;padding: 0;}
+body{font-family: Helvetica, Tahoma, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei", STXihei, STHeiti, Heiti, SimSun, sans-serif;}
+p{font-size: 15px;color: #333;line-height: 28px;}
+h3{font-family: SimHei;font-size: 35px;text-align: center;margin: 30px 0}
+.wrap{width: 600px;margin: 0 auto;}
+.{color: #f00;}
+.fs{font-family:FangSong;}
+</style>
+<style media="print" type="text/css">
+.noprint{display : none }
+</style>
+</head>
+<body>
+<!--startprint1-->
+<div class="wrap">
+	<h3>完税证明</h3>
+	<p style="text-indent:2em;" class="fs">
+		兹有<span class="fs">{$projectOutertube.taxpayerName}</span>承接<span class="fs">{$projectOutertube.projectName}</span>。
+		根据2016年第17号国家税务总局关于发布《纳税人跨县（市、区）提供建筑服务增值税征收管理暂行办法》的公告，<span class="fs">{$projectOutertube.payTaxUserType}</span>跨县（市、区）提供建筑服务，以取得的全部价款和价外费用扣除支付的分包款后的余额，按照<span class="fs">{$pre_appreciation_rate}%</span>的征收率计算应预缴税款。纳税人跨县（市、区）提供建筑服务，应向建筑服务发生地主管国税机关预缴税款。该纳税人{$settlementAmount}元工程款已于<span class="fs">{$nationalInvoiceYear}年{$nationalInvoiceMonth}月{$nationalInvoiceDay}日</span>在我局预缴税增值税<span class="fs">{$projectOutertube.preAppreciationTaxAmount}</span>元，税票号码：<span class="fs">{$invoiceInfo.nationalInvoiceNo}</span>。
+	</p>
+	<br><br>
+	<p style="text-align:right;" class="fs">新晃县国家税务局<br><span class="fs">{$year}年{$month}月{$day}日</span></p>
+</div>
+<!--endprint1-->
+
+<input id="btnPrint" type="button" class="noprint" value="打印" onclick="javascript:window.print();" />
+<input id="btnPrintPreview" type="button" class="noprint" value="打印预览" onclick=preview(1) />
+<input id="back_history" type="button" class="noprint" value="返回" onclick="history.back()">
+</body>
+{include file='/library/base_js.lbi'}
+<script>
+$(document).ready(function(){
+	window.print();
+});
+
+function preview(oper)
+	{
+		if (oper < 10) {
+			bdhtml=window.document.body.innerHTML;//获取当前页的html代码
+			sprnstr="<!--startprint"+oper+"-->";//设置打印开始区域
+			eprnstr="<!--endprint"+oper+"-->";//设置打印结束区域
+			prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
+			
+			prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html
+			window.document.body.innerHTML=prnhtml;
+			window.print();
+			window.document.body.innerHTML=bdhtml;
+		} else {
+			window.print();
+		}
+	}
+</script>
+</html>

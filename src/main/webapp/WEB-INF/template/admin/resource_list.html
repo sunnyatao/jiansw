@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="{$context_path}/styles/bootstrap.3.3.7/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{$context_path}/styles/modal.css">
+    <link rel="stylesheet" type="text/css" href="{$context_path}/styles/member.css">
+    
+    <title>资源管理</title>
+    {include file='/library/head_top.lbi'}
+  </head> 
+
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}
+	<!--创建新资源 -->
+			<div class="modal-content">
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" id="guanbi" class="close btn-danger" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">创建新资源</h4>
+				      </div>
+				      <div class="modal-body">
+				        <tag class="tag horizontal">
+							<div class="grid_item">
+								<label class="label-title">名称：</label>
+								<div class="tag-content">
+									<span class="tag-input"><input type="text" id="resourceName"  value="" maxlength="50" style="width:360px;"></span>
+									<label style='color:red' class="hidden tx-error-resource-name">请输入资源名称</label>
+									<span class="msg msg-error" id="resourceNameHas">
+										<span >该名称已经存在</span>
+									</span>
+								</div>
+							</div>
+							<div class="grid_item">
+								<label class="label-title">URL：</label>
+								<div class="tag-content">
+									<span class="tag-input"><input type="text" id="resourcePath"  value="" maxlength="100" style="width:360px;"></span>
+									<label style='color:red' class="hidden tx-error-resource-path">请输入资源url</label>
+								</div>
+							</div>
+							<div class="grid_item">
+								<label class="label-title">描述：</label>
+								<div class="tag-content">
+									<span class="tag-input"><input type="text" id="resourceDesc"  value="" maxlength="50" style="width:360px;"></span>
+									<label style='color:red' class="hidden tx-error-resource-desc">请输入资源描述</label>
+								</div>
+							</div>
+							<div class="grid_item">
+								<label class="label-title">分类：</label>
+								<div class="tag-content">
+									 <input type="radio" class="check-member"  name="resourceType" value = "1" checked="checked"/>业务管理
+						             <input type="radio" class="check-member"  name="resourceType" value = "2"/>权限管理
+						             <!-- <input type="radio" class="check-member"  name="resourceType" value = "3"/>市场营销 -->
+						             <label style='color:red' class="hidden tx-error-resource-type">请选择资源分类</label>
+								</div>
+							</div>
+						</tag>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				        <button type="button" id="submitResourceId" class="btn btn-primary" onclick="saveResource(0)">确定</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</div>
+	<!--创建新资源  尾-->
+	<!-- 删除资源 -->
+	 <div class="modal fade" id="deleteResource" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">删除资源</h4>
+		      </div>
+		      <div class="modal-body">
+		        	 确定要将此资源删除么？
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary" onclick="deleteResource()">确定</button>
+		        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+		      </div>
+		    </div>
+		  </div>
+	</div>
+<!-- 删除资源 -->
+<!--编辑资源 -->
+			<div class="modal-content">
+				<div class="modal fade" id="editResource" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" id="guanbi" class="close btn-danger" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">编辑资源</h4>
+				      </div>
+				      <div class="modal-body">
+				        <tag class="tag horizontal">
+							<div class="grid_item">
+								<label class="label-title">名称：</label>
+								<div class="tag-content">
+									<span class="tag-input"><input type="text" id="editResourceName"  value="" maxlength="32" style="width:360px;"></span>
+									<label style='color:red' class="hidden tx-error-resource-name">请输入资源名称</label>
+								</div>
+							</div>
+							<div class="grid_item">
+								<label class="label-title">URL：</label>
+								<div class="tag-content">
+									<span class="tag-input"><input type="text" id="editResourcePath"  value="" maxlength="50" style="width:360px;"></span>
+									<label style='color:red' class="hidden tx-error-resource-path">请输入资源url</label>
+								</div>
+							</div>
+							<div class="grid_item">
+								<label class="label-title">描述：</label>
+								<div class="tag-content">
+									<span class="tag-input"><input type="text" id="editResourceDesc"  value="" maxlength="32" style="width:360px;"></span>
+									<label style='color:red' class="hidden tx-error-resource-desc">请输入资源描述</label>
+								</div>
+							</div>
+							<div class="grid_item">
+								<label class="label-title">分类：</label>
+								<div class="tag-content">
+									 <input type="radio" class="check-member"  name="editResourceType" value = "1"/>业务管理
+						             <input type="radio" class="check-member"  name="editResourceType" value = "2"/>权限管理
+						             <!-- <input type="radio" class="check-member"  name="editResourceType" value = "3"/>市场营销 -->
+						             <label style='color:red' class="hidden tx-error-resource-type">请选择资源分类</label>
+								</div>
+							</div>
+						</tag>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				        <button type="button" id="submitEditResourceId" class="btn btn-primary" onclick="editResource()">确定</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			</div>
+<!--编辑资源  尾-->
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 会员管理左侧菜单 -->
+        {include file='/library/left.lbi'}
+        
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h3 class="page-header" class="h-sm">资源管理</h3>
+
+          <h3 class="sub-header">
+          <a href="javascript:void(-1);" data-toggle="modal" data-target="#myModel" onclick="">
+          	<button data-target="#myModal" data-toggle="modal" class="btn btn-primary btn-sm" type="button" >创建新资源</button>
+          </a>
+          </h3>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>名称</th>
+                  <th>url</th>
+                  <th>描述</th>
+                  <th>分类</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="aa">
+                {foreach from=$resourceList item=resource key=key}
+                <tr>
+                  <td>{$resource.resourceId}</td>
+                  <td>{$resource.resourceName}</td>
+                  <td>{$resource.resourcePath}</td>
+                  <td>{$resource.resourceDesc}</td>
+                  <td>
+                  	 <!-- {if $resource.resourceType == 1} -->业务管理
+                  	 <!-- {elseif $resource.resourceType == 2} -->权限管理
+                  	 <!-- {elseif $resource.resourceType == 3} -->市场营销
+                  	 <!-- {/if} -->
+                  </td>
+                  <td><a href="#" onclick="" data-target="#editResource" data-toggle="modal" data-whatever="{$resource.resourceId},{$resource.resourceName},{$resource.resourcePath},{$resource.resourceDesc},{$resource.resourceType}">修改</a> - 
+                  <a href="#" data-target="#deleteResource" data-toggle="modal"  data-whatever="{$resource.resourceId}">删除</a></td>
+                </tr>
+                {/foreach} 
+              </tbody>
+            </table>
+            <hr/>
+          </div>
+          {include file='/library/page.lbi'}
+        </div>
+      </div>
+    </div>
+	<input type="hidden" id="currResourceId">
+	<input type="hidden" id="currResourceName">
+	<input type="hidden" id="currResourcePath">
+	<input type="hidden" id="currResourceDesc">
+	<!-- 引入bash_js -->
+{include file='/library/base_js.lbi'}
+ <script src="{$context_path}/javascript/common/page.js"></script>
+<script type="text/javascript">
+function saveResource(resourceId){
+	
+	$("#submitResourceId").attr('disabled',"true");
+	var resourceName = $("#resourceName").val();
+	var resourcePath = $("#resourcePath").val();
+	var resourceDesc = $("#resourceDesc").val();
+	var resourceType= $("input[name='resourceType']:checked").val();
+	if (resourceName.trim() == '') {
+		$(".tx-error-resource-name").removeClass("hidden");
+		$(".tx-error-resource-name").show();
+		return;
+	}
+	if (resourcePath.trim() == '') {
+		$(".tx-error-resource-path").removeClass("hidden");
+		$(".tx-error-resource-path").show();
+		return;
+	}
+	if (resourceDesc.trim() == '') {
+		$(".tx-error-resource-desc").removeClass("hidden");
+		$(".tx-error-resource-desc").show();
+		return;
+	}
+	$.post(
+			'{$context_path}' + "/crm/v1/auth/resource/ajax/save",
+    		{'resource_id': resourceId, "resource_name": resourceName,"resource_path":resourcePath,"resource_desc":resourceDesc,"resource_type":resourceType},
+    		function(data) {
+    			if (data.code == 1) {
+    				window.location.href = context_path+"/crm/v1/auth/resource/list";
+    			} else {
+    				$("#submitResourceId").attr('disabled',"false");
+    				alert(data.reason);
+    			}
+    		},
+    		'JSON'
+    	);
+}
+//删除资源
+$('#deleteResource').on('show.bs.modal', function (event) {
+	 var button = $(event.relatedTarget)
+	 var resourceId = button.data('whatever') 
+	 $("#currResourceId").val(resourceId);
+})
+//编辑资源
+$('#editResource').on('show.bs.modal',function(event){
+	 var button = $(event.relatedTarget)
+	 var recipient = button.data('whatever') 
+	 var paramInfo= recipient.split(",");
+	 var resourceType = paramInfo[4];
+	 //console.log(resourceType); 
+	 $("input[name='editResourceType']").get((resourceType-1)).checked=true
+	 $("#currResourceId").val(paramInfo[0]);
+	 $("#editResourceName").val(paramInfo[1]);
+	 $("#editResourcePath").val(paramInfo[2]);
+	 $("#editResourceDesc").val(paramInfo[3]);
+})
+function deleteResource(){
+	$('#deleteResource').modal('hide');
+	var resourceId = $("#currResourceId").val();
+	$.post(
+			'{$context_path}' + "/crm/v1/auth/resource/ajax/delete",	
+    		{'resource_id':resourceId},
+    		function(data) {
+    			if(data.code == 1){
+    				window.location.href=context_path+"/crm/v1/auth/resource/list";
+    			}else{
+    				alert(data.reason);
+    				return;
+    			}
+    		},
+    		'JSON'
+    	);
+}
+function editResource(){
+	$("#submitEditResourceId").attr('disabled',"true");
+	var resourceId = $("#currResourceId").val();
+	var resourceName = $("#editResourceName").val();
+	var resourcePath = $("#editResourcePath").val();
+	var resourceDesc = $("#editResourceDesc").val();
+	var resourceType= $("input[name='editResourceType']:checked").val();
+	if (resourceName.trim() == '') {
+		$(".tx-error-resource-name").removeClass("hidden");
+		$(".tx-error-resource-name").show();
+		return;
+	}
+	if (resourcePath.trim() == '') {
+		$(".tx-error-resource-path").removeClass("hidden");
+		$(".tx-error-resource-path").show();
+		return;
+	}
+	if (resourceDesc.trim() == '') {
+		$(".tx-error-resource-desc").removeClass("hidden");
+		$(".tx-error-resource-desc").show();
+		return;
+	}
+	$.post(
+			'{$context_path}' + "/crm/v1/auth/resource/ajax/save",
+    		{'resource_id': resourceId, "resource_name": resourceName,"resource_path":resourcePath,"resource_desc":resourceDesc,"resource_type":resourceType},
+    		function(data) {
+    			if (data.code == 1) {
+    				window.location.href = context_path+"/crm/v1/auth/resource/list";
+    			} else {
+    				$("#submitEditResourceId").attr('disabled',"false");
+    				alert(data.reason);
+    				
+    			}
+    		},
+    		'JSON'
+    	);
+	
+}
+</script> 
+<script>
+    var context_path = '{$context_path}';
+</script>       
+  </body>
+</html>

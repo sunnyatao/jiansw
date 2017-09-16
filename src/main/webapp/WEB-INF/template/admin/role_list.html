@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+	    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	    <meta name="description" content="">
+	    <meta name="author" content="">
+	    <link rel="icon" href="{$context_path}/images/favicon.ico">
+	    <link rel="stylesheet" type="text/css" href="{$context_path}/styles/modal.css">
+		<link rel="stylesheet" type="text/css" href="{$context_path}/styles/bootstrap.3.3.7/bootstrap.min.css">
+	
+	    <title>角色列表</title>
+	    {include file='/library/head_top.lbi'}
+	</head>
+	<body>
+		<!-- 导航 -->
+		{include file='/library/body_top.lbi'}
+		 <!-- 会员管理左侧菜单 -->
+        {include file='/library/left.lbi'}
+        <div class="roleList">    <!--进行页面之间的切换 -->
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<div>
+					<h4 id="roleId" style="font-weight:bold; display:inline-block" >角色管理</h4>
+					<p style="display:inline-block;float:right;">
+						<a href="#" class="button blockquote-reverse" onclick="insertOrUpdateRoles(0)">添加角色</a>   
+					</p>
+				</div>
+				<table id="tableList" class="table table-bordered table-hover">
+				    <tr>
+				    	<th class= "topTitle" width="10%" style="text-align:left;">管理员角色</th>
+				    	<th class= "topTitle" width="86%" style="text-align:center;">角色描述</th>
+				    	<th class= "topTitle" width="4%" style="text-align:center;">操作</th>
+				    </tr>
+		  			{foreach from=$authRoles item=authRole key=key}
+	  				<tr class = "roleList">
+	  					<td>{$authRole.roleName}</td>
+	  					<td>{$authRole.description}</td>
+	  					<td>
+	  						<div class="alert alert-danger " style="display:none" role="alert"></div><!--失败提醒-->
+	  						<a href="#" title="编辑" id="{$authRole.roleId}" onclick="insertOrUpdateRoles({$authRole.roleId})"><span class="glyphicon glyphicon-cog"></span></a>&nbsp;&nbsp;
+	  						<a href="#" title="删除" id="{$authRole.roleId}" onclick="deleteRole(this)"><span class="glyphicon glyphicon-remove"></span></a>
+	  					</td>
+	  				</tr>
+		  			{/foreach}
+				</table>
+				<input type="hidden" value="0" id="selectedRoleId"/> <!--存储roleID用来区分增加和编辑  -->
+			</div>
+		</div>
+		
+		<!--添加列表和更新列表  -->
+		<div class="addRoleOrUpdateRole" style="display:none">       <!--进行页面之间的切换 -->
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<div>
+					<h4 id="roleId" style="font-weight:bold; display:inline-block" class="roleTitleLeft"></h4>
+					<p style="display:inline-block;float:right;">
+						<a href="#" class="button blockquote-reverse roleTitleRight" onclick="changToList()"></a>  
+					</p>
+				</div>
+				<div class="resourceList"><!--这里展示要添加的内容 -->
+					<table class="table table-bordered addRole-table">
+ 						<tr><td><label style="float:right;">角色名称:</label></td><td><input  id="roleName" type="text" name="role_name"  style="width:270px;"  value="" placeholder="角色的名称" ></td></tr>
+ 						<tr><td><label style="float:right;">角色描述:</label></td><td><textarea id="description" cols="35" rows="6"  name="role_description"  value="" placeholder="角色的描述"></textarea></td></tr>
+						<tr>
+		    				<td width="30%">
+		    					<label class="fontMargin"><input type="checkbox"  onclick="checkAll(this,1)" style="font-weight:bold;display:inline-block;" class="checkbox">业务管理</label>
+		    				</td>
+		    				<td id="memeberResources"><!-- 会员资源 -->
+		    				</td>
+		   	 		  	</tr>
+						<tr>
+		    				<td width="30%">
+		    					<label class="fontMargin"><input type="checkbox"  onclick="checkAll(this,2)" style="font-weight:bold;display:inline-block;" class="checkbox">权限管理</label>
+		    				</td>
+		    				<td id="powerResources"><!--权限资源  -->
+		    				</td>
+		   	 		  	</tr>
+					</table>
+					<table class="table addRole-table-btn" id = "resourcesShow">
+					<tr>
+						<td style="text-align:center">
+							<label class="fontMargin"><input type="checkbox" name="checkAll" id="remove" value="checkbox" onclick="checkAll(this,0)" style="font-weight:bold;display:inline-block;" class="checkbox">全选 </label>&nbsp;&nbsp;
+							<input type="submit"  name="submit"  style="font-weight:bold;" value="保存" onclick="saveRole();" >&nbsp;&nbsp;
+							<input type="reset"  value="重置" style="font-weight:bold;" onclick="removeAll()" class="reset">
+						</td>
+					</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	  	<!-- 引入bash_js -->
+   		{include file='/library/base_js.lbi'}
+   		<script src="{$context_path}/javascript/jquery.tmpl.min.js"></script>
+   		<!-- js内容   -->
+   		<script type="text/javascript">
+   		function deleteRole(e){
+   			var roleId = $(e).attr("id");
+   			if(confirm("确定要删除吗？")){
+	   			$.ajax({
+	   				type:"post",
+	   			    url:"{$context_path}/crm/v1/role/ajax/deleteRole",
+	   			    data:{"roleId":roleId},
+	   			    dataType:'JSON',
+	   			    success:function(data) {
+	   			    	if(data.code==1) {
+	   			    		window.location.href="{$context_path}/crm/v1/role/admin/toRoleRoute";
+	   			    		//console.log("role数据删除成功");
+	   			    	}else {
+	   			    		$(".tx-search-failure").html("数据删除失败");
+	   			    		$(".tx-search-failure").fadeIn(1000);
+	   			    		$(".tx-search-failure").fadeOut(2000);
+	   			    	}
+	   			    }
+	   			});
+   			}
+   		}
+   		
+   		/*进行重新编辑角色 */
+   		function insertOrUpdateRoles(roleId) {
+   		    $(".roleList").hide();
+   		    $(".addRoleOrUpdateRole").show();
+   		    
+   		    if(roleId>0) {/*更新 */
+	   		    $(".roleTitleLeft").html("角色修改");
+	   		    $(".roleTitleRight").html("角色列表");
+	   		    $(".reset").prop("hidden",true);
+   		    }else {	/*添加 */
+   		    	$(".roleTitleLeft").html("添加角色");
+   	   		    $(".roleTitleRight").html("角色列表");
+   		    }
+	   		$.ajax({
+			    	type:"post",
+			    	url:"{$context_path}/crm/v1/role/ajax/getRoles",
+			    	data:{"roleId":roleId},
+			    	dataType:"json",
+			    	success:function(data) {
+			    		 if(data.code = 1) {
+			    			var resources = data.msg_data.crmAuthResources;
+			    			for(var i = 0;i<resources.length;i++) {
+			    				var resource = resources[i];
+			    				if(resource.resourceType == 1) {
+			    					var addMemberResource = '<label class="fontMargin"><input type="checkbox" class="resources memberResource" id='+resource.resourceId+'>'+resource.resourceName+'</label>'
+			    					$("#memeberResources").append(addMemberResource);
+			    				}else {
+			    					var addPowerResource = '<label  class="fontMargin"><input type="checkbox" class="resources powerResource" id='+resource.resourceId+'>'+resource.resourceName+'</label>'
+		 		    				$("#powerResources").append(addPowerResource);
+			    				}
+			    			}
+			    			if(roleId > 0) {
+		 		    			var role = data.msg_data.crmAuthRole;
+		 		    			$("#selectedRoleId").val(role.roleId);
+			 		    		$("#roleName").val(role.roleName);
+			 		    		$("#description").html(role.description);
+		 		    			var roleResource = role.roleResources;
+			    				for(var j= 0; j<roleResource.length;j++) {
+			    				    var roleRes = roleResource[j];
+			    					var resourceId = roleRes.resourceId;
+			    					$("#"+resourceId).prop("checked",true);
+			    				}
+			    			}
+		    			}
+			    	}
+			    });
+   		}
+   		
+   		function saveRole() {
+   			var roleId = $("#selectedRoleId").val();
+   			var arrResource= new Array(); /* 存放resourceId */
+   			var resourceIds = $(".resources");
+   			$.each(resourceIds,function(){
+   				if($(this).prop("checked")) {
+   					arrResource.push($(this).attr("id"));
+   				}
+   			});
+   			var roleName = $.trim($("#roleName").val());
+   			var description = $.trim($("#description").val());
+   			$.ajax({
+   				type:"post",
+   				url:"{$context_path}/crm/v1/role/ajax/updateOrInsert",
+   				data:{"arrResource":JSON.stringify(arrResource),"roleName":roleName,"description":description,"roleId":roleId},
+   				dataType:"JSON",
+   				success:function(data) {
+   					if(data.code == 1){
+   						//console.log("角色保存成功或修改成功");
+   						window.location.href="{$context_path}/crm/v1/role/admin/toRoleRoute";
+   					} else {
+   						//console.log("数据保存或修改失败");
+   					}
+   				}
+   			});
+   		}
+   		/*进行全选的设置  */
+   		function checkAll(e,flagId) {
+   			if(flagId == 0) {
+	   			var resourceIds = $(".resources");
+	   			if($(e).prop("checked")) {
+		   			$.each(resourceIds,function(){
+		   				$(this).prop("checked",true);
+		   			});
+	   			} else {
+	   				$.each(resourceIds,function(){
+		   				$(this).prop("checked",false);
+		   			});
+	   			}
+   			}else if(flagId == 1) {
+   				var resourceIds = $(".memberResource");
+	   			if($(e).prop("checked")) {
+		   			$.each(resourceIds,function(){
+		   				$(this).prop("checked",true);
+		   			});
+	   			} else {
+	   				$.each(resourceIds,function(){
+		   				$(this).prop("checked",false);
+		   			});
+	   			}
+   			}else {
+   				var resourceIds = $(".powerResource");
+	   			if($(e).prop("checked")) {
+		   			$.each(resourceIds,function(){
+		   				$(this).prop("checked",true);
+		   			});
+	   			} else {
+	   				$.each(resourceIds,function(){
+		   				$(this).prop("checked",false);
+		   			});
+	   			}
+   			}
+   		}
+   		
+   		/*进行重置  */
+   		function removeAll() {
+   			window.location.reload(); 
+   		}
+   		/*从角色添加界面向列表界面转换  */
+   		function changToList() {
+   			window.location.reload();/* 等效于进行路径转换 */
+   		}
+   		
+   		</script>
+	</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

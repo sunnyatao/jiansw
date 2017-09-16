@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.lepu.hst.crm.web.role.dao">
+	<resultMap id="roleList" type="com.jianan.software.pojo.CrmAuthRole">
+		<id column="role_id" property="roleId"></id>
+		<result column="role_name" property="roleName"></result>
+		<result column="description" property="description"></result>
+		<result column="created_on" property="createdOn"></result>
+		<result column="created_by" property="createdBy"></result>
+		<collection property="roleResources" ofType="com.jianan.software.pojo.CrmauthRoleResource" column="role_id" select="getAuthRoleResource">
+		</collection>
+	</resultMap>
+	<resultMap id="roleResourceList" type="com.jianan.software.pojo.CrmauthRoleResource">
+		<id column="role_resource_id" property="roleResourceId"></id>
+		<result column="role_id" property="roleId"></result>
+		<result column="resource_id" property="resourceId"></result>
+		<result column="created_on" property="createdOn"></result>
+		<result column="created_by" property="createdBy"></result>
+	</resultMap>
+	
+	<select id = "getRoleList"  resultMap="roleList">
+		select * from auth_role order by role_id DESC;
+	</select>
+	<!--进行删除  -->
+	<delete id = "deleteAuthRole" parameterType="int">
+		delete from auth_role where role_id = #{roleId};
+	</delete>
+	<delete id = "deleteAuthRoleResource" parameterType="int">
+		delete from auth_role_resource where role_id = #{roleId};
+	</delete>
+	<delete id = "deleteAuthUserRole" parameterType="int">
+		delete from auth_user_role where role_id = #{roleId};
+	</delete>
+	<!--进行修改 -->
+	<select id="getRoleBy" parameterType="int" resultMap="roleList">
+		select * from auth_role where role_id = #{roleId};
+	</select>
+	<select id="getAuthRoleResource" parameterType="int" resultMap="roleResourceList">
+		select * from auth_role_resource where role_id = #{roleId};
+	</select>
+	<update id="updateRole" parameterType="com.jianan.software.pojo.CrmAuthRole">
+		update auth_role set role_name=#{roleName},description=#{description},created_on= #{createdOn},created_by = #{createdBy} where role_id = #{roleId};
+	</update>
+	<delete id="deleteRoleResources" parameterType="int">
+		delete from auth_role_resource where role_id = #{roleId};
+	</delete>
+	<insert id="insertRoleResources" parameterType="List">
+		insert into auth_role_resource(role_id,resource_id,created_on,created_by) values
+		<foreach collection="list" item="roleResoure" separator=",">
+		(#{roleResoure.roleId},#{roleResoure.resourceId},#{roleResoure.createdOn},#{roleResoure.createdBy})
+		</foreach>
+	</insert>
+	
+	<insert id="insertRole" parameterType="com.jianan.software.pojo.CrmAuthRole" useGeneratedKeys="true" keyProperty="roleId">
+		insert into auth_role(role_name,description,created_on,created_by) values(#{roleName},#{description},#{createdOn},#{createdBy});
+	</insert>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

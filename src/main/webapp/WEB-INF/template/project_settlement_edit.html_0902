@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+
+    <title>工程结算编辑</title>
+    {include file='/library/head_top.lbi'}
+    <link href="{$context_path}/styles/wjb/wjb-crm-css.css" rel="stylesheet">
+    <link href="{$context_path}/styles/bootstrap.3.3.7/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="{$context_path}/styles/member.css" rel="stylesheet">
+    
+    
+  </head>
+
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 会员管理左侧菜单 -->
+        {include file='/library/left.lbi'}
+        
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<div class="mem-info">
+				<form id='project_check_form' name='project_check_form' method="post" action="{$context_path}/projectSettlement/submit">
+				<div class="mem-info-bd">
+					<div class="line">
+						  <div class="item"><span class="tit">编号：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$projectSettlement.serialNum}" id="serial_num" name= "serial_num" readonly="readonly" style="margin-left: -4px"/></span></div>	                			
+						  <div class="item"><span class="tit">纳税人识别号：</span>
+						  <span class="con"><input readonly="readonly" type="text" value="{$projectSettlement.taxpayerIdentifyNum}" id="taxpayer_identify_num" name= "taxpayer_identify_num"/></span></div>
+						  <div class="item"><span class="tit">纳税人名称：</span>
+						  <span class="con"><input type="text" value="{$projectSettlement.taxpayerName}" id="taxpayer_name" name= "taxpayer_name"/></span></div>
+						  <div class="item"><span class="tit">工程项目名称：</span>
+						  <span class="con"><input type="text" value="{$projectSettlement.projectName}" id="project_name" name= "project_name"/></span></div>
+						  <div class="item"><span class="tit">工程项目地址：</span>
+						  <span class="con"><input type="text" value="{$projectSettlement.projectAddress}" id="project_address" name= "project_address"/></span></div>
+						  <div class="item"><span class="tit">工程发包方：</span>
+						  <span class="con"><input type="text" value="{$projectSettlement.projectConstructor}" id="project_constructor" name= "project_constructor"/></span></div>
+						  <div class="item"><span class="tit">工程总造价：</span>
+						  <span class="con"><input type="text" value="{$projectSettlement.projectTotalCost}" id="project_total_cost" name= "project_total_cost"/></span></div>
+					 	  <div class="item"><span class="tit">是否完工：</span>
+						  <select name='is_down' id='is_down'>
+						  		<option value='完工' {if $projectSettlement.isDown eq '完工'}selected="selected"{/if}>完工</option>
+						  		<option value='进度款' {if $projectSettlement.isDown eq '进度款'}selected="selected"{/if}>进度款</option>
+						  		<option value='一事一议工程' {if $projectSettlement.isDown eq '一事一议工程'}selected="selected"{/if}>一事一议工程</option>
+						  		<option value='扶贫办项目' {if $projectSettlement.isDown eq '扶贫办项目'}selected="selected"{/if}>扶贫办项目</option>
+						  </select></div>
+						  
+						  <div class="item"><span class="tit">本次结算金额：</span>
+						  <span class="con"><input type="text" value="{$projectSettlement.settlementAmount}" id="settlement_amount" name= "settlement_amount"/></span></div>
+						  <div class="item"><span class="tit">供货方身份证号码：</span>
+						  <span class="con"><input type="text" value="{$projectSettlement.serviceProducerCardNo}" id="service_producer_card_no" name= "service_producer_card_no"/></span></div>
+						  <div class="item"><span class="tit">供货方姓名：</span>
+						  <span class="con"><input type="text" value="{$projectSettlement.serviceProducerName}" id="service_producer_name" name= "service_producer_name"/></span></div>
+						  <div class="item"><span class="tit">成本发票比例：</span>
+						  <span class="con"><input type="text" value="65" id="cost_invoice_rate" name= "cost_invoice_rate"/>%</span></div>
+						  <div class="item"><span class="tit">已取得发票分数：</span>
+						  <span class="con"><input type="text" value="{$projectSettlement.obtainInvoiceNum}" id="obtain_invoice_num" name= "obtain_invoice_num"/></span></div>
+						  <div class="item"><span class="tit">已取得发票金额：</span>
+						  <span class="con"><input type="text" value="{$projectSettlement.obtainInvoiceAmount}" id="obtain_invoice_amount" name= "obtain_invoice_amount"/></span></div>
+						  <div class="item"><span class="tit">代扣单位：</span>
+						  	<select name='withhold_department' id='withhold_department' style="width: 77px">
+						  		<option value='请选择'>请选择</option>
+						  		<option value='财政支付局' {if $projectSettlement.withholdDepartment eq '财政支付局'}selected='selected'{/if}>财政支付局</option>
+						  		<option value='经建投' {if $projectSettlement.withholdDepartment eq '经建投'}selected='selected'{/if}>经建投</option>
+						  		<option value='工建投' {if $projectSettlement.withholdDepartment eq '工建投'}selected='selected'{/if}>工建投</option>
+						  	</select>
+						  </div>
+						  <div class="item"><span class="tit line-tiny">已代扣增值税及地税附征税额：</span>
+						  <span class="con"><input type="text"  value="{$projectSettlement.withholdTaxAmount}" id="withhold_tax_amount" name= "withhold_tax_amount"/></span></div>
+						  <div class="item"><span class="tit line-tiny">增值税额及地税附征税款：</span>
+						  <span class="con"><input type="text"  value="{$projectSettlement.appreciationLocalTaxAmount}" id="appreciation_local_tax_amount" name= "appreciation_local_tax_amount" disabled="disabled"/></span></div>
+						  <div class="item"><span class="tit line-tiny">本次结算应补应退税额：</span>
+						  <span class="con"><input type="text"  value="{$projectSettlement.refundTaxAmount}" id="refund_tax_amount" name= "refund_tax_amount" disabled="disabled"/></span></div>
+						  <div class="item"><span class="tit">征收单位：</span>
+							<select name='impose_department' id='impose_department' style="width: 77px">
+						  		<option value='办税大厅' {if $projectSettlement.imposeDepartment eq '办税大厅'}selected="selected"{/if}>办税大厅</option>
+						  		<option value='房产局' {if $projectSettlement.imposeDepartment eq '房产局'}selected="selected"{/if}>房产局</option>
+						  	</select>
+						  </div>
+						  <div class="item"><span class="tit">经济性质：</span>
+							<select name='economic_nature' id='economic_nature' style="width: 77px">
+						  		<option value='个人' {if $projectSettlement.economicNature eq '个人'}selected="selected"{/if}>个人</option>
+						  		<option value='企业' {if $projectSettlement.economicNature eq '企业'}selected="selected"{/if}>企业</option>
+						  	</select>
+						  </div>
+						  <div class="item"><span class="tit">竣工时间：</span>&nbsp;
+						  <span class="con"><input type="text" value="{if $projectSettlement.overTime eq null}{else}{$projectSettlement.overTime|date_format:'%Y-%m-%d'}{/if}" id="over_time" name= "over_time"  style="margin-left: -4px"/></span></div>
+					 	  <div class="item"><span class="tit">纳税经办人：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$projectSettlement.payTaxUser}" id="pay_tax_user" name= "pay_tax_user" style="margin-left: -4px"/></span></div>
+					 	  <div class="item"><span class="tit">联系电话：</span>
+						  <span class="con"><input type="text" value="{$projectSettlement.contactsPhone}" id="contacts_phone" name= "contacts_phone"/></span></div>
+					 	  <div class="item"><span class="tit">经办人：</span>
+						  <span class="con"><input type="text" readonly="readonly"  value="{$projectSettlement.operatorName}" id="operator_name" name= "operator_name"/></span></div>
+					 	  <div class="item"><span class="tit">负责人：</span>
+						  <select name='duty_user_name' id='duty_user_name' style="width: 77px">
+						  		<!-- {foreach from=$dutyUsers item=dutyUser key=key} -->
+						  		<option value='{$dutyUser.name}' {if $dutyUser.name eq $projectSettlement.dutyUserName}selected="selected"{/if}>{$dutyUser.name}</option>
+						  		<!-- {/foreach} -->
+						  </select>
+						  </div>
+					 	  <div class="item"><span class="tit">局领导：</span>
+						  <select name='bureau_leader' id='bureau_leader' style="width: 77px">
+						  		<!-- {foreach from=$bureauLeaders item=bureauLeader key=key} -->
+						  		<option value='{$bureauLeader.name}' {if $bureauLeader.name eq $projectSettlement.bureauLeader}selected="selected"{/if}>{$bureauLeader.name}</option>
+						  		<!-- {/foreach} -->      
+						  </select>
+					 	  </div>
+					 	  <div class="item"><span class="tit"><a href="{$context_path}/projectsettlement/viewfile?serial_num={$projectSettlement.serialNum}" target="_blank">相关附件</a></span>
+						  </div>					 
+				</div>
+				<br/>
+				<button type="button" class="mem-save-btn btn btn-primary" style="margin-left:17px" onclick="upadtProjectCheck()" style="">保存</button>
+				<button type="button" class="mem-save-btn btn btn-primary" style="margin-left:17px" onclick="nextProjectCheck()" style="">下一工程</button>
+				<button type="button" class="mem-save-btn btn btn-primary" style="margin-left:17px" onclick="toPrint()" style="">打印</button>
+				<button type="button" class="mem-save-btn btn btn-primary" style="margin-left:17px" onclick="history.back()" style="">返回</button>
+			</form>
+            </div>
+		  	<!-- 引入bash_js -->
+    {include file='/library/base_js.lbi'}
+    <script src="{$context_path}/javascript/bootstrap.3.3.7/bootstrap-datetimepicker.min.js"></script>
+    <script src="{$context_path}/javascript/bootstrap.3.3.7/bootstrap-datetimepicker.zh-CN.js"></script>
+    
+<script>
+
+$(document).ready(function(){
+	$('#project_total_cost').bind('change', totalCostOnchange);
+	
+	$('#settlement_amount').bind('change', settlementAmountOnchanges);
+    $('#cost_invoice_rate').bind('change', settlementAmountOnchanges);
+    $('#obtain_invoice_num').bind('change', settlementAmountOnchanges);
+    $('#withhold_tax_amount').bind('change', settlementAmountOnchanges);
+});
+
+//工程结算金额默认为工程总造价
+totalCostOnchange = function(event) {
+	totalCost = $('#project_total_cost').val();
+	$('#settlement_amount').val(toFloat(totalCost));
+};
+
+settlementAmountOnchanges = function(event) {
+	obtainInvoiceAmountOnchange();
+	withholdTaxAmountOnchange();
+};
+
+//增值税额及地税附征税款：4.8%，后面直接显示税额（（(本次结算金额*成本发票比例-已取得发票金额)/1+3%）*4.8%）
+obtainInvoiceAmountOnchange = function(event) {
+	//本次结算金额
+	settlementAmount = $('#settlement_amount').val();
+	//成本发票比例
+	costInvoiceRate = $('#cost_invoice_rate').val()/100;
+	//已取得发票金额
+	obtainInvoiceAmount = $('#obtain_invoice_amount').val();
+	
+	appreciationLocalTaxAmount = ((settlementAmount*costInvoiceRate - obtainInvoiceAmount)/(1+0.03))*0.048
+	$('#appreciation_local_tax_amount').val(toFloat(appreciationLocalTaxAmount));
+	
+};
+
+//增值税额及地税附征税款：
+//本次结算应补应退税额：本次结算金额*成本发票比例/1+3%）*4.8%-已代扣增值税及地税附征税额
+withholdTaxAmountOnchange = function(event) {
+	//本次结算金额
+	settlementAmount = $('#settlement_amount').val();
+	//成本发票比例
+	costInvoiceRate = $('#cost_invoice_rate').val()/100;
+	//已代扣税款
+	withholdTaxAmount = $('#withhold_tax_amount').val();
+	
+	appreciationLocalTaxAmount = $('#appreciation_local_tax_amount').val();
+	
+	//refundTaxAmount = settlementAmount*costInvoiceRate/(1+0.03)*0.048 - withholdTaxAmount;
+	//本次结算应补退 = 增值税额及地税 - 已抵扣 : 2017-08-09修改
+	refundTaxAmount = appreciationLocalTaxAmount - withholdTaxAmount;
+	$('#refund_tax_amount').val(toFloat(refundTaxAmount));
+};
+
+function toFloat(num) {
+	return Math.round(num*100)/100;
+}
+
+function upadtProjectCheck() {
+	serialNum = $('#serial_num').val();
+	$.post(
+			'{$context_path}' + "/projectsettlement/api/update",	
+			{'serial_num': serialNum, 'taxpayer_identify_num':$('#taxpayer_identify_num').val(),'taxpayer_name' :$('#taxpayer_name').val(),
+				'project_name':$('#project_name').val(),'project_address':$('#project_address').val(),'project_constructor' :$('#project_constructor').val(),
+				'project_total_cost' :$('#project_total_cost').val(),'is_down' :$('#is_down').val(),
+				'settlement_amount': $('#settlement_amount').val(),'service_producer_card_no': $('#service_producer_card_no').val(),
+				'service_producer_name': $('#service_producer_name').val(),'cost_invoice_rate': $('#cost_invoice_rate').val(),
+				'obtain_invoice_num': $('#obtain_invoice_num').val(),'obtain_invoice_amount': $('#obtain_invoice_amount').val(),
+				'withhold_department': $('#withhold_department').val(),'withhold_tax_amount': $('#withhold_tax_amount').val(),
+				'appreciation_local_tax_amount': $('#appreciation_local_tax_amount').val(),'withhold_appreciation_local_tax_amount':$('#withhold_appreciation_local_tax_amount').val(),
+				'refund_tax_amount':$('#refund_tax_amount').val(),'impose_department':$('#impose_department').val(),
+				'operator_name':$('#operator_name').val(),'duty_user_name':$('#duty_user_name').val(),
+				'pay_tax_user':$('#pay_tax_user').val(),'contacts_phone':$('#contacts_phone').val(), 'bureau_leader':$('#bureau_leader').val(),
+				'over_time': $('#over_time').val(), 'c_dkje': $('#withhold_tax_amount').val(), 'c_zsje': $('#refund_tax_amount').val(), 'economic_nature': $('#economic_nature').val()},
+    		function(data) {
+    			if(data.code == 1){
+    				alert("保存成功!");
+    				window.location.href = '{$context_path}' + "/projectsettlement/list"
+    			} else {
+    				alert("保存失败, 服务异常!");
+    			}
+    		},
+    		'JSON'
+    	);  
+}
+
+function nextProjectCheck() {
+	window.location.href = "{$context_path}/projectsettlement/toadd";
+}
+
+function toPrint() {
+	window.location.href = "{$context_path}/projectsettlement/toprint?serial_num={$projectSettlement.serialNum}";
+}
+</script>
+</body>
+</html>

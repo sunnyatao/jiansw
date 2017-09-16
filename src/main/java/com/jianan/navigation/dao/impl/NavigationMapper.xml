@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lepu.hst.crm.web.navigation.dao">
+	<resultMap type="com.jianan.software.pojo.CrmAuthNavigation" id="navigationMap">
+		<id column="nav_id" property="navId"></id>
+		<result column="nav_name" property="navName"/>
+		<result column="parent_id" property="parentId"/>
+		<result column="resource_id" property="resourceId"/>
+		<result column="created_by" property="createdBy"/>
+		<result column="created_on" property="createdOn"/>
+		<result column="sort_value" property="sortValue"/>
+		<result column="nav_level"  property="navLevel"/>
+	</resultMap>
+	<select id="getNavigationList" resultMap="navigationMap">
+		select * from auth_navigation where parent_id = 0
+	</select>
+	<insert id="saveFirstNavigation" parameterType="com.jianan.software.pojo.CrmAuthNavigation">
+	   insert into auth_navigation (nav_name,parent_id,resource_id,created_on,nav_level) values (#{navName},#{parentId},#{resourceId},#{createdOn},#{navLevel})
+	</insert>
+	<select id="getNavListByParentId" parameterType="string" resultMap="navigationMap">
+		select * from auth_navigation  where parent_id = #{parentId}
+	</select>
+	<delete id="deleteNavById" parameterType="string">
+		delete from auth_navigation  where nav_id = #{navId} or parent_id =#{navId}
+	</delete>
+	<delete id="deleteUserNavById" parameterType="string">
+		delete from auth_user_nav where nav_id = #{navId}
+	</delete>
+	<update id="updateNavigationById" parameterType="map">
+		update auth_navigation set nav_name = #{navName},resource_id=#{resourceId} where nav_id= #{navId}
+	</update>
+</mapper>

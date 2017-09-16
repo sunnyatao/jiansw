@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{$context_path}/images/favicon.ico">
+
+    <title>房屋契税信息详情</title>
+    {include file='/library/head_top.lbi'}
+    <link href="{$context_path}/styles/wjb/wjb-crm-css.css" rel="stylesheet">
+    <link href="{$context_path}/styles/bootstrap.3.3.7/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="{$context_path}/styles/member.css" rel="stylesheet">
+    <link href="{$context_path}/styles/jquery/jquery-ui.min.css" rel="stylesheet">
+    
+  </head>
+
+  <body>
+  	<!-- 导航 -->
+	{include file='/library/body_top.lbi'}
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- 会员管理左侧菜单 -->
+        {include file='/library/left.lbi'}
+        
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<div class="mem-info">
+				<form id='project_check_form' name='project_check_form' method="post" action="{$context_path}/housecontract/submit">
+				<div class="mem-info-bd">
+					<div class="line">
+						  <div class="item"><span class="tit">姓名：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$houseContract.name}" id="name" name="name" style="margin-left: -4px"/></span></div>	                			
+						  <div class="item"><span class="tit">楼栋：</span>
+						  <span class="con"><input type="text" value="{$houseContract.floorName}" id="floor_number" name="floor_number"/></span></div>
+						  <div class="item"><span class="tit">房号：</span>
+						  <span class="con"><input type="text" value="{$houseContract.serialNo}" id="serial_no" name="serial_no"/></span></div>
+						  <div class="item"><span class="tit">面积：</span>
+						  <span class="con"><input type="text" value="{$houseContract.area}" id="area" name="area"/></span></div>
+						  <div class="item"><span class="tit">单价：</span>
+						  <span class="con"><input type="text" value="{$houseContract.unitPrice}" id="unit_price" name="unit_price"/></span></div>
+						  <div class="item"><span class="tit">总价：</span>
+						  <span class="con"><input type="text" value="{$houseContract.totalPrice}" id="total_price" name="total_price"/></span></div>
+						  <div class="item"><span class="tit">契税税率：</span>
+						  <span class="con"><input type="text" value="{$houseContract.contractTaxRate}" id="contract_tax_rate" name="contract_tax_rate"/></span></div>
+						  <div class="item"><span class="tit">契税税额：</span>
+						  <span class="con"><input type="text" value="{$houseContract.contractTax}" id="contract_tax" name="contract_tax"/></span></div>
+						  <div class="item"><span class="tit">身份证号：</span>
+						  <span class="con"><input type="text" value="{$houseContract.cardNo}" id="card_no" name= "card_no"/></span></div>
+						  <div class="item"><span class="tit">合同签订日期：</span>
+						  <span class="con"><input type="text" value="{$houseContract.contractDate|date_format:'%Y-%m-%d'}" id="contract_date" name="contract_date"/></span></div>
+						  <div class="item"><span class="tit">契税完税：</span>
+						  <span class="con"><input type="text" value="{$houseContract.contractDown}" id="contract_down" name="contract_down"/></span></div>
+						  <div class="item"><span class="tit">首付：</span>
+						  <span class="con"><input type="text" value="{$houseContract.firstPaymentAmount}" id="first_payment_amount" name="first_payment_amount"/></span></div>
+						  <div class="item"><span class="tit">月供：</span>
+						  <span class="con"><input type="text" value="{$houseContract.mortgageAmount}" id="mortgage_amount" name= "mortgage_amount"/></span></div>
+					 </div>
+				</div>
+				<br/>
+				<button type="button" class="mem-save-btn btn btn-primary" onclick="history.back()" style="margin-left:17px">返回</button>
+				<button type="button" class="mem-save-btn btn btn-primary" onclick="toprint()" style="margin-left:17px">打印</button>
+			</form>
+            </div>
+		  	<!-- 引入bash_js -->
+    {include file='/library/base_js.lbi'}
+    <script src="{$context_path}/javascript/jquery-ui.min.js"></script>
+    
+<script>
+$(function(){
+	$("#contract_date").datepicker({ dateFormat: 'yy-mm-dd'});
+});
+
+function toFloat(num) {
+	return Math.round(num*100)/100;
+}
+
+function isfloat(oNum){
+	if (!oNum) 
+		return false;
+	var strP=/^\d+(\.\d+)?$/;
+	if (!strP.test(oNum)) return false;
+	try {
+		if(parseFloat(oNum)!=oNum)
+			return false;
+	} catch(ex) {
+		return false;
+	}
+	return true;
+}
+
+function toprint() {
+	window.location.href = '{$context_path}' + "/housecontract/toprint?id={$houseContract.id}";
+}
+</script>
+</body>
+</html>
