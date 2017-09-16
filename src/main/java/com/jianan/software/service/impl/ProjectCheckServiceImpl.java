@@ -158,7 +158,6 @@ public class ProjectCheckServiceImpl implements IProjectCheckService {
 
 	@Override
 	public void deletetSinglePrint(int id) {
-		// TODO Auto-generated method stub
-		
+		projectCheckDao.deletetSinglePrint(id);
 	}
 }

@@ -105,7 +105,8 @@ public class CommonServiceImpl implements ICommonService {
 			CrmAuthResource authResource = userResource.getAuthResource();
 			String resourcePath = authResource.getResourcePath();
 			if (resourcePath.equals("/projectcheck/api/delete") || resourcePath.equals("/projectsettlement/api/delete") 
-					|| resourcePath.equals("/projectouterube/api/delete") || resourcePath.equals("/housecontract/api/delete")) {
+					|| resourcePath.equals("/projectouterube/api/delete") || resourcePath.equals("/housecontract/api/delete")
+					|| resourcePath.equals("/summary/api/prints/delete")) {
 				Set<String> userDeleteResourceUrls = userId2deleteUrls.get(userResource.getUserId());
 				if (userDeleteResourceUrls == null) {
 					userDeleteResourceUrls = new HashSet<String>();
@@ -252,6 +253,12 @@ public class CommonServiceImpl implements ICommonService {
 			view.addObject("delete_housecontract", "y");
 		} else {
 			view.addObject("delete_housecontract", "n");
+		}
+		
+		if (userDeletePaths != null && userDeletePaths.contains("/summary/api/prints/delete")) {
+			view.addObject("delete_single_print", "y");
+		} else {
+			view.addObject("delete_single_print", "n");
 		}
 		
 		view.addObject("childNavs", currentChildNavs);

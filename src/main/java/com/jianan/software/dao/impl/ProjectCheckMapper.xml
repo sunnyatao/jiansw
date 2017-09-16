@@ -86,11 +86,11 @@
 	</select>
 	
 	<select id="getSinglePrintCount" resultType="int">
-		select count(*) from t_single_print;
+		select count(*) from t_single_print where is_deleted=0 ;
 	</select>
 	
 	<select id="getSinglePrints" resultType="map" resultMap="singlePrint">
-		select * from t_single_print where 1=1 order by id desc limit #{start}, #{pageSize};
+		select * from t_single_print where is_deleted=0 and 1=1 order by id desc limit #{start}, #{pageSize};
 	</select>
 	
 	<select id="getSinglePrint" parameterType="int" resultMap="singlePrint">
