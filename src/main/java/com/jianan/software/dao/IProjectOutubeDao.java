@@ -50,4 +50,7 @@ public interface IProjectOutubeDao {
 	public void createInvoiceFiles(List<ProjectCheckFile> checkFiles);
 
 	public List<ProjectCheckFile> getInvoiceFiles(int invoiceId);
+	
+	public void updateProjectCheckInvoiceInfo(
+			ProjectOutertubeInvoiceInfo projectOuterubeInvoiceInfo); 
 }

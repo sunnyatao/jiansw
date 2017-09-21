@@ -117,4 +117,10 @@ public class ProjectOuterubeServiceImpl implements IProjectOuterubeService {
 	public List<ProjectCheckFile> getInvoiceFiles(int invoiceId) {
 		return projectOutubeDao.getInvoiceFiles(invoiceId);
 	}
+
+	@Override
+	public void updateProjectCheckInvoiceInfo(
+			ProjectOutertubeInvoiceInfo projectOuterubeInvoiceInfo) {
+		projectOutubeDao.updateProjectCheckInvoiceInfo(projectOuterubeInvoiceInfo);
+	}
 }

@@ -125,4 +125,10 @@ public class ProjectSettlementServiceImpl implements IProjectSettlementService {
 		return projectSettlementDao.getInvoiceFiles(invoiceId);
 	}
 
+	@Override
+	public void updateSettlementInvoiceInfo(
+			ProjectSettlementInvoiceInfo projectSettlementInvoiceInfo) {
+		projectSettlementDao.updateSettlementInvoiceInfo(projectSettlementInvoiceInfo);
+	}
+
 }

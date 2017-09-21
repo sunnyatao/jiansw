@@ -247,12 +247,18 @@ public class ProjectOuterubeController {
 		ModelAndView view = new ModelAndView("redirect:/projectouterube/list");
 		
 		try {
-			ProjectOutertubeInvoiceInfo projectOuterubeInvoiceInfo = buildProjectCheckInvoiceInfo(request);
-			String serialNum = request.getParameter("serial_num");
-			ProjectOutertube outertube = projectOuterubeService.getProjectCheckBySerialNo(serialNum);
-			projectOuterubeInvoiceInfo.setProjectOuterubeId(outertube.getId());
-			projectOuterubeService.createProjectCheckInvoiceInfo(projectOuterubeInvoiceInfo);
-			
+			int infoId = Integer.parseInt(request.getParameter("invoice_info_id"));
+			if (infoId == -1) {
+				ProjectOutertubeInvoiceInfo projectOuterubeInvoiceInfo = buildProjectCheckInvoiceInfo(request);
+				String serialNum = request.getParameter("serial_num");
+				ProjectOutertube outertube = projectOuterubeService.getProjectCheckBySerialNo(serialNum);
+				projectOuterubeInvoiceInfo.setProjectOuterubeId(outertube.getId());
+				projectOuterubeService.createProjectCheckInvoiceInfo(projectOuterubeInvoiceInfo);
+			} else {
+				ProjectOutertubeInvoiceInfo projectOuterubeInvoiceInfo = buildProjectCheckInvoiceInfo(request);
+				projectOuterubeInvoiceInfo.setId(infoId);
+				projectOuterubeService.updateProjectCheckInvoiceInfo(projectOuterubeInvoiceInfo);
+			}
 			commomService.fillCommonView(request, view);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

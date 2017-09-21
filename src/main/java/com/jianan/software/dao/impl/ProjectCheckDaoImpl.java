@@ -189,4 +189,9 @@ public class ProjectCheckDaoImpl implements IProjectCheckDao {
 		sqlSession.update("com.jianan.software.dao.impl.projectCheck.deletetSinglePrint", id);
 	}
 
+	@Override
+	public void updateInvoiceInfo(ProjectCheckInvoiceInfo invoiceInfo) {
+		sqlSession.update("com.jianan.software.dao.impl.projectCheck.updateCheckInvoiceInfo", invoiceInfo);
+	}
+
 }

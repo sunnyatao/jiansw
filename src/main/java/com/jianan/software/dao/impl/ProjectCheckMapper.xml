@@ -267,5 +267,12 @@
 	<update id="deletetSinglePrint" parameterType="int">
 		update t_single_print set is_deleted=1 where id=#{id}
 	</update>
+	
+	<update id="updateCheckInvoiceInfo" parameterType="com.jianan.software.pojo.ProjectCheckInvoiceInfo">
+		update t_project_check_invoice_info set national_invoice_date=#{nationalInvoiceDate},
+		national_invoice_no=#{nationalInvoiceNo}, national_invoice_tax_no=#{nationalInvoiceTaxNo},
+		local_invoice_date=#{localInvoiceDate}, local_invoice_tax_no=#{localInvoiceTaxNo} 
+		where id=#{id};
+	</update>
 </mapper>
 

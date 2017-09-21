@@ -287,35 +287,42 @@ public class ProjectCheckController {
 		ModelAndView view = new ModelAndView("redirect:/projectcheck/list");
 		
 		try {
-			ProjectCheckInvoiceInfo projectCheckInvoiceInfo = buildProjectCheckInvoiceInfo(request);
-			String serialNum = request.getParameter("serial_num");
-			ProjectCheck check = projectCheckService.getProjectCheckBySerialNo(serialNum);
-			projectCheckInvoiceInfo.setProjectCheckId(check.getId());
-			projectCheckService.createProjectCheckInvoiceInfo(projectCheckInvoiceInfo);
-			
-			String checkStampDutyRate = request.getParameter("check_stamp_duty_rate");
-			String checkLaborUnion = request.getParameter("check_labor_union");
-			String checkWaterConstruct = request.getParameter("check_water_construct");
-			
-			boolean needUpdate = false;
-			if (checkStampDutyRate == null) {
-				check.setStampDutyRate(0);
-				check.setStampDutyAmount(0);
-				needUpdate = true;
-			}
-			
-			if (checkLaborUnion == null) {
-				check.setLaborUnionAmount(0);
-				needUpdate = true;
-			}
-			
-			if (checkWaterConstruct == null) {
-				check.setWaterConstructAmount(0);
-				needUpdate = true;
-			}
-			
-			if (needUpdate) {
-				projectCheckService.updateProjectCheck(check);
+			int infoId = Integer.parseInt(request.getParameter("invoice_info_id"));
+			if (infoId == -1) {
+				ProjectCheckInvoiceInfo projectCheckInvoiceInfo = buildProjectCheckInvoiceInfo(request);
+				String serialNum = request.getParameter("serial_num");
+				ProjectCheck check = projectCheckService.getProjectCheckBySerialNo(serialNum);
+				projectCheckInvoiceInfo.setProjectCheckId(check.getId());
+				projectCheckService.createProjectCheckInvoiceInfo(projectCheckInvoiceInfo);
+				
+				String checkStampDutyRate = request.getParameter("check_stamp_duty_rate");
+				String checkLaborUnion = request.getParameter("check_labor_union");
+				String checkWaterConstruct = request.getParameter("check_water_construct");
+				
+				boolean needUpdate = false;
+				if (checkStampDutyRate == null) {
+					check.setStampDutyRate(0);
+					check.setStampDutyAmount(0);
+					needUpdate = true;
+				}
+				
+				if (checkLaborUnion == null) {
+					check.setLaborUnionAmount(0);
+					needUpdate = true;
+				}
+				
+				if (checkWaterConstruct == null) {
+					check.setWaterConstructAmount(0);
+					needUpdate = true;
+				}
+				
+				if (needUpdate) {
+					projectCheckService.updateProjectCheck(check);
+				}
+			} else {
+				ProjectCheckInvoiceInfo invoiceInfo = buildProjectCheckInvoiceInfo(request);
+				invoiceInfo.setId(infoId);
+				projectCheckService.updateInvoiceInfo(invoiceInfo);
 			}
 			commomService.fillCommonView(request, view);
 		} catch (Exception e) {

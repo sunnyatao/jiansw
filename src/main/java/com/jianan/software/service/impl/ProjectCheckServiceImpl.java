@@ -160,4 +160,9 @@ public class ProjectCheckServiceImpl implements IProjectCheckService {
 	public void deletetSinglePrint(int id) {
 		projectCheckDao.deletetSinglePrint(id);
 	}
+
+	@Override
+	public void updateInvoiceInfo(ProjectCheckInvoiceInfo invoiceInfo) {
+		projectCheckDao.updateInvoiceInfo(invoiceInfo);
+	}
 }

@@ -274,15 +274,22 @@ public class ProjectSettlementController {
 	
 	@RequestMapping("/taxinfo/submit")
 	public ModelAndView submitTaxInfo(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView view = new ModelAndView("redirect:/projectcheck/list");
+		ModelAndView view = new ModelAndView("redirect:/projectsettlement/list");
 		
 		try {
-			ProjectSettlementInvoiceInfo projectCheckInvoiceInfo = buildProjectCheckInvoiceInfo(request);
-			String serialNum = request.getParameter("serial_num");
-			ProjectSettlement settlement = projectSettlementService.getProjectSettlementBySerialNo(serialNum);
-			projectCheckInvoiceInfo.setProjectCheckId(settlement.getId());
-			projectSettlementService.createProjectSettlementInvoiceInfo(projectCheckInvoiceInfo);
-			
+			int infoId = Integer.parseInt(request.getParameter("invoice_info_id"));
+			if (infoId == -1)
+			{
+				ProjectSettlementInvoiceInfo projectCheckInvoiceInfo = buildProjectCheckInvoiceInfo(request);
+				String serialNum = request.getParameter("serial_num");
+				ProjectSettlement settlement = projectSettlementService.getProjectSettlementBySerialNo(serialNum);
+				projectCheckInvoiceInfo.setProjectCheckId(settlement.getId());
+				projectSettlementService.createProjectSettlementInvoiceInfo(projectCheckInvoiceInfo);
+			} else {
+				ProjectSettlementInvoiceInfo projectSettlementInvoiceInfo = buildProjectCheckInvoiceInfo(request);
+				projectSettlementInvoiceInfo.setId(infoId);
+				projectSettlementService.updateSettlementInvoiceInfo(projectSettlementInvoiceInfo);
+			}
 			commomService.fillCommonView(request, view);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

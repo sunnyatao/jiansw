@@ -230,5 +230,12 @@
 	<update id="delete" parameterType="string">
 		update t_project_outertube set is_deleted = 1 where serial_num=#{serialNum}
 	</update>
+	
+	<update id="updateProjectCheckInvoiceInfo" parameterType="com.jianan.software.pojo.ProjectOutertubeInvoiceInfo">
+		update t_project_outertube_invoice_info set national_invoice_date=#{nationalInvoiceDate},
+		national_invoice_tax_no=#{nationalInvoiceTaxNo}, local_invoice_date=#{localInvoiceDate},
+		local_invoice_tax_no=#{localInvoiceTaxNo} 
+		where id=#{id}
+	</update>
 </mapper>
 

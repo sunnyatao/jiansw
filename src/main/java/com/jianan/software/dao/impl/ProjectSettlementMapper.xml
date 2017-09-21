@@ -227,5 +227,12 @@
 	<update id="updateTaxSerialNo" parameterType="map">
 		update t_project_settlement set tax_serial_no=#{serialNo} where id=#{id} 
 	</update>
+	
+	<update id="updateSettlementInvoiceInfo" parameterType="com.jianan.software.pojo.ProjectSettlementInvoiceInfo">
+		update t_project_settlement_invoice_info set national_invoice_date=#{nationalInvoiceDate},
+		national_invoice_no=#{nationalInvoiceNo}, national_invoice_tax_no=#{nationalInvoiceTaxNo},
+		local_invoice_date=#{localInvoiceDate}, local_invoice_tax_no=#{localInvoiceTaxNo}
+		where id=#{id};
+	</update>
 </mapper>
 

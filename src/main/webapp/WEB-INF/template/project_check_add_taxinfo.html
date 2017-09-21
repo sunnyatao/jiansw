@@ -32,6 +32,7 @@
 					<div class="line">
 					<form id='project_check_form' name='project_check_form' method="post" action="{$context_path}/projectcheck/taxinfo/submit">
 						  {if $containsInvoiceInfo eq '0'}
+						  <input type="hidden" id="invoice_info_id" name="invoice_info_id" value="-1"/>
 						  <div class="item"><span class="tit">国税开票日期：</span>&nbsp;
 						  <span class="con"><input type="text" value="{$today}" id="national_invoice_date" name= "national_invoice_date"/></span></div>
 						  <div class="item"><span class="tit">国税发票号码：</span>&nbsp;
@@ -45,6 +46,7 @@
 						  <span class="con"><input type="text" value="" id="local_invoice_tax_no" name= "local_invoice_tax_no"/></span></div>
 						  {/if}
 						  {if $containsInvoiceInfo eq '1'}
+						  <input type="hidden" id="invoice_info_id" name="invoice_info_id" value="{$invoiceInfo.id}"/>
 						  <div class="item"><span class="tit">国税开票日期：</span>&nbsp;
 						  <span class="con"><input type="text" value="{$invoiceInfo.nationalInvoiceDate|date_format:'%Y-%m-%d'}" id="national_invoice_date" name= "national_invoice_date"/></span></div>
 						  <div class="item"><span class="tit">国税发票号码：</span>&nbsp;
@@ -113,6 +115,7 @@
 				<button type="button" class="mem-save-btn btn btn-primary" onclick="toprint()" style="margin-left: 10px">打印</button>
 			{/if}
 			{if $containsInvoiceInfo eq '1'}
+				<button type="button" class="mem-save-btn btn btn-primary" onclick="saveProjectCheckTaxInfo()" style="margin-left: 20px">保存</button>
 				<button type="button" class="mem-save-btn btn btn-primary" onclick="toprint()" style="margin-left:14px">打印</button>
 				<button type="button" class="mem-save-btn btn btn-primary" onclick="toscan()" style="margin-left:14px">扫描</button>
 				<button type="button" class="mem-save-btn btn btn-primary" onclick="history.back()" style="margin-left:14px">返回</button>

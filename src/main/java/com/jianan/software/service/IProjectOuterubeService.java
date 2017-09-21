@@ -44,5 +44,8 @@ public interface IProjectOuterubeService {
 
 	public void createInvoiceFiles(List<ProjectCheckFile> checkFiles);
 
-	public List<ProjectCheckFile> getInvoiceFiles(int id); 
+	public List<ProjectCheckFile> getInvoiceFiles(int id);
+
+	public void updateProjectCheckInvoiceInfo(
+			ProjectOutertubeInvoiceInfo projectOuterubeInvoiceInfo); 
 }

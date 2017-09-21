@@ -154,4 +154,10 @@ public class ProjectSettlementDaoImpl implements IProjectSettlementDao {
 		return sqlSession.selectList("com.jianan.software.dao.impl.projectSettlement.getInvoiceFiles", invoiceId);
 	}
 
+	@Override
+	public void updateSettlementInvoiceInfo(
+			ProjectSettlementInvoiceInfo projectSettlementInvoiceInfo) {
+		sqlSession.update("com.jianan.software.dao.impl.projectSettlement.updateSettlementInvoiceInfo", projectSettlementInvoiceInfo);
+	}
+
 }

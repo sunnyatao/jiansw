@@ -140,4 +140,10 @@ public class ProjectOuterubeDaoImpl implements IProjectOutubeDao {
 		return sqlSession.selectList("com.jianan.software.dao.impl.outerubeDao.getInvoiceFiles", invoiceId);
 	}
 
+	@Override
+	public void updateProjectCheckInvoiceInfo(
+			ProjectOutertubeInvoiceInfo projectOuterubeInvoiceInfo) {
+		sqlSession.update("com.jianan.software.dao.impl.outerubeDao.updateProjectCheckInvoiceInfo", projectOuterubeInvoiceInfo);
+	}
+
 }

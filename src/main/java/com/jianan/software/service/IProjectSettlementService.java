@@ -50,4 +50,7 @@ public interface IProjectSettlementService {
 	public void createInvoiceFiles(List<ProjectCheckFile> checkFiles);
 
 	public List<ProjectCheckFile> getInvoiceFiles(int id); 
+	
+	public void updateSettlementInvoiceInfo(
+			ProjectSettlementInvoiceInfo projectSettlementInvoiceInfo);
 }

@@ -56,4 +56,7 @@ public interface IProjectSettlementDao {
 	public void createInvoiceFiles(List<ProjectCheckFile> checkFiles);
 
 	public List<ProjectCheckFile> getInvoiceFiles(int invoiceId);
+	
+	public void updateSettlementInvoiceInfo(
+			ProjectSettlementInvoiceInfo projectSettlementInvoiceInfo);
 }
