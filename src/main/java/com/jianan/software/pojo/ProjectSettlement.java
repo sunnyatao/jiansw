@@ -122,12 +122,12 @@ public class ProjectSettlement {
 		this.overTime = overTime;
 	}
 	public String getTaxSerialNoStr() {
-		if (0 < taxSerialNo && taxSerialNo < 10) {
-			return "00" + taxSerialNo;
-		} else if (10 <= taxSerialNo && taxSerialNo < 100) {
-			return "0" + taxSerialNo;
+		if (0 < id && id < 10) {
+			return "00" + id;
+		} else if (10 <= id && id < 100) {
+			return "0" + id;
 		} else {
-			return "";
+			return ""+id;
 		}
 	}
 

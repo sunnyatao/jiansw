@@ -1,0 +1,1 @@
+ALTER TABLE t_project_settlement MODIFY project_total_cost decimal(10,2) not null default '0';

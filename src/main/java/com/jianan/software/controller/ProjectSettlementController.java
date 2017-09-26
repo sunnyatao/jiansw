@@ -392,13 +392,13 @@ public class ProjectSettlementController {
 		ProjectSettlement settlement = projectSettlementService.getProjectSettlementBySerialNo(serialNum);
 		ProjectSettlementInvoiceInfo infoInvoiceInfo = projectSettlementService.getProjectSettlementInvoiceInfoById(settlement.getId());
 		
-		String nextTaxSerialNo = null;
-		if (settlement.getTaxSerialNoStr() == null || settlement.getTaxSerialNoStr().isEmpty()) {
+		String nextTaxSerialNo = settlement.getTaxSerialNoStr();
+		/*if (settlement.getTaxSerialNoStr() == null || settlement.getTaxSerialNoStr().isEmpty()) {
 			String maxTaxSerialNo = projectSettlementService.getMaxTaxSerialNo();
 			nextTaxSerialNo = SerialUtil.nextTaxNumber(maxTaxSerialNo);
 		} else {
 			nextTaxSerialNo = settlement.getTaxSerialNoStr();
-		}
+		}*/
 		view.addObject("nextSerialNo", nextTaxSerialNo);
 		view.addObject("settlement", settlement);
 		view.addObject("settlementAmount", DataUtil.changeZF(settlement.getSettlementAmount()));
