@@ -97,4 +97,14 @@ public class HouseContractDaoImpl implements IHouseContractDao {
 		return sqlSession.selectList("com.jianan.software.dao.impl.housecontract.getInvoiceFiles", invoiceId);
 	}
 
+	@Override
+	public void updateTaxInfo(HouseContractTaxInfo taxInfo) {
+		sqlSession.update("com.jianan.software.dao.impl.housecontract.updateTaxInfo", taxInfo);
+	}
+
+	@Override
+	public void updateProjectCheck(HouseContract houseContract) {
+		sqlSession.update("com.jianan.software.dao.impl.housecontract.updateProjectCheck", houseContract);
+	}
+
 }

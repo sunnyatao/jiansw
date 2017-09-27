@@ -147,4 +147,14 @@ public class HouseContractServiceImpl implements IHouseContractService {
 		return houseContractDao.getInvoiceFiles(id);
 	}
 
+	@Override
+	public void updateTaxInfo(HouseContractTaxInfo taxInfo) {
+		houseContractDao.updateTaxInfo(taxInfo);
+	}
+
+	@Override
+	public void updateProjectCheck(HouseContract houseContract) {
+		houseContractDao.updateProjectCheck(houseContract);
+	}
+
 }

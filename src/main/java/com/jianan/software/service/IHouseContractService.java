@@ -37,5 +37,9 @@ public interface IHouseContractService {
 
 	public void createInvoiceFiles(List<ProjectCheckFile> checkFiles);
 
-	public List<ProjectCheckFile> getInvoiceFiles(int id); 
+	public List<ProjectCheckFile> getInvoiceFiles(int id);
+
+	void updateTaxInfo(HouseContractTaxInfo taxInfo);
+
+	void updateProjectCheck(HouseContract houseContract); 
 }

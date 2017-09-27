@@ -32,6 +32,7 @@
 					<div class="line">
 					<form id='project_check_form' name='project_check_form' method="post" action="{$context_path}/projectcheck/taxinfo/submit">
 						  {if $containsInvoiceInfo eq '0'}
+						  <input type="hidden" id="id" name="id" value="-1"/>
 						  <div class="item"><span class="tit">契税税票号码：</span>&nbsp;
 						  <span class="con"><input type="text" value="" id="contact_tax_no" name= "contact_tax_no"/></span></div>
 						  <div class="item"><span class="tit">契税开票日期：</span>&nbsp;
@@ -43,6 +44,7 @@
 						  <span class="con"><input type="text" value="{$today}" id="stamp_tax_date" name= "stamp_tax_date"/></span></div>
 						  {/if}
 						  {if $containsInvoiceInfo eq '1'}
+						  <input type="hidden" id="id" name="id" value="{$contractTaxInfo.id}"/>
 						  <div class="item"><span class="tit">契税税票号码：</span>&nbsp;
 						  <span class="con"><input type="text" value="{$contractTaxInfo.contractTaxNo}" id="contact_tax_no" name= "contact_tax_no"/></span></div>
 						  <div class="item"><span class="tit">契税开票日期：</span>&nbsp;
@@ -89,6 +91,7 @@
 				<button type="button" class="mem-save-btn btn btn-primary" onclick="saveProjectCheckTaxInfo()" style="margin-left: 20px">保存</button>
 			{/if}
 			{if $containsInvoiceInfo eq '1'}
+				<button type="button" class="mem-save-btn btn btn-primary" onclick="saveProjectCheckTaxInfo()" style="margin-left: 20px">保存</button>
 				<button type="button" class="mem-save-btn btn btn-primary" onclick="toscan()" style="margin-left:14px">扫描</button>
 				<button type="button" class="mem-save-btn btn btn-primary" onclick="history.back()" style="margin-left:14px">返回</button>
 			{/if}
@@ -112,6 +115,7 @@ function toscan() {
 }
 
 function saveProjectCheckTaxInfo() {
+	var id = $("#id").val();
 	var contact_tax_date = $("#contact_tax_date").val();
 	var stamp_tax_date = $("#stamp_tax_date").val();
 	var contract_tax_no = $("#contact_tax_no").val();
@@ -135,14 +139,14 @@ function saveProjectCheckTaxInfo() {
 	
 	$.post(
 			'{$context_path}' + "/housecontract/api/taxinfo/submit",	
-    		 {'house_contract_id': $('#house_contract_id').val(), 'contract_tax_no':contract_tax_no,
+    		 {'id':id,'house_contract_id': $('#house_contract_id').val(), 'contract_tax_no':contract_tax_no,
 				'stamp_tax_no':stamp_tax_no, 'contact_tax_date':contact_tax_date, 'stamp_tax_date':stamp_tax_date},
     		function(data) {
 				//console.log(data);
     			if(data.code == 1){
-    				alert("添加成功");
+    				alert("保存成功");
     			} else {
-    				alert("添加失败");
+    				alert("保存失败");
     			}
     		},
     		'JSON'

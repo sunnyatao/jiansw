@@ -149,13 +149,19 @@ public class HouseContractController {
 	public ModelAndView submit(HttpServletRequest request, HttpServletResponse response) {
 		CrmAdminUser user = SessionManager.getUserSession(request);
 		
-		ModelAndView view = new ModelAndView("redirect:/housecontract/toview");
+		String strId = request.getParameter("id");
 		HouseContract houseContract = buildHouseContract(request);
-		houseContract.setOperatorId(user.getUserId());
-		houseContract.setOperatorName(user.getUserName());
-		houseContract.setCreatedAt(new Date());
-		
-		houseContractService.createProjectCheck(houseContract);
+		if (strId == null || "".equals(strId)){
+			houseContract.setOperatorId(user.getUserId());
+			houseContract.setOperatorName(user.getUserName());
+			houseContract.setCreatedAt(new Date());
+			
+			houseContractService.createProjectCheck(houseContract);
+		} else {
+			houseContract.setId(Integer.parseInt(strId));
+			houseContractService.updateProjectCheck(houseContract);
+		}
+		ModelAndView view = new ModelAndView("redirect:/housecontract/list");
 		return view;
 	}
 	
@@ -181,10 +187,15 @@ public class HouseContractController {
 	@RequestMapping("/api/taxinfo/submit")
 	public void ajaxSubmitTaxInfo(HttpServletRequest request, HttpServletResponse response) {
 		try{
+			int id = Integer.parseInt(request.getParameter("id"));
 			HouseContractTaxInfo taxInfo = buildTaxInfo(request);
-		
-			houseContractService.createTaxInfo(taxInfo);
-			
+			taxInfo.setId(id);
+			if (id == -1) 
+			{
+				houseContractService.createTaxInfo(taxInfo);
+			} else {
+				houseContractService.updateTaxInfo(taxInfo);
+			}
 			ResponseUtil.writeResponseSuccess(response);
 		} catch (Exception e) {
 			LOGGER.error(e.toString(), e);

@@ -35,4 +35,8 @@ public interface IHouseContractDao {
 
 	List<ProjectCheckFile> getInvoiceFiles(int id);
 
+	void updateTaxInfo(HouseContractTaxInfo taxInfo);
+
+	void updateProjectCheck(HouseContract houseContract);
+
 }

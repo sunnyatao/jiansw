@@ -108,6 +108,17 @@
 		#{projectName}, #{appreciationRate}, #{appreciationAmount}, #{stampDutyRate}, #{stampDutyAmount}, #{houseType})
 	</insert>
 	
+	<update id="updateProjectCheck" parameterType="com.jianan.software.pojo.HouseContract">
+		update t_house_contract set name=#{name}, floor_name=#{floorName}, serial_no=#{serialNo}, 
+		area=#{area}, unit_price=#{unitPrice}, total_price=#{totalPrice}, 
+		contract_tax_rate=#{contractTaxRate}, contract_tax=#{contractTax},
+		card_no=#{cardNo}, contract_date=#{contractDate}, contract_down=#{contractDown}, 
+		first_payment_amount=#{firstPaymentAmount}, mortgage_amount=#{mortgageAmount},
+		project_name=#{projectName}, appreciation_rate=#{appreciationRate}, 
+		stamp_duty_rate=#{stampDutyRate}, stamp_duty_amount=#{stampDutyAmount}, house_type=#{houseType}
+		where id=#{id};
+	</update>
+	
 	<insert id="createHouseContractTaxInfo" parameterType="com.jianan.software.pojo.HouseContractTaxInfo">
 		insert into t_house_contract_tax_info(house_contract_id, contact_tax_no, stamp_tax_no, contact_tax_date,
 		stamp_tax_date, created_at, operator_id, operator_name) 
@@ -133,6 +144,12 @@
 	
 	<update id="delete" parameterType="string">
 		update t_house_contract set is_deleted=1 where id = #{serialNum}
+	</update>
+	
+	<update id="updateTaxInfo" parameterType="com.jianan.software.pojo.HouseContractTaxInfo">
+		update t_house_contract_tax_info set contact_tax_no=#{contractTaxNo},
+		stamp_tax_no=#{stampTaxNo}, contact_tax_date=#{contractTaxDate}, stamp_tax_date=#{stampTaxDate}
+		 where id=#{id}
 	</update>
 </mapper>
 
