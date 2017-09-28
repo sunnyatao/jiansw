@@ -69,4 +69,6 @@ public interface IProjectCheckDao {
 	public void deletetSinglePrint(int id);
 	
 	public void updateInvoiceInfo(ProjectCheckInvoiceInfo invoiceInfo);
+
+	public void updateSinglePrintInfo(SinglePrint singlePrint);
 }

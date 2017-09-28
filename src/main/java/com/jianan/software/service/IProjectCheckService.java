@@ -64,4 +64,6 @@ public interface IProjectCheckService {
 	public void deletetSinglePrint(int id);
 	
 	public void updateInvoiceInfo(ProjectCheckInvoiceInfo invoiceInfo);
+
+	public void updateSinglePrintInfo(SinglePrint singlePrint);
 }

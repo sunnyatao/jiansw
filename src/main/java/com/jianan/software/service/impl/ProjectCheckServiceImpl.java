@@ -165,4 +165,9 @@ public class ProjectCheckServiceImpl implements IProjectCheckService {
 	public void updateInvoiceInfo(ProjectCheckInvoiceInfo invoiceInfo) {
 		projectCheckDao.updateInvoiceInfo(invoiceInfo);
 	}
+
+	@Override
+	public void updateSinglePrintInfo(SinglePrint singlePrint) {
+		projectCheckDao.updateSinglePrintInfo(singlePrint);
+	}
 }

@@ -122,13 +122,16 @@ public class ProjectSettlement {
 		this.overTime = overTime;
 	}
 	public String getTaxSerialNoStr() {
-		if (0 < id && id < 10) {
+		/*if (0 < id && id < 10) {
 			return "00" + id;
 		} else if (10 <= id && id < 100) {
 			return "0" + id;
 		} else {
 			return ""+id;
-		}
+		}*/
+		int serialSize = this.serialNum.length();
+		String last4Serial = this.serialNum.substring(serialSize-4, serialSize-0);
+		return last4Serial;
 	}
 
 	public int getTaxSerialNo() {

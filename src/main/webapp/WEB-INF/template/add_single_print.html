@@ -34,6 +34,8 @@
 				<div class="mem-info-bd">
 					<div class="line">
 					<form id='project_check_form' name='project_check_form' method="post" action="{$context_path}/projectouterube/taxinfo/submit">
+						  {if $hasSinglePrint eq 0}
+						  <input type="hidden" id="id" name="id" value="-1">
 						  <div class="item"><span class="tit">编号：</span>&nbsp;
 						  <span class="con"><input type="text" value="{$nextSerialNo}" id="serial_no" name= "serial_no" readonly="readonly"/></span></div>	                			
 						  <div class="item"><span class="tit">姓名：</span>&nbsp;
@@ -46,6 +48,22 @@
 						  <span class="con"><input type="text" value="" id="address" name= "address"/></span></div>
 						  <div class="item"><span class="tit">建安增值税：</span>&nbsp;
 						  <span class="con"><input type="text" value="" id="amount" name= "amount"/></span></div>
+						  {/if}
+						  {if $hasSinglePrint eq 1}
+						  <input type="hidden" id="id" name="id" value="{$singlePrint.id}">
+						  <div class="item"><span class="tit">编号：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$singlePrint.serialNo}" id="serial_no" name= "serial_no" readonly="readonly"/></span></div>	                			
+						  <div class="item"><span class="tit">姓名：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$singlePrint.name}" id="name" name= "name"/></span></div>
+						  <div class="item"><span class="tit">身份证号：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$singlePrint.serviceProducerCardNo}" id="service_producer_card_no" name= "service_producer_card_no"/></span></div>
+						  <div class="item"><span class="tit">面积：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$singlePrint.area}" id="area" name= "area"/></span></div>
+						  <div class="item"><span class="tit">地址：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$singlePrint.address}" id="address" name= "address"/></span></div>
+						  <div class="item"><span class="tit">建安增值税：</span>&nbsp;
+						  <span class="con"><input type="text" value="{$singlePrint.amount}" id="amount" name= "amount"/></span></div>
+						  {/if}
 					 </div>
 				</div>
 				<br/>
@@ -68,7 +86,9 @@ function saveProjectCheckTaxInfo(type) {
 	}
 	$.post(
 			'{$context_path}' + "/summary/api/prints/submit",	
-			{'serial_num':$('#serial_num').val(),
+			{
+				'id':$('#id').val(),
+				'serial_num':$('#serial_num').val(),
 				'name': $('#name').val(), 
 				'service_producer_card_no': $('#service_producer_card_no').val(), 
 				'area': $('#area').val(), 
@@ -77,7 +97,7 @@ function saveProjectCheckTaxInfo(type) {
 				'address': $('#address').val()},				
     		function(data) {
     			if(data.code == 1){
-    				alert("添加成功!");
+    				alert("保存成功!");
     				if (type == 0) {
     					window.location.href = '{$context_path}' + "/summary/prints/list";
     				} else if (type == 1) {

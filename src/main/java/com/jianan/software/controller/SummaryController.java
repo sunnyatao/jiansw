@@ -225,14 +225,34 @@ public class SummaryController {
 		return view;
 	}
 	
+	@RequestMapping("/prints/detail")
+	public ModelAndView detailPrints(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView view = new ModelAndView("/add_single_print");
+		String id = request.getParameter("id");
+		SinglePrint singlePrint = projectCheckService.getSinglePrint(id);
+		view.addObject("singlePrint", singlePrint);
+		view.addObject("hasSinglePrint", 1);
+		
+		commomService.fillCommonView(request, view);
+		return view;
+	}
+	
 	@RequestMapping("/prints/toadd")
 	public ModelAndView toAddSinglePrintInfo(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView view = new ModelAndView("/add_single_print");
 		
-		int maxTaxSerialNo = projectCheckService.getMaxPrintSerialNo();
-		String nextTaxSerialNo = SerialUtil.nextTaxNumber(maxTaxSerialNo);
-		view.addObject("nextSerialNo", nextTaxSerialNo);
-		
+		String id = request.getParameter("id");
+		if (id == null || "".equals(id.trim())) {
+			int maxTaxSerialNo = projectCheckService.getMaxPrintSerialNo();
+			String nextTaxSerialNo = SerialUtil.nextTaxNumber(maxTaxSerialNo);
+			view.addObject("nextSerialNo", nextTaxSerialNo);
+			
+			view.addObject("hasSinglePrint", 0);
+		} else {
+			SinglePrint singlePrint = projectCheckService.getSinglePrint(id);
+			view.addObject("singlePrint", singlePrint);
+			view.addObject("hasSinglePrint", 1);
+		}
 		commomService.fillCommonView(request, view);
 		return view;
 	}
@@ -258,8 +278,13 @@ public class SummaryController {
 		try{
 			SinglePrint singlePrint = buildSinglePrintInfo(request);
 			
-			projectCheckService.createSinglePrintInfo(singlePrint);
-			
+			int id = Integer.parseInt(request.getParameter("id"));
+			if (id == -1) {
+				projectCheckService.createSinglePrintInfo(singlePrint);
+			} else {
+				singlePrint.setId(id);
+				projectCheckService.updateSinglePrintInfo(singlePrint);
+			}
 			JSONObject msgData = new JSONObject();
 			msgData.put("id", singlePrint.getId());
 			ResponseUtil.writeResponseSuccess(response, msgData);

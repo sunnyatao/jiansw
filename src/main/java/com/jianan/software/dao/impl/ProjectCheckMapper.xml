@@ -229,6 +229,13 @@
 		value(#{name}, #{serviceProducerCardNo}, #{area}, #{serialNo}, #{amount}, #{createdAt}, #{operatorName}, #{operatorId}, #{address})
 	</insert>
 	
+	<update id="updateSinglePrintInfo" parameterType="com.jianan.software.pojo.SinglePrint">
+		update t_single_print set 
+		name=#{name}, service_producer_card_no=#{serviceProducerCardNo}, area=#{area}, serial_no=#{serialNo},
+		amount=#{amount}, address=#{address}
+		where id=#{id}
+	</update>
+	
 	<insert id="createProjectCheckFiles" parameterType="java.util.List">
 		insert into t_project_check_files(check_id, file_name, name) 
 		values
@@ -274,5 +281,6 @@
 		local_invoice_date=#{localInvoiceDate}, local_invoice_tax_no=#{localInvoiceTaxNo} 
 		where id=#{id};
 	</update>
+
 </mapper>
 
