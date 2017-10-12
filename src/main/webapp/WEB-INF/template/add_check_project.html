@@ -55,6 +55,7 @@
 						  		<option value='进度款'>进度款</option>
 						  		<option value='一事一议工程'>一事一议工程</option>
 						  		<option value='扶贫办项目'>扶贫办项目</option>
+						  		<option value='清包工工程'>清包工工程</option>
 						  	</select></div>
 					 	  <div class="item"><span class="tit">本次开票金额：</span>&nbsp;
 						  <span class="con"><input type="text" value="" id="invoice_amount" name= "invoice_amount" style="margin-left: -4px"/></span></div>
@@ -367,8 +368,15 @@ function toSettlement() {
 function saveProjectCheck(nextType) {
 	$('.tx-save').attr("disabled", "disabled");
 	var identifyNum = $('#taxpayer_identify_num').val();
-	if (identifyNum.length < 18 || identifyNum.length > 19) {
-		alert("纳税人识别号不能小于18位，不能大于19位, 请重新输入!");
+	if (identifyNum.length < 15 || identifyNum.length > 20) {
+		alert("纳税人识别号不能小于15位，不能大于20位, 请重新输入!");
+		$('.tx-save').removeAttr("disabled");
+		return;
+	}
+	
+	var constructorIdentifyNum = $('#constructor_identify_num').val();
+	if (constructorIdentifyNum.length < 15 || constructorIdentifyNum.length > 20) {
+		alert("发包方纳税人识别号不能小于15位，不能大于20位, 请重新输入!");
 		$('.tx-save').removeAttr("disabled");
 		return;
 	}
