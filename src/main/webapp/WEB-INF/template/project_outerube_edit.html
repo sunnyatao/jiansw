@@ -160,7 +160,7 @@ function upadtProjectCheck() {
 	serialNum = $('#serial_num').val();
 	$.post(
 			'{$context_path}' + "/projectouterube/api/update",	
-			{'serial_num': serialNum, 'taxpayer_identify_num':$('#taxpayer_identify_num').val(),'taxpayer_name' :$('#taxpayer_name').val(),
+			{'serial_num': serialNum, 'taxpayer_identify_num':$('#taxpayer_identify_num').val(), 'constructor_identify_num': $('#constructor_identify_num').val(), 'taxpayer_name' :$('#taxpayer_name').val(),
 				'project_name':$('#project_name').val(),'project_address':$('#project_address').val(),'project_constructor' :$('#project_constructor').val(),
 				'project_total_cost' :$('#project_total_cost').val(),'is_down' :$('#is_down').val(),
 				'settlement_amount':$('#settlement_amount').val(), 'pre_appreciation_rate':$('#pre_appreciation_rate').val(), 'pre_appreciation_tax_amount':$('#pre_appreciation_tax_amount').val(),

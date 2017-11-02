@@ -359,11 +359,11 @@ function isfloat(oNum){
 function saveProjectCheck(nextType) {
 	$('.tx-save').attr("disabled", "disabled");
 	var identifyNum = $('#taxpayer_identify_num').val();
-	if (identifyNum.length < 15 || identifyNum.length > 20) {
+	/* if (identifyNum.length < 15 || identifyNum.length > 20) {
 		alert("纳税人识别号不能小于15位，不能大于20位, 请重新输入!");
 		$('.tx-save').removeAttr("disabled");
 		return;
-	}
+	} */
 	
 	//$('#submit_next_type').val(nextType);
 	//alert("提交成功");

@@ -35,7 +35,7 @@
 						  <div class="item"><span class="tit">编号：</span>&nbsp;
 						  <span class="con"><input type="text" value="{$projectCheck.serialNum}" id="serial_num" name= "serial_num" readonly="readonly" style="margin-left: -4px"/></span></div>	                			
 						  <div class="item"><span class="tit">纳税人识别号：</span>
-						  <span class="con"><input readonly="readonly" type="text" value="{$projectCheck.taxpayerIdentifyNum}" id="taxpayer_identify_num" name= "taxpayer_identify_num"/></span></div>
+						  <span class="con"><input type="text" value="{$projectCheck.taxpayerIdentifyNum}" id="taxpayer_identify_num" name= "taxpayer_identify_num"/></span></div>
 						  <div class="item"><span class="tit">纳税人名称：</span>
 						  <span class="con"><input type="text" value="{$projectCheck.taxpayerName}" id="taxpayer_name" name= "taxpayer_name"/></span></div>
 						  <div class="item"><span class="tit">工程项目名称：</span>
@@ -161,7 +161,7 @@ function upadtProjectCheck() {
 				'education_addition_amount' :$('#education_addition_amount').val(),'local_education_addition_amount' :$('#local_education_addition_amount').val(),
 				'stamp_duty_rate':$('#stamp_duty_rate').val(),'stamp_duty_amount' :$('#stamp_duty_amount').val(),'labor_union_amount' :$('#labor_union_amount').val(),
 				'water_construct_amount':$('#water_construct_amount').val(),'operator_name':$('#operator_name').val(),'duty_user_name':$('#duty_user_name').val(),
-				'pay_tax_user':$('#pay_tax_user').val(),'contacts_phone':$('#contacts_phone').val()},
+				'pay_tax_user':$('#pay_tax_user').val(),'contacts_phone':$('#contacts_phone').val(), 'constructor_identify_num':$('#constructor_identify_num').val()},
     		function(data) {
     			if(data.code == 1){
     				alert("保存成功!");

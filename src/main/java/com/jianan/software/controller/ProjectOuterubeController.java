@@ -166,6 +166,7 @@ public class ProjectOuterubeController {
 	public void ajaxUpdateCheckProject(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			ProjectOutertube outertube = buildProjectOutertube(request);
+			outertube.setConstructorIdentifyNum(request.getParameter("constructor_identify_num"));
 			projectOuterubeService.updateOutertube(outertube);
 			ResponseUtil.writeResponseSuccess(response);
 		} catch (ServerBaseException se) {
