@@ -368,7 +368,10 @@ public class ProjectSettlementController {
 				- projectSettlement.getObtainInvoiceAmount() 
 				- (projectSettlement.getWithholdTaxAmount()/0.48*1.03);*/
 		//税价合计=本次结算应补应退税额/0.048*1.03 2017-08-22
-		double currentInvoiceAmount = projectSettlement.getRefundTaxAmount()/0.048*1.03;
+		//double currentInvoiceAmount = projectSettlement.getRefundTaxAmount()/0.048*1.03;
+		//税价合计=本次结算金额*成本发票比例 - 已取得发票金额 -x；x=已代扣增值税及地税附征税额/0.048+已代扣增值税及地税附征税额
+		double x = projectSettlement.getWithholdTaxAmount()/0.048 + projectSettlement.getWithholdTaxAmount();
+		double currentInvoiceAmount = projectSettlement.getSettlementAmount() * projectSettlement.getCostInvoiceRate() - projectSettlement.getObtainInvoiceAmount() - x;
 		view.addObject("current_invoice_amount", DataUtil.changeZF(currentInvoiceAmount));
 		//将本次开票金额换算成大写
 		view.addObject("current_big_invoice_amount", DataUtil.toChineseCurrency(currentInvoiceAmount));
