@@ -47,7 +47,7 @@
 						  <div class="item"><span class="tit">发包方纳税人识别号：</span>
 						  <span class="con"><input readonly="readonly" type="text" value="{$projectOutertube.constructorIdentifyNum}" id="constructor_identify_num" name= "constructor_identify_num"/></span></div>
 						  <div class="item"><span class="tit">工程总造价：</span>
-						  <span class="con"><input readonly="readonly" type="text" value="{$projectOutertube.projectTotalCost}" id="project_total_cost" name= "project_total_cost"/></span></div>
+						  <span class="con"><input readonly="readonly" type="text" value="{$projectOutertube.projectTotalCost|string_format:'%.2f'}" id="project_total_cost" name= "project_total_cost"/></span></div>
 					 	  <div class="item"><span class="tit">是否完工：</span>
 						  <select name='is_down' id='is_down' disabled="disabled" style="width:77px;">
 						  		<option value='完工' {if $projectOutertube.isDown eq '完工'}selected="selected"{/if}>完工</option>

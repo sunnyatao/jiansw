@@ -223,7 +223,8 @@
 		education_addition_amount=#{educationAdditionAmount}, local_education_addition_amount=#{localEducationAdditionAmount}, stamp_duty_rate=#{stampDutyRate}, stamp_duty_amount=#{stampDutyAmount},
 		labor_union_amount=#{laborUnionAmount}, water_construct_amount=#{waterConstructAmount}, is_invoiced=#{isInvoiced},
 		pay_tax_user=#{payTaxUser}, contacts_phone=#{contactsPhone}, operator_name=#{operatorName}, duty_user_name=#{dutyUserName},
-		tax_type=#{taxType}, income_affiliation=#{incomeAffiliation}, constructor_identify_num=#{constructorIdentifyNum}
+		tax_type=#{taxType}, income_affiliation=#{incomeAffiliation}, constructor_identify_num=#{constructorIdentifyNum},
+		pay_tax_user_type=#{payTaxUserType}
 		where serial_num=#{serialNum}
 	</update>
 	

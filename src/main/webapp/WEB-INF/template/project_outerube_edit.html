@@ -47,7 +47,7 @@
 						  <div class="item"><span class="tit">发包方纳税人识别号：</span>
 						  <span class="con"><input type="text" value="{$projectOutertube.constructorIdentifyNum}" id="constructor_identify_num" name= "constructor_identify_num"/></span></div>
 						  <div class="item"><span class="tit">工程总造价：</span>
-						  <span class="con"><input type="text" value="{$projectOutertube.projectTotalCost}" id="project_total_cost" name= "project_total_cost"/></span></div>
+						  <span class="con"><input type="text" value="{$projectOutertube.projectTotalCost|string_format:'%.2f'}" id="project_total_cost" name= "project_total_cost"/></span></div>
 					 	  <div class="item"><span class="tit">是否完工：</span>
 						  <select name='is_down' id='is_down'>
 						  		<option value='完工' {if $projectOutertube.isDown eq '完工'}selected="selected"{/if}>完工</option>
@@ -102,7 +102,7 @@
 						  <span class="con"><input readonly="readonly" type="text" value="{$projectOutertube.localEducationAdditionAmount}" id="local_education_addition_amount" name= "local_education_addition_amount"/></span></div>
 						  <div class="item"><span class="tit">印花税：</span>
 						  	<select name='stamp_duty_rate' id='stamp_duty_rate' style="display:none">
-						  		<option value='0.003'>3‰</option>
+						  		<option value='0.0003'>0.03%</option>
 						  	</select>
 						  	<input readonly="readonly" type="text" value="{$projectOutertube.stampDutyAmount}" id="stamp_duty_amount" name= "stamp_duty_amount"/>
 						  </div>
@@ -169,7 +169,7 @@ function upadtProjectCheck() {
 				'local_education_addition_amount':$('#local_education_addition_amount').val(), 'stamp_duty_rate':$('#stamp_duty_rate').val(), 'stamp_duty_amount':$('#stamp_duty_amount').val(), 
 				'labor_union_amount':$('#labor_union_amount').val(), 'water_construct_amount':$('#water_construct_amount').val(), 'is_invoiced':$('#is_invoiced').val(), 
 				'operator_name':$('#operator_name').val(),'duty_user_name':$('#duty_user_name').val(),
-				'pay_tax_user':$('#pay_tax_user').val(),'contacts_phone':$('#contacts_phone').val(), 'tax_type': $('#tax_type').val()},
+				'income_affiliation':$('#income_affiliation').val(),'pay_tax_user':$('#pay_tax_user').val(),'pay_tax_user_type':$('#pay_tax_user_type').val(),'contacts_phone':$('#contacts_phone').val(), 'tax_type': $('#tax_type').val()},
     		function(data) {
     			if(data.code == 1){
     				alert("保存成功!");

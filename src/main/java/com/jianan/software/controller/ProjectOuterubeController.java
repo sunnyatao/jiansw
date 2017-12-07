@@ -117,8 +117,8 @@ public class ProjectOuterubeController {
 	public ModelAndView toAddCheckProject(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView view = new ModelAndView("/add_outertube_project");
 		
-		String nextSerialNo = projectOuterubeService.getNextSerialNo();
-		view.addObject("nextSerialNo", nextSerialNo);
+		//String nextSerialNo = projectOuterubeService.getNextSerialNo();
+		view.addObject("nextSerialNo", "");
 		
 		CrmAdminUser user = SessionManager.getUserSession(request);
 		view.addObject("operatorName", user.getUserName());
@@ -133,6 +133,8 @@ public class ProjectOuterubeController {
 	@RequestMapping("/submit")
 	public ModelAndView submitCheckProject(HttpServletRequest request, HttpServletResponse response) {
 		ProjectOutertube projectOutertube = buildProjectOutertube(request);
+		String nextSerialNo = projectOuterubeService.getNextSerialNo();
+		projectOutertube.setSerialNum(nextSerialNo);
 		projectOuterubeService.createProjectOuterube(projectOutertube);
 		
 		String nextType = request.getParameter("submit_next_type");
@@ -154,6 +156,8 @@ public class ProjectOuterubeController {
 	public void ajaxSubmitCheckProject(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			ProjectOutertube outertube = buildProjectOutertube(request);
+			String nextSerialNo = projectOuterubeService.getNextSerialNo();
+			outertube.setSerialNum(nextSerialNo);
 			projectOuterubeService.createProjectOuterube(outertube);
 			ResponseUtil.writeResponseSuccess(response);
 		} catch (Exception e){

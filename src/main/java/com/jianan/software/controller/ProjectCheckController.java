@@ -128,8 +128,8 @@ public class ProjectCheckController {
 	public ModelAndView toAddCheckProject(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView view = new ModelAndView("/add_check_project");
 		
-		String nextSerialNo = projectCheckService.getNextSerialNo();
-		view.addObject("nextSerialNo", nextSerialNo);
+		//String nextSerialNo = projectCheckService.getNextSerialNo();
+		view.addObject("nextSerialNo", "");
 		
 		CrmAdminUser user = SessionManager.getUserSession(request);
 		view.addObject("operatorName", user.getUserName());
@@ -144,8 +144,9 @@ public class ProjectCheckController {
 	@RequestMapping("/submit")
 	public ModelAndView submitCheckProject(HttpServletRequest request, HttpServletResponse response) {
 		ProjectCheck projectCheck = buildProjectCheck(request);
+		String nextSerialNo = projectCheckService.getNextSerialNo();
+		projectCheck.setSerialNum(nextSerialNo);
 		projectCheckService.createProjectCheck(projectCheck);
-		
 		String nextType = request.getParameter("submit_next_type");
 		ModelAndView view = null;
 		if ("0".equals(nextType)) {
@@ -165,6 +166,8 @@ public class ProjectCheckController {
 	public void ajaxSubmitCheckProject(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			ProjectCheck projectCheck = buildProjectCheck(request);
+			String nextSerialNo = projectCheckService.getNextSerialNo();
+			projectCheck.setSerialNum(nextSerialNo);
 			projectCheckService.createProjectCheck(projectCheck);
 			JSONObject msgData = new JSONObject();
 			msgData.put("id", projectCheck.getId());

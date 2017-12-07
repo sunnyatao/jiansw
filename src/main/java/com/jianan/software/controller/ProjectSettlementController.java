@@ -1,5 +1,6 @@
 package com.jianan.software.controller;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -119,8 +120,8 @@ public class ProjectSettlementController {
 	public ModelAndView toAddCheckProject(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView view = new ModelAndView("/add_settlement_project");
 		
-		String nextSerialNo = projectSettlementService.getNextSerialNo();
-		view.addObject("nextSerialNo", nextSerialNo);
+		//String nextSerialNo = projectSettlementService.getNextSerialNo();
+		view.addObject("nextSerialNo", "");
 		
 		CrmAdminUser user = SessionManager.getUserSession(request);
 		if (user == null) {
@@ -157,6 +158,8 @@ public class ProjectSettlementController {
 	@RequestMapping("/submit")
 	public ModelAndView submitCheckProject(HttpServletRequest request, HttpServletResponse response) {
 		ProjectSettlement projectSettlement = buildProjectSettlement(request);
+		String nextSerialNo = projectSettlementService.getNextSerialNo();
+		projectSettlement.setSerialNum(nextSerialNo);
 		projectSettlementService.createSettlement(projectSettlement);
 		
 		String nextType = request.getParameter("submit_next_type");
@@ -176,6 +179,8 @@ public class ProjectSettlementController {
 	public void ajaxSubmitCheckProject(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			ProjectSettlement settlement = buildProjectSettlement(request);
+			String nextSerialNo = projectSettlementService.getNextSerialNo();
+			settlement.setSerialNum(nextSerialNo);
 			projectSettlementService.createSettlement(settlement);
 			ResponseUtil.writeResponseSuccess(response);
 		} catch (Exception e){
@@ -411,7 +416,8 @@ public class ProjectSettlementController {
 		
 		//应取得发票金额
 		double yqdfpje = settlement.getSettlementAmount() * settlement.getCostInvoiceRate();
-		view.addObject("yqdfpje", DataUtil.changeZF(yqdfpje));
+		DecimalFormat df = new DecimalFormat("######0.00");
+		view.addObject("yqdfpje", DataUtil.changeZF(Double.parseDouble(df.format(yqdfpje))));
 		
 		//应纳税额
 		//double ynse = (yqdfpje - settlement.getObtainInvoiceAmount())/(1+0.03)*0.048;
