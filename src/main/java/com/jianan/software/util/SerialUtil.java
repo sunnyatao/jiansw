@@ -21,7 +21,7 @@ public class SerialUtil {
 			}
 			return prefix + year + serial;
 		} else {
-			return prefix + year + "0001";
+			return prefix + DateUtil.getYear() + "0001";
 		}
 	}
 	
