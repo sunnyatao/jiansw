@@ -387,6 +387,14 @@ public class ProjectCheckController {
 		view.addObject("contact_phone", projectCheck.getContactsPhone());
 		
 		view.addObject("constructor_identify_num", projectCheck.getConstructorIdentifyNum());
+		
+		view.addObject("print_type", "1");
+		view.addObject("projectCheck", projectCheck);
+		double projectCheckTotal = projectCheck.getAppreciationTaxAmount() + projectCheck.getIncomeTaxAmount()+
+				projectCheck.getUrbanTaxAmount() + projectCheck.getEducationAdditionAmount() + 
+				projectCheck.getLocalEducationAdditionAmount() + projectCheck.getStampDutyAmount() + 
+				projectCheck.getLaborUnionAmount() + projectCheck.getWaterConstructAmount();
+		view.addObject("projectCheckTotal", projectCheckTotal);
 		return view;
 	}
 	

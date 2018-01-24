@@ -145,6 +145,36 @@ body{background: #fff;color: #030303;font-family: "Roboto","Helvetica",arial,san
 			<td>应补税额</td>
 			<td colspan="3" class="font-red">{$need_tax_amount|string_format:"%.2f"}</td>
 		</tr>
+		{if $print_type eq "1"}
+		<tr>
+			<td>增值税</td>
+			<td>{$projectCheck.appreciationTaxAmount}</td>
+			<td>所得税</td>
+			<td>{$projectCheck.incomeTaxAmount}</td>
+		</tr>
+		<tr>
+			<td>城建税</td>
+			<td>{$projectCheck.urbanTaxAmount}</td>
+			<td>教育费附加</td>
+			<td>{$projectCheck.educationAdditionAmount}</td>
+		</tr>
+		<tr>
+			<td>地方教育费附加</td>
+			<td>{$projectCheck.localEducationAdditionAmount}</td>
+			<td>印花税</td>
+			<td>{$projectCheck.stampDutyAmount}</td>
+		</tr>
+		<tr>
+			<td>工会经费</td>
+			<td>{$projectCheck.laborUnionAmount}</td>
+			<td>水利建设专项收入</td>
+			<td>{$projectCheck.waterConstructAmount}</td>
+		</tr>
+		<tr>
+			<td>合计</td>
+			<td>{$projectCheckTotal|string_format:"%.2f"}</td>
+		</tr>
+		{/if}
 		<tr>
 			<td>备注</td>
 			<td colspan="3"></td>

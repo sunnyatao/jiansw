@@ -339,6 +339,8 @@ public class ProjectOuterubeController {
 		view.addObject("contact_phone", projectOutertube.getContactsPhone());
 		
 		view.addObject("constructor_identify_num", projectOutertube.getConstructorIdentifyNum());
+		
+		view.addObject("print_type", "3");
 		return view;
 	}
 	

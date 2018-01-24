@@ -354,14 +354,19 @@ public class ProjectSettlementController {
 		double appreciationRate = 0.02;
 		
 		double salesAmount = projectSettlement.getSettlementAmount()/(1+appreciationRate);
+		
+		//税额
+		double taxAmount = projectSettlement.getRefundTaxAmount()*3/4.8;
+		
 		//不含税销售额
-		view.addObject("sale_amount", DataUtil.changeZF(projectSettlement.getRefundTaxAmount()/4.8*3/0.03));
+		double saleAmount = taxAmount/0.03;
+		view.addObject("sale_amount", DataUtil.changeZF(saleAmount));
 		
 		//增值税率
 		view.addObject("appreciation_rate", "3%");
 		
 		//税额
-		view.addObject("tax_amount", DataUtil.changeZF(projectSettlement.getRefundTaxAmount()/4.8*3));
+		view.addObject("tax_amount", DataUtil.changeZF(taxAmount));
 		
 		double needTaxAmount = projectSettlement.getRefundTaxAmount();
 		view.addObject("need_tax_amount", needTaxAmount);
@@ -375,8 +380,10 @@ public class ProjectSettlementController {
 		//税价合计=本次结算应补应退税额/0.048*1.03 2017-08-22
 		//double currentInvoiceAmount = projectSettlement.getRefundTaxAmount()/0.048*1.03;
 		//税价合计=本次结算金额*成本发票比例 - 已取得发票金额 -x；x=已代扣增值税及地税附征税额/0.048+已代扣增值税及地税附征税额
-		double x = projectSettlement.getWithholdTaxAmount()/0.048 + projectSettlement.getWithholdTaxAmount();
-		double currentInvoiceAmount = projectSettlement.getSettlementAmount() * projectSettlement.getCostInvoiceRate() - projectSettlement.getObtainInvoiceAmount() - x;
+		//double x = projectSettlement.getWithholdTaxAmount()/0.048 + projectSettlement.getWithholdTaxAmount();
+		//double currentInvoiceAmount = projectSettlement.getSettlementAmount() * projectSettlement.getCostInvoiceRate() - projectSettlement.getObtainInvoiceAmount() - x;
+		
+		double currentInvoiceAmount = saleAmount + taxAmount;
 		view.addObject("current_invoice_amount", DataUtil.changeZF(currentInvoiceAmount));
 		//将本次开票金额换算成大写
 		view.addObject("current_big_invoice_amount", DataUtil.toChineseCurrency(currentInvoiceAmount));
@@ -385,6 +392,8 @@ public class ProjectSettlementController {
 		view.addObject("contact_phone", projectSettlement.getContactsPhone());
 		
 		view.addObject("constructor_identify_num", projectSettlement.getTaxpayerIdentifyNum());
+		
+		view.addObject("print_type", "2");
 		return view;
 	}
 	
