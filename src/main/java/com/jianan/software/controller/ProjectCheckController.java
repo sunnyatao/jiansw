@@ -390,7 +390,7 @@ public class ProjectCheckController {
 		
 		view.addObject("print_type", "1");
 		view.addObject("projectCheck", projectCheck);
-		double projectCheckTotal = projectCheck.getAppreciationTaxAmount() + projectCheck.getIncomeTaxAmount()+
+		double projectCheckTotal = projectCheck.getIncomeTaxAmount()+
 				projectCheck.getUrbanTaxAmount() + projectCheck.getEducationAdditionAmount() + 
 				projectCheck.getLocalEducationAdditionAmount() + projectCheck.getStampDutyAmount() + 
 				projectCheck.getLaborUnionAmount() + projectCheck.getWaterConstructAmount();
