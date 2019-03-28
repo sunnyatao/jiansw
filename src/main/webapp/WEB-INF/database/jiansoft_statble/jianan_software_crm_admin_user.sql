@@ -1,0 +1,57 @@
+-- MySQL dump 10.13  Distrib 5.7.12, for Win64 (x86_64)
+--
+-- Host: localhost    Database: jianan_software
+-- ------------------------------------------------------
+-- Server version	5.7.17-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `crm_admin_user`
+--
+
+DROP TABLE IF EXISTS `crm_admin_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `crm_admin_user` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(50) NOT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  `salt` varchar(50) DEFAULT NULL,
+  `last_login_time` datetime DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `created_by` varchar(50) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `crm_admin_user`
+--
+
+LOCK TABLES `crm_admin_user` WRITE;
+/*!40000 ALTER TABLE `crm_admin_user` DISABLE KEYS */;
+INSERT INTO `crm_admin_user` VALUES (1,'admin','f0df7414507bcb57e07e18555821228a','1','2018-09-03 21:44:43','2017-02-24 23:13:23',NULL,1),(2,'业务员1','fc73078b8fd3e52fca482a2c2c0d622a','3139','2017-03-18 20:57:32','2017-02-26 11:07:40',NULL,1),(3,'业务员2','38e5a6ea454c91ee7a9672f942da8a59','3872','2017-03-11 21:38:48','2017-02-26 20:09:51',NULL,1),(4,'覃冲','a044e5b26dae737231a2379cfc994606','5722','2017-04-17 15:25:15','2017-04-14 22:50:22',NULL,1),(5,'周薇','27e0821ee63a5321f9e7cf3d5b602e2d','3881','2017-04-14 22:50:45','2017-04-14 22:50:45',NULL,1),(6,'尹梅','1cca69c7e7dd8c9aac0147db99097e88','2735','2017-04-16 21:03:40','2017-04-14 22:51:02',NULL,1),(7,'李咏秋','37a73b034045724f02471d16873a9316','8583','2017-04-14 22:51:18','2017-04-14 22:51:18',NULL,1),(8,'陈建辉','4c4fafa8ba37b7d5d63550ce2752c66a','1058','2017-04-14 22:51:32','2017-04-14 22:51:32',NULL,1),(9,'邓根林','dfee7f2bef6fb00c2807c70484c482e5','3952','2017-04-16 21:51:24','2017-04-16 21:51:24',NULL,1),(10,'钟海云','9e1a10e173611b40845cb570be6b9d23','2592','2017-04-16 21:51:51','2017-04-16 21:51:51',NULL,1),(11,'甘功勋','e3c8fc02e7f3c2fb29b8c2c50eca184e','3567','2017-04-16 21:52:27','2017-04-16 21:52:27',NULL,1);
+/*!40000 ALTER TABLE `crm_admin_user` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2019-03-28 10:46:04
